@@ -30,4 +30,7 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'google-calendar' => [
+        'apikey' => env('GOOGLE_CALENDAR_API'),
+    ],
 ];

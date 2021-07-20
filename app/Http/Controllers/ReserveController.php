@@ -13,39 +13,118 @@ use App\stylist_cut_and_color;
 use App\stylist_cut_and_perm;
 use App\User;
 use App\Menu;
+use App\time;
 use DateTime;
 
 class ReserveController extends Controller
 {
+    
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+    
+    
+    public function reserve_date_stylist()
+    {
+        //スタイリストの取得
+        $query = Stylist::query();
+        $stylists = $query->pluck('name');
+        
+        return view('reserve_date_stylist')->with([
+            "stylists" => $stylists
+            ]);
+    }
+    
+    
+    public function reserve_time_menu(Request $request)
+    {
+        $input = $request['reserve'];
+        
+        //時間の取得
+        $time = time::query()->pluck('time');
+        
+        //時間の表示形式変更
+        $times = [];
+        foreach ($time as $t){
+            $t = date('H:i',strtotime($t));
+            array_push($times,$t);
+        }
+        
+         //メニューとそのidの取得
+        $menu_id = Menu::query()->pluck('id');
+        $menus = Menu::query()->get();
+        
+        
+        //日付の表示形式変更
+        $date = $input['date'];
+        $date = date('Y年m月d日',strtotime($input["date"]));
+        
+        //スタイリストIDの取得
+        $stylist_id = Stylist::query()->where('name','LIKE',"%{$input["stylist"]}%") ->value('id');
+        
+        //予約可能時間の取得
+        $notPossible_time = Reserve::query()->where('date',$input['date'])->where('stylist_id',$stylist_id)->pluck('startTime');
+
+        if (count($notPossible_time) == 0 ){
+            //時間の取得
+            $possible_time = time::query()->pluck('time');
+        }else{
+            //時間の取得
+            $possible_time = [];
+            foreach (time::query()->pluck('time') as $time){
+                if (!(in_array($time,$notPossible_time->toArray()))){
+                    array_push($possible_time,$time);
+                }
+            }
+            
+        }
+
+        //時間の表示形式変更
+        $times = [];
+        foreach ($possible_time as $t){
+            $t = date('H:i',strtotime($t));
+            array_push($times,$t);
+        }
+        
+        return view('reserve_time_menu')->with([
+            "times" => $times,
+            "menus" => $menus,
+            "reserve" => $input,
+            "date" => $date
+            ]);
+    }
+    
     public function reserve(Request $request, Reserve $reserve, stylist_color $stylist_color, stylist_cut $stylist_cut, stylist_perm $stylist_perm,Menu $menu, stylist_cut_and_color $stylist_cut_and_color, stylist_cut_and_perm $stylist_cut_and_perm){
+        //入力された日にちが過去の場合
+        $input = $request['reserve'];
+        $date = strtotime($input['date']);
+        $dateNow = strtotime(date('Y-m-d'));
+        if ($date < $dateNow){
+            $date_correction = false;
+            return view('failure_reserve')->with(["date_correction" => $date_correction]);
+        }else{
         //データベースのレコード数取得
         $con = mysqli_connect('localhost', 'dbuser', 'yuki121028', 'salon');
         if(!$con) {
             die('接続に失敗しました');
         }
-        // 文字コード
         mysqli_set_charset($con, 'utf8');
         // SQLの発行と出力
         $sql = "SELECT * FROM reserves";
         $res = mysqli_query($con, $sql);
         $num_rows = mysqli_num_rows($res);
-
         mysqli_close($con);
-        
-        //
         
         if ($num_rows > 0){
             $input = $request['reserve'];
-            
             $user_id = Auth::id();
+            
             //スタイリストのID取得
-            $query = Stylist::query();
-            $query -> where('name','LIKE',"%{$input["stylist"]}%");
-            $stylist_id = $query->value('id');
+            $stylist_id = Stylist::query()->where('name','LIKE',"%{$input["stylist"]}%")>value('id');
+            
             //メニュー名取得
-            $query = Menu::query();
-            $query -> where('id','LIKE',"%{$input["menu"]}%");
-            $menu = $query->value('menu');
+            $menu = Menu::query()->where('id','LIKE',"%{$input["menu"]}%")->value('menu');
             
             if ($menu == "カット"){
                 //データベースの接続
@@ -63,39 +142,19 @@ class ReserveController extends Controller
                 mysqli_close($con);
                 
                 //同じスタイリストの同時刻のカラー取得
-                $query_color = stylist_color::query();
-                $query_color -> where("stylist_id",$stylist_id);
-                $query_color -> where("予約日時", $input['date']);
-                $query_color -> where("開始時間", $input['time']);
-                $color_time = $query_color->value("開始時間");
+                $color_time = stylist_color::query()->where("stylist_id",$stylist_id)->where("予約日時", $input['date'])->where("開始時間", $input['time'])->value("開始時間");
                 
                 //同じスタイリストの同時刻のパーマ取得
-                $query_perm = stylist_perm::query();
-                $query_perm -> where("stylist_id",$stylist_id);
-                $query_perm -> where("予約日時", $input['date']);
-                $query_perm -> where("開始時間", $input['time']);
-                $perm_time = $query_perm->value("開始時間");
+                $perm_time = stylist_perm::query()->where("stylist_id",$stylist_id)->where("予約日時", $input['date'])->where("開始時間", $input['time'])->value("開始時間");
                 
                 //同じスタイリストの同時刻のカット・カラー取得
-                $query_cut_color = stylist_cut_and_color::query();
-                $query_cut_color -> where("stylist_id",$stylist_id);
-                $query_cut_color -> where("予約日時", $input['date']);
-                $cut_and_color_time = $query_cut_color->value("開始時間");
+                $cut_and_color_time = stylist_cut_and_color::query()->where("stylist_id",$stylist_id)->where("予約日時", $input['date'])->where("開始時間", $input['time'])->value("開始時間");
                 
                 //同じスタイリストの同時刻のカット・パーマ取得
-                $query_cut_perm = stylist_cut_and_perm::query();
-                $query_cut_perm -> where("stylist_id",$stylist_id);
-                $query_cut_perm -> where("予約日時", $input['date']);
-                $cut_and_perm_time = $query_cut_perm->value("開始時間");
+                $cut_and_perm_time = stylist_cut_and_perm::query()->where("stylist_id",$stylist_id)->where("予約日時", $input['date'])->where("開始時間", $input['time'])->value("開始時間");
                 
-
                 //レコードの数で条件分岐
                 if ($num_rows == 0){
-                    //inputをTIME型に変換
-                    $start_time = strtotime($input["time"]);
-                    $start_time = date("H:i:s",$start_time);
-                    
-                    if ($color_time != $start_time && $perm_time != $start_time && $cut_and_color_time != $start_time && $cut_and_perm_time != $start_time){
                         $reserve= Reserve::insert([
                             "user_id" =>  $user_id,
                             "stylist_id" => $stylist_id,
@@ -113,20 +172,16 @@ class ReserveController extends Controller
                             "created_at" => now(),
                             "updated_at" => now(),
                         ]);
-                        return redirect('/')->with('flash_message', '予約が完了しました');
-                    }else{
-                        dd("失敗");
-                    }
+                        
+                        return redirect('/reserved')->withInput($input);
+                    
                 }else{
                     //inputをTIME型に変換
                     $start_time = strtotime($input["time"]);
                     $start_time = date("H:i:s",$start_time);
                     
-                    $query = stylist_cut::query();
-                    $query -> where("stylist_id",$stylist_id);
-                    $query -> where("予約日時", $input['date']);
-                    $query -> where("開始時間", $input['time']);
-                    $lists = $query->value('stylist_id');
+                    $lists = stylist_cut::query()->where("stylist_id",$stylist_id)->where("予約日時", $input['date'])->where("開始時間", $input['time'])->value('stylist_id');
+                    
                     if ($lists == null && $color_time != $start_time && $perm_time != $start_time && $cut_and_color_time != $start_time && $cut_and_perm_time != $start_time){
                         //予約テーブルへのDB書き込み
                             $reserve= Reserve::insert([
@@ -147,9 +202,11 @@ class ReserveController extends Controller
                             "created_at" => now(),
                             "updated_at" => now(),
                         ]);
-                        return redirect('/')->with('flash_message', '予約が完了しました');
+                        
+                        return redirect('/reserved')->withInput($input);
                     }else{
-                        dd("失敗");
+                        $date_correction = true;
+                        return view('failure_reserve')->with(["date_correction" => $date_correction]);
                     }
                 }
             }elseif ($menu == "カラー"){
@@ -168,37 +225,19 @@ class ReserveController extends Controller
                     mysqli_close($con);
                     
                     //同じスタイリストの同時刻のカット取得
-                    $query_cut = stylist_cut::query();
-                    $query_cut -> where("stylist_id",$stylist_id);
-                    $query_cut -> where("予約日時", $input['date']);
-                    $query_cut -> where("開始時間", $input['time']);
-                    $cut_time = $query_cut->value("開始時間");
+                    $cut_time = stylist_cut::query()->where("stylist_id",$stylist_id)->where("予約日時", $input['date'])->where("開始時間", $input['time'])->value("開始時間");
                     
                      //同じスタイリストの同時刻のパーマ取得
-                    $query_perm = stylist_perm::query();
-                    $query_perm -> where("stylist_id",$stylist_id);
-                    $query_perm -> where("予約日時", $input['date']);
-                    $query_perm -> where("開始時間", $input['time']);
-                    $perm_time = $query_perm->value("開始時間");
+                    $perm_time = stylist_perm::query()->where("stylist_id",$stylist_id)->where("予約日時", $input['date'])->where("開始時間", $input['time'])->value("開始時間");
                     
                     //同じスタイリストの同時刻のカット・カラー取得
-                    $query_cut_color = stylist_cut_and_color::query();
-                    $query_cut_color -> where("stylist_id",$stylist_id);
-                    $query_cut_color -> where("予約日時", $input['date']);
-                    $cut_and_color_time = $query_cut_color->value("開始時間");
+                    $cut_and_color_time = stylist_cut_and_color::query()->where("stylist_id",$stylist_id)->where("予約日時", $input['date'])->where("開始時間", $input['time'])->value("開始時間");
                     
                     //同じスタイリストの同時刻のカット・パーマ取得
-                    $query_cut_perm = stylist_cut_and_perm::query();
-                    $query_cut_perm -> where("stylist_id",$stylist_id);
-                    $query_cut_perm -> where("予約日時", $input['date']);
-                    $cut_and_perm_time = $query_cut_perm->value("開始時間");
+                    $cut_and_perm_time = stylist_cut_and_perm::query()->where("stylist_id",$stylist_id)->where("予約日時", $input['date'])->where("開始時間", $input['time'])->value("開始時間");
                     
                     if ($num_rows == 0){
-                        //inputをTIME型に変換
-                        $start_time = strtotime($input["time"]);
-                        $start_time = date("H:i:s",$start_time);
                         
-                        if ($cut_time != $start_time && $perm_time != $start_time && $cut_and_color_time != $start_time && $cut_and_perm_time != $start_time){
                             $reserve= Reserve::insert([
                             "user_id" =>  $user_id,
                             "stylist_id" => $stylist_id,
@@ -216,20 +255,16 @@ class ReserveController extends Controller
                                 "created_at" => now(),
                                 "updated_at" => now(),
                             ]);
-                            return redirect('/')->with('flash_message', '予約が完了しました');
-                        }else{
-                            dd("失敗");
-                        }
+                           
+                            return redirect('/reserved')->withInput($input);
+                        
                     }else{
                         //inputをTIME型に変換
                         $start_time = strtotime($input["time"]);
                         $start_time = date("H:i:s",$start_time);
                     
-                        $query = stylist_color::query();
-                        $query -> where('stylist_id',$stylist_id);
-                        $query -> where('予約日時', $input['date']);
-                        $query -> where('開始時間', $input['time']);
-                        $lists = $query -> value('stylist_id');
+                        $lists = stylist_color::query()->where("stylist_id",$stylist_id)->where("予約日時", $input['date'])->where("開始時間", $input['time'])->value('stylist_id');
+                    
                         if ($lists == null && $cut_time != $start_time && $perm_time != $start_time && $cut_and_color_time != $start_time && $cut_and_perm_time != $start_time){
                             $reserve= Reserve::insert([
                             "user_id" =>  $user_id,
@@ -248,9 +283,13 @@ class ReserveController extends Controller
                                 "created_at" => now(),
                                 "updated_at" => now(),
                             ]);
-                            return redirect('/')->with('flash_message', '予約が完了しました');
+                            $mail_controller = app()->make('App\Http\Controllers\MailController');
+                            $mail_controller->reserveComplete($input);
+    
+                            return redirect('/reserved')->withInput($input);
                         }else{
-                            dd("失敗");
+                            $date_correction = true;
+                            return view('failure_reserve')->with(["date_correction" => $date_correction]);
                         }
                     }
                 }elseif ($menu == "パーマ"){
@@ -269,37 +308,19 @@ class ReserveController extends Controller
                     mysqli_close($con);
                     
                     //同じスタイリストの同時刻のカット取得
-                    $query_cut = stylist_cut::query();
-                    $query_cut -> where("stylist_id",$stylist_id);
-                    $query_cut -> where("予約日時", $input['date']);
-                    $query_cut -> where("開始時間", $input['time']);
-                    $cut_time = $query_cut->value("開始時間");
+                    $cut_time = stylist_cut::query()->where("stylist_id",$stylist_id)->where("予約日時", $input['date'])->where("開始時間", $input['time'])->value("開始時間");
                     
-                     //同じスタイリストの同時刻のカラー取得
-                    $query_color = stylist_color::query();
-                    $query_color -> where("stylist_id",$stylist_id);
-                    $query_color -> where("予約日時", $input['date']);
-                    $query_color -> where("開始時間", $input['time']);
-                    $color_time = $query_color->value("開始時間");
+                    //同じスタイリストの同時刻のカラー取得
+                    $color_time = stylist_color::query()->where("stylist_id",$stylist_id)->where("予約日時", $input['date'])->where("開始時間", $input['time'])->value("開始時間");
                     
                     //同じスタイリストの同時刻のカット・カラー取得
-                    $query_cut_color = stylist_cut_and_color::query();
-                    $query_cut_color -> where("stylist_id",$stylist_id);
-                    $query_cut_color -> where("予約日時", $input['date']);
-                    $cut_and_color_time = $query_cut_color->value("開始時間");
+                    $cut_and_color_time = stylist_cut_and_color::query()->where("stylist_id",$stylist_id)->where("予約日時", $input['date'])->where("開始時間", $input['time'])->value("開始時間");
                     
                     //同じスタイリストの同時刻のカット・パーマ取得
-                    $query_cut_perm = stylist_cut_and_perm::query();
-                    $query_cut_perm -> where("stylist_id",$stylist_id);
-                    $query_cut_perm -> where("予約日時", $input['date']);
-                    $cut_and_perm_time = $query_cut_perm->value("開始時間");
+                    $cut_and_perm_time = stylist_cut_and_perm::query()->where("stylist_id",$stylist_id)->where("予約日時", $input['date'])->where("開始時間", $input['time'])->value("開始時間");
                     
                     if ($num_rows == 0){
-                        //inputをTIME型に変換
-                        $start_time = strtotime($input["time"]);
-                        $start_time = date("H:i:s",$start_time);
                         
-                        if ($cut_time != $start_time && $color_time != $start_time && $cut_and_color_time != $start_time && $cut_and_perm_time != $start_time){
                             $reserve= Reserve::insert([
                             "user_id" =>  $user_id,
                             "stylist_id" => $stylist_id,
@@ -317,20 +338,14 @@ class ReserveController extends Controller
                                 "created_at" => now(),
                                 "updated_at" => now(),
                             ]);
-                            return redirect('/')->with('flash_message', '予約が完了しました');
-                        }else{
-                            dd("失敗");
-                        }
+                            return redirect('/reserved')->withInput($input);
                     }else{
                         //inputをTIME型に変換
                         $start_time = strtotime($input["time"]);
                         $start_time = date("H:i:s",$start_time);
                         
-                        $query = stylist_perm::query();
-                        $query -> where('stylist_id',$stylist_id);
-                        $query -> where('予約日時', $input['date']);
-                        $query -> where('開始時間', $input['time']);
-                        $lists = $query -> value('stylist_id');
+                        $lists = stylist_perm::query()->where("stylist_id",$stylist_id)->where("予約日時", $input['date'])->where("開始時間", $input['time'])->value('stylist_id');
+                        
                         if ($lists == null && $cut_time != $start_time && $color_time != $start_time && $cut_and_color_time != $start_time && $cut_and_perm_time != $start_time){
                             $reserve= Reserve::insert([
                             "user_id" =>  $user_id,
@@ -349,9 +364,10 @@ class ReserveController extends Controller
                                 "created_at" => now(),
                                 "updated_at" => now(),
                             ]);
-                            return redirect('/')->with('flash_message', '予約が完了しました');
+                            return redirect('/reserved')->withInput($input);
                         }else{
-                            dd("失敗");
+                            $date_correction = true;
+                            return view('failure_reserve')->with(["date_correction" => $date_correction]);
                         }
                     }
                 }elseif ($menu = "カット・カラー"){
@@ -370,38 +386,19 @@ class ReserveController extends Controller
                     mysqli_close($con);
                     
                     //同じスタイリストの同時刻のカット取得
-                    $query_cut = stylist_cut::query();
-                    $query_cut -> where("stylist_id",$stylist_id);
-                    $query_cut -> where("予約日時", $input['date']);
-                    $query_cut -> where("開始時間", $input['time']);
-                    $cut_time = $query_cut->value("開始時間");
+                    $cut_time = stylist_cut::query()->where("stylist_id",$stylist_id)->where("予約日時", $input['date'])->where("開始時間", $input['time'])->value("開始時間");
                     
-                     //同じスタイリストの同時刻のカラー取得
-                    $query_color = stylist_color::query();
-                    $query_color -> where("stylist_id",$stylist_id);
-                    $query_color -> where("予約日時", $input['date']);
-                    $query_color -> where("開始時間", $input['time']);
-                    $color_time = $query_color->value("開始時間");
+                    
+                    //同じスタイリストの同時刻のカラー取得
+                    $color_time = stylist_color::query()->where("stylist_id",$stylist_id)->where("予約日時", $input['date'])->where("開始時間", $input['time'])->value("開始時間");
                     
                     //同じスタイリストの同時刻のパーマ取得
-                    $query_perm = stylist_perm::query();
-                    $query_perm -> where("stylist_id",$stylist_id);
-                    $query_perm -> where("予約日時", $input['date']);
-                    $query_perm -> where("開始時間", $input['time']);
-                    $perm_time = $query_perm->value("開始時間");
+                    $perm_time = stylist_perm::query()->where("stylist_id",$stylist_id)->where("予約日時", $input['date'])->where("開始時間", $input['time'])->value("開始時間");
                     
                     //同じスタイリストの同時刻のカット・パーマ取得
-                    $query_cut_perm = stylist_cut_and_perm::query();
-                    $query_cut_perm -> where("stylist_id",$stylist_id);
-                    $query_cut_perm -> where("予約日時", $input['date']);
-                    $cut_and_perm_time = $query_cut_perm->value("開始時間");
+                    $cut_and_perm_time = stylist_cut_and_perm::query()->where("stylist_id",$stylist_id)->where("予約日時", $input['date'])->where("開始時間", $input['time'])->value("開始時間");
                     
                     if ($num_rows == 0){
-                        //inputをTIME型に変換
-                        $start_time = strtotime($input["time"]);
-                        $start_time = date("H:i:s",$start_time);
-                        
-                        if ($cut_time != $start_time && $color_time != $start_time && $perm_time != $start_time && $cut_and_perm_time != $start_time){
                             $reserve= Reserve::insert([
                             "user_id" =>  $user_id,
                             "stylist_id" => $stylist_id,
@@ -419,20 +416,15 @@ class ReserveController extends Controller
                                 "created_at" => now(),
                                 "updated_at" => now(),
                             ]);
-                            return redirect('/')->with('flash_message', '予約が完了しました');
-                        }else{
-                            dd("失敗");
-                        }
+                            return redirect('/reserved')->withInput($input);
+                        
                     }else{
                         //inputをTIME型に変換
                         $start_time = strtotime($input["time"]);
                         $start_time = date("H:i:s",$start_time);
                         
-                        $query = stylist_cut_and_color::query();
-                        $query -> where('stylist_id',$stylist_id);
-                        $query -> where('予約日時', $input['date']);
-                        $query -> where('開始時間', $input['time']);
-                        $lists = $query -> value('stylist_id');
+                        $lists = stylist_cut_and_color::query()->where("stylist_id",$stylist_id)->where("予約日時", $input['date'])->where("開始時間", $input['time'])->value('stylist_id');
+                        
                         if ($list == null && $cut_time != $start_time && $color_time != $start_time && $perm_time != $start_time && $cut_and_perm_time != $start_time){
                             $reserve= Reserve::insert([
                             "user_id" =>  $user_id,
@@ -451,9 +443,10 @@ class ReserveController extends Controller
                                 "created_at" => now(),
                                 "updated_at" => now(),
                             ]);
-                            return redirect('/')->with('flash_message', '予約が完了しました');
+                            return redirect('/reserved')->withInput($input);
                         }else{
-                            dd("失敗");
+                            $date_correction = true;
+                            return view('failure_reserve')->with(["date_correction" => $date_correction]);
                         }
                     }
                 }elseif ($menu == "カット・パーマ"){
@@ -472,37 +465,19 @@ class ReserveController extends Controller
                     mysqli_close($con);
                     
                     //同じスタイリストの同時刻のカット取得
-                    $query_cut = stylist_cut::query();
-                    $query_cut -> where("stylist_id",$stylist_id);
-                    $query_cut -> where("予約日時", $input['date']);
-                    $query_cut -> where("開始時間", $input['time']);
-                    $cut_time = $query_cut->value("開始時間");
+                    $cut_time = stylist_cut::query()->where("stylist_id",$stylist_id)->where("予約日時", $input['date'])->where("開始時間", $input['time'])->value("開始時間");
                     
-                     //同じスタイリストの同時刻のカラー取得
-                    $query_color = stylist_color::query();
-                    $query_color -> where("stylist_id",$stylist_id);
-                    $query_color -> where("予約日時", $input['date']);
-                    $query_color -> where("開始時間", $input['time']);
-                    $color_time = $query_color->value("開始時間");
+                    //同じスタイリストの同時刻のカラー取得
+                    $color_time = stylist_color::query()->where("stylist_id",$stylist_id)->where("予約日時", $input['date'])->where("開始時間", $input['time'])->value("開始時間");
                     
                     //同じスタイリストの同時刻のパーマ取得
-                    $query_perm = stylist_perm::query();
-                    $query_perm -> where("stylist_id",$stylist_id);
-                    $query_perm -> where("予約日時", $input['date']);
-                    $query_perm -> where("開始時間", $input['time']);
-                    $perm_time = $query_perm->value("開始時間");
+                    $perm_time = stylist_perm::query()->where("stylist_id",$stylist_id)->where("予約日時", $input['date'])->where("開始時間", $input['time'])->value("開始時間");
                     
                     //同じスタイリストの同時刻のカット・カラー取得
-                    $query_cut_color = stylist_cut_and_color::query();
-                    $query_cut_color -> where("stylist_id",$stylist_id);
-                    $query_cut_color -> where("予約日時", $input['date']);
-                    $cut_and_color_time = $query_cut_color->value("開始時間");
+                    $cut_and_color_time = stylist_cut_and_color::query()->where("stylist_id",$stylist_id)->where("予約日時", $input['date'])->where("開始時間", $input['time'])->value("開始時間");
                     
                     if ($num_rows == 0){
-                        //inputをTIME型に変換
-                        $start_time = strtotime($input["time"]);
-                        $start_time = date("H:i:s",$start_time);
-                        if ($cut_time != $start_time && $color_time != $start_time && $perm_time != $start_time && $cut_and_color_time != $start_time){
+                        
                             $reserve= Reserve::insert([
                             "user_id" =>  $user_id,
                             "stylist_id" => $stylist_id,
@@ -520,20 +495,15 @@ class ReserveController extends Controller
                                 "created_at" => now(),
                                 "updated_at" => now(),
                             ]);
-                            return redirect('/')->with('flash_message', '予約が完了しました');
-                        }else{
-                            dd("失敗");
-                        }
+                            return redirect('/reserved')->withInput($input);
+                        
                     }else{
                         //inputをTIME型に変換
                         $start_time = strtotime($input["time"]);
                         $start_time = date("H:i:s",$start_time);
                         
-                        $query = stylist_cut_and_perm::query();
-                        $query -> where('stylist_id',$stylist_id);
-                        $query -> where('予約日時', $input['date']);
-                        $query -> where('開始時間', $input['time']);
-                        $lists = $query -> value('stylist_id');
+                        $lists = stylist_cut_and_perm::query()->where("stylist_id",$stylist_id)->where("予約日時", $input['date'])->where("開始時間", $input['time'])->value('stylist_id');
+                        
                         if ($lists == null && $cut_time != $start_time && $color_time != $start_time && $perm_time != $start_time && $cut_and_color_time != $start_time){
                             $reserve= Reserve::insert([
                             "user_id" =>  $user_id,
@@ -552,9 +522,10 @@ class ReserveController extends Controller
                                 "created_at" => now(),
                                 "updated_at" => now(),
                             ]);
-                            return redirect('/')->with('flash_message', '予約が完了しました');
+                            return redirect('/reserved')->withInput($input);
                         }else{
-                            dd("失敗");
+                            $date_correction = true;
+                            return view('failure_reserve')->with(["date_correction" => $date_correction]);
                         }
                     }
                 }
@@ -563,18 +534,12 @@ class ReserveController extends Controller
             
             //ログインしているユーザのID取得
             $user_id = Auth::id();
+            
             //スタイリストのID取得
-            $query = Stylist::query();
-            $query -> where('name','LIKE',"%{$input["stylist"]}%");
-            $stylist_id = $query->value('id');
-
+            $stylist_id = Stylist::query()->where('name','LIKE',"%{$input["stylist"]}%")>value('id');
             
             //メニュー名取得
-            $query = Menu::query();
-            $query -> where('id','LIKE',"%{$input['menu']}%");
-            $menu = $query->value('menu');  
-            
-            
+            $menu = Menu::query()->where('id','LIKE',"%{$input['menu']}%")->value('menu');
             
             $reserve= Reserve::insert([
                 "user_id" =>  $user_id,
@@ -594,7 +559,7 @@ class ReserveController extends Controller
                     "created_at" => now(),
                     "updated_at" => now(),
                 ]);
-                return redirect('/')->with('flash_message', '予約が完了しました');
+                return redirect('/reserved')->withInput($input);
             }elseif ($menu == "カラー"){
                 $stylist_color = stylist_color::insert([
                     "stylist_id" => $stylist_id,
@@ -603,7 +568,7 @@ class ReserveController extends Controller
                     "created_at" => now(),
                     "updated_at" => now(),
                 ]);
-                return redirect('/')->with('flash_message', '予約が完了しました');
+                return redirect('/reserved')->withInput($input);
             }elseif ($menu == "パーマ"){
                 $stylist_perm = stylist_perm::insert([
                     "stylist_id" => $stylist_id,
@@ -612,7 +577,7 @@ class ReserveController extends Controller
                     "created_at" => now(),
                     "updated_at" => now(),
                 ]);
-                return redirect('/')->with('flash_message', '予約が完了しました');
+                return redirect('/reserved')->withInput($input);
             }elseif ($menu = "カット・カラー"){
                 $stylist_cut_and_color = stylist_cut_and_color::insert([
                     "stylist_id" => $stylist_id,
@@ -621,7 +586,7 @@ class ReserveController extends Controller
                     "created_at" => now(),
                     "updated_at" => now(),
                 ]);
-                return redirect('/')->with('flash_message', '予約が完了しました');
+                return redirect('/reserved')->withInput($input);
             }elseif ($menu = "カット・パーマ"){
                 $stylist_cut_and_perm = stylist_cut_and_perm::insert([
                     "stylist_id" => $stylist_id,
@@ -630,11 +595,14 @@ class ReserveController extends Controller
                     "created_at" => now(),
                     "updated_at" => now(),
                 ]);
-                return redirect('/')->with('flash_message', '予約が完了しました');
+                return redirect('/reserved')->withInput($input);
             }
               
             
               
+            }
         }
+        
     }
+    
 }

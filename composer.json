@@ -10,9 +10,12 @@
     "require": {
         "php": "^7.2.5|^8.0",
         "fideloper/proxy": "^4.4",
+        "google/apiclient": "^2.0",
         "laravel/framework": "^6.20.26",
         "laravel/tinker": "^2.5",
-        "laravel/ui": "1.*"
+        "laravel/ui": "1.*",
+        "league/flysystem-aws-s3-v3": "~1.0",
+        "spatie/laravel-google-calendar": "^3.3"
     },
     "require-dev": {
         "facade/ignition": "^1.16.15",

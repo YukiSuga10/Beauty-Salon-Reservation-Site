@@ -23,13 +23,20 @@
                         @yield('content')
                     </main>
                     <div class = 'new-reserve'>
-                        <a href = '/reserve'>新規予約はこちら</a>
+                        <a href = '/reserve'>▶︎新規予約はこちら</a>
                     </div>
-                    
+                    <br>
                     <div class = 'confirm-reserve'>
-                        <a href = '/'>ご予約の確認はこちら</a>
+                        <a href = '/mypage'>▶ご予約の確認はこちら</a>
                     </div>
-                
+                    <br>
+                    <div class = 'info_stylist'>
+                        <a href = '/info_stylist'>▶美容師の詳細はこちら</a>
+                    </div>
+                    <br>
+                    <div class = 'location'>
+                        <a href = '/show_location'>▶アクセス</a>
+                    </div>
                 </div>
             </div>
         </div>

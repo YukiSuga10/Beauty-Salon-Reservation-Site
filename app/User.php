@@ -42,4 +42,8 @@ class User extends Authenticatable
     public function reserves(){
         return $this->hasMany('App\Stylist');
     }
+    
+    public function reviews(){
+        return $this->hasMany('App\StylistReview');
+    }
 }

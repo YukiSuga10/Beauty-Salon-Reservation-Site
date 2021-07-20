@@ -9,4 +9,8 @@ class Menu extends Model
     public function reserves(){
         return $this->hasMany('App\Reserve','menu');
     }
+    
+    public function views(){
+        return $this->hasMany('App\StylistReview');
+    }
 }

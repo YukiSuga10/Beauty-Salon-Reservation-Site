@@ -11,4 +11,8 @@ class Stylist extends Model
     public function reserves(){
         return $this->belongsToMany('App\User');
     }
+    
+    public function reviews(){
+        return $this->hasMany('App\StylistReview');
+    }
 }
