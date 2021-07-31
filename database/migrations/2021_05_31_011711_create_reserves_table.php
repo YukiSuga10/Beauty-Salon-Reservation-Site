@@ -14,16 +14,18 @@ class CreateReservesTable extends Migration
     public function up()
     {
         Schema::create('reserves', function (Blueprint $table) {
+            $table->Increments('id');
+            $table->unsignedInteger('admin_id');
             $table->unsignedInteger('user_id');
             $table->unsignedInteger('stylist_id');
-            $table->unsignedInteger('menu_id');
+            $table->string('menu');
             $table->date('date');
             $table->time('startTime');
             $table->timestamps();
             
+            $table->foreign('admin_id')->references('id')->on('admins')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('stylist_id')->references('id')->on('stylists')->onDelete('cascade');
-            $table->foreign('menu_id')->references('id')->on('menus')->onDelete('cascade');
             
         });
     }

@@ -14,9 +14,11 @@ class CreateStylistCutAndColorsTable extends Migration
     public function up()
     {
         Schema::create('stylist_cut_and_colors', function (Blueprint $table) {
+            $table->Increments('id');
+            $table->unsignedInteger('admin_id');
             $table->unsignedInteger('stylist_id');
-            $table->date('予約日時');
-            $table->time('開始時間');
+            $table->date('date');
+            $table->time('startTime');
             $table->timestamps();
         });
     }

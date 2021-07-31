@@ -1,4 +1,4 @@
-@extends('layouts.app_admin')
+@extends('layouts.app_admin_login')
 
 
 @section('content')
@@ -11,7 +11,6 @@
                 <div class="card-body">
                     <form method="POST" action="/admin_Login">
                         @csrf
-
                         <div class="form-group row">
                             <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('E-Mail Address') }}</label>
 

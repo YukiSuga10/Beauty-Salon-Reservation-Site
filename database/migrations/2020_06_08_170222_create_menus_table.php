@@ -15,8 +15,15 @@ class CreateMenusTable extends Migration
     {
         Schema::create('menus', function (Blueprint $table) {
             $table->Increments('id');
-            $table->string('menu');
+            $table->unsignedInteger('admin_id');
+            $table->boolean('cut');
+            $table->boolean('color');
+            $table->boolean('perm');
+            $table->boolean('cut・color');
+            $table->boolean('cut・perm');
             $table->timestamps();
+            
+            $table->foreign('admin_id')->references('id')->on('admins')->onDelete('cascade');
         });
     }
 

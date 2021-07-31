@@ -7,7 +7,11 @@
             <div class="card">
                 <div class="card-header">確認画面</div>
                 <div class="card-body">
+                    @if ($content == "予約確認")
                     以下のご予約内容でよろしいですか
+                    @elseif($content == "変更確認")
+                    以下の変更内容でよろしいですか
+                    @endif
                     @if (session('status'))
                         <div class="alert alert-success" role="alert">
                             {{ session('status') }}
@@ -21,7 +25,8 @@
                     <main class="mt-4">
                         @yield('content')
                     </main>
-                    <form method ="POST" action="/reserve">
+                    @if ($content == '予約確認')
+                    <form method ="POST" action="/salon/{{$salon_id}}/reserve">
                         @csrf
                         
                         {{-- 隠しデータ送信 --}}
@@ -47,8 +52,36 @@
                         </div>
                         <hr>
                         <input type = "submit" value = "予約する">
-
                     </form>
+                    @else
+                    <form method ="POST" action="/update">
+                        @csrf
+                        @method('PUT')
+                        {{-- 隠しデータ送信 --}}
+                        <input type = 'hidden' name = 'edit[date]' value = {{ $edit['date']}}>
+                        <input type = 'hidden' name = 'edit[time]' value = {{ $edit['time']}}>
+                        <input type = 'hidden' name = 'edit[stylist]' value = {{ $edit['stylist']}}>
+                        <input type = 'hidden' name = 'edit[menu]' value = {{ $edit['menu']}}>
+                        
+                        <div class = "date">
+                            <p name = "reserve">日付 : {{ $date }}<p>
+                        </div>
+                        
+                        <div class = "time">
+                            <p>来店時間 : {{ $time }} (所要時間 : {{$time_require}}程度)</p>
+                        </div>
+
+                        <div class = "stylist">
+                           <p>スタイリスト : {{ $edit["stylist"] }} </p>
+                        </div>
+
+                        <div class = "menu">
+                           <p>メニュー : {{ $menu }}</p>
+                        </div>
+                        <hr>
+                        <input type = "submit" value = "変更する">
+                    </form>
+                    @endif
     
                 </div>
             </div>

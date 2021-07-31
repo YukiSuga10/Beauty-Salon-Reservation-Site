@@ -15,7 +15,9 @@ class CreateTimesTable extends Migration
     {
         Schema::create('times', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->time('time');
+            $table->unsignedInteger('admin_id');
+            $table->time('startTime');
+            $table->time('endTime');
             $table->timestamps();
         });
     }

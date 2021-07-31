@@ -15,10 +15,12 @@ class CreateStylistsTable extends Migration
     {
         Schema::create('stylists', function (Blueprint $table) {
             $table->Increments('id');
-            
+            $table->unsignedInteger('admin_id');
             $table->string('name');
             $table->string('gender');
             $table->timestamps();
+            
+            $table->foreign('admin_id')->references('id')->on('admins')->onDelete('cascade');
         });
     }
 

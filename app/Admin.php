@@ -39,4 +39,22 @@ class Admin extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+    
+    
+    public function reserves(){
+        return $this->hasMany('App\Reserve');
+    }
+    
+    public function stylists(){
+        return $this->hasMany('App\Stylist');
+    }
+    
+    public function menus(){
+        return $this->hasMany('App\Menu');
+    }
+    
+    public function reviews(){
+        return $this->hasMany('App\StylistReview');
+    }
+    
 }

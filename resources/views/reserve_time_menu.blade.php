@@ -20,7 +20,7 @@
                     <main class="mt-4">
                         @yield('content')
                     </main>
-                    <form method ="POST" action="/confirm">
+                    <form method ="POST" action="/salon/{{$salon_id}}/confirm">
                         @csrf
                          {{-- 隠しデータ送信 --}}
                         <input type = 'hidden' name = 'reserve[date]' value = {{ $reserve['date']}}>
@@ -42,7 +42,7 @@
                             <select name = "reserve[menu]" id = "menu" required>
                                 <option value = "">選択してください</option>
                                 @foreach ($menus as $menu);
-                                    <option value = {{$menu->id}}>{{$menu->menu}}</option>
+                                    <option value = {{$menu}}>{{$menu}}</option>
                                 @endforeach
                             </select>
                         </div>

@@ -9,6 +9,7 @@ use App\Reserve;
 use App\Stylist;
 use App\User;
 use App\Menu;
+use App\Admin;
 use App\StylistReview;
 use App\time;
 use App\file_Image;
@@ -32,91 +33,53 @@ class StylistController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
     
-    public function able_time(Request $request)
+    public function able_time($id,Request $request)
     {
         $input = $request['search'];
+        $salon = Admin::find($id)->first();
+        
         //既存の予約が入っている時間の取り出し
-        $query = Reserve::query();
-        $query -> where('date',$input['date']);
+        $reserved_times = $salon->reserves()->where('date',$input['date'])->pluck('startTime');
         
-        $reserved_times = $query->pluck('startTime');
-
+        $stylists = Stylist::query()->get();
         
-        $query = Stylist::query();
-        $stylists = $query -> get();
-        $allID = $stylists->pluck('id');
-        
-        foreach ($allID as $id){
-            $query = Reserve::query();
-            $query -> where('date',$input['date']);
-            $query -> where('stylist_id',$id);
-            $time = $query->pluck('startTime');
- 
-            $stylist_times[$id] = $time;
+        $stylist_times = [];
+        foreach ($stylists as $stylist){
+            $time = $salon->reserves()->where('date',$input['date'])->where('stylist_id',$id)->pluck('startTime');
+            $stylist_times[$stylist->name] = $time;
         }
 
-        
-        $query_time = time::query();
-        $times = $query_time->pluck('time');
-        
-        
-        foreach ($stylist_times as $key => $value){
-            if (count($value) == 0){
-                foreach ($times as $time){
-                    $Times[$key][$time] = '○';
-                }
-            }else{
-                foreach ($times as $time){
-                    foreach ($value as $not_able_time){
-                        if ($time == $not_able_time){
-                            $Times[$key][$time] = '×';
-                            break;
-                        }else{
-                            $Times[$key][$time] = '○';
-                        }
-                    }
-                }
-                
-            }
-        }
-        
-         //時間の表示形式変更
-        foreach ($Times as $key => $value){
-            foreach($value as $key2 => $value2){
-                $key2 = date('H:i',strtotime($key2));
-                $stylist_time[$key][$key2] = $value2;
-            }
-        }
 
-        $stylist_sum = count($allID);
-        for ($i=1; $i<=$stylist_sum; $i++){
-            for ($j = 1; $j<=2; $j++){
-                if ($j==1){
-                    $stylist_ableTime[$i][$j] = $stylist_time[$i];
-                }else{
-                    $stylist_ableTime[$i][$j] = $allID[$i-1];
-                }
-                
-            }
+        //営業時間の取得
+        $startTime = time::query()->where("admin_id",$id)->value('startTime');
+        $endTime = time::query()->where("admin_id",$id)->value('endTime');
+        $diff = strtotime($endTime)-strtotime($startTime);
+        $count = $diff/1800;
+        $times = [];
+        
+        array_push($times,date('H:i',strtotime($startTime)));
+        for ($i = 1; $i <= $count; $i++){
+            $startTime = strtotime('+30 minutes', strtotime($startTime));
+            $startTime = date('H:i',$startTime);
+            array_push($times,$startTime);
         }
         
         //日にちの取得
         $date = $input['date'];
         $date = date('m月d日',strtotime($date));
         
-        $stylist_images = file_Image::query()->get();
         
         return view('info_stylists')->with([
-            'stylist_sum' => $stylist_sum,
-            'stylist_times' => $stylist_time,
+            'stylist_times' => $stylist_times,
             'stylists' => $stylists,
-            'allID' => $allID,
+            'times' => $times,
+            'salon_id' => $id,
             'date' => $date,
-            "stylist_images" => $stylist_images]);
+            ]);
     }
     
     
-    public function show_review($stylist){
+    public function show_review($id, $stylist){
         $reviews = StylistReview::query()->where('stylist_id',$stylist)->get();
         
         //全ユーザとメニューの取得

@@ -11,8 +11,6 @@
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
-    <script src="{{ asset('js/result.js') }}"></script>
-  
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -48,9 +46,12 @@
                             </li>
                             @if (Route::has('admin.register'))
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('admin.register') }}">{{ __('Register') }}</a>
+                                    <a class="nav-link" href="/register_corporation">{{ __('Register') }}</a>
                                 </li>
                             @endif
+                            <li class="nav-item">
+                                <a class="nav-link" href="/login">ユーザの方はこちら</a>
+                            </li>
                         @else
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>

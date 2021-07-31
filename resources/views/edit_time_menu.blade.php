@@ -21,7 +21,7 @@
                         @yield('content')
                     </main>
 
-                    <form method ="POST" action="/confirm">
+                    <form method ="POST" action="/edit_confirm">
                         @csrf
                          {{-- 隠しデータ送信 --}}
                         <input type = 'hidden' name = 'edit[date]' value = {{ $edit['date']}}>
@@ -43,7 +43,7 @@
                         <hr>
                         <div class = "menu" >
                             <p>4:メニューを選択してください</p>
-                            <select name = "reserve[menu]" id = "menu" required>
+                            <select name = "edit[menu]" id = "menu" required>
                                 <option value = "">選択してください</option>
                                 @foreach ($menus as $menu);
                                     @if ($edit['menu'] == $menu->menu)
@@ -55,7 +55,7 @@
                             </select>
                         </div>
                         <hr>
-                        <input type = "submit" value = "予約する"> 
+                        <input type = "submit" value = "変更する"> 
                         <p></p>
                         <div class='back'>[<a href='/edit'>戻る</a>]</div>
                     </form>

@@ -43,10 +43,8 @@ class MailController extends Controller
         $mail_text = $user_name.'様';
         
         
+    
         $reserves = $request->old();
-        
-        //メニューの取得
-        $reserves['menu'] = Menu::query()->where('id',$reserves['menu'])->value('menu');
         
         //日付の表示形式変更
         $reserves['date'] = date('Y年m月d日',strtotime($reserves['date']));

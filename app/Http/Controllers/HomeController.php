@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Reserve;
 use App\Stylist;
+use App\Admin;
 use App\User;
 use App\Menu;
 use App\time;
@@ -21,7 +22,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth')->except('start','info_stylist','show_locationPage');
+        $this->middleware('auth')->except('start','info_stylist','show_locationPage','show_salon','show_salonPage');
     }
 
     /**
@@ -30,10 +31,20 @@ class HomeController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
     
+    public function show_salon(){
+        $admins = Admin::query()->get();
+        return view('first_launch')->with(["admins" => $admins]);
+    }
+    
+    public function show_salonPage($id){
+        $salon = Admin::find($id);
+        return view('salonPage')->with(["salon" => $salon]);
+    }
+    
     
     public function start()
     {
-        return view('launch');
+        return view('first_launch');
     }
     
     public function launch_corporation()
@@ -42,28 +53,15 @@ class HomeController extends Controller
     }
     
     
-    public function info_stylist()
+    public function info_stylist($id)
     {
-        $query = Stylist::query();
-        $stylists = $query -> get();
+        $stylists = Stylist::query()->where("admin_id",$id)->get();
         $stylist_times = null;
-        $stylists_id = Stylist::query()->pluck('id');
-        $stylist_times = null;
-        $allID = $stylists->pluck('id');
-        
-        //現在ログイン中のユーザIDを変数$user_idに格納する
-        $user_id = Auth::id();
-        //imagesテーブルからuser_idカラムが変数$user_idと一致するレコード情報を取得し変数$user_imagesに格納する
-        $stylist_images = file_Image::query()->get();
-
-        
         return view("info_stylists")->with([
             'stylists' => $stylists, 
-            'stylist_times' => $stylist_times, 
-            'stylists_id' => $stylists_id,
-            'allID' => $allID,
             'stylist_times' => $stylist_times,
-            'stylist_images' => $stylist_images]);
+            "salon_id" => $id
+            ]);
     }
     
     
@@ -95,18 +93,16 @@ class HomeController extends Controller
     
     
     
-    public function confirm(Request $request)
+    public function confirm($id,Request $request)
     {
-        $input = $request['reserve'];
+        $salon = Admin::find($id)->first();
         
-        //日時と時間の表示方式変更
-        $date = date('Y年m月d日',strtotime($input["date"]));
-        $time = date('G時i分',strtotime($input["time"]));
-
-        $query = Menu::query();
-        $query -> where('id',$input["menu"]);
-        $menu = $query->value("menu");
-        $reserve = $input;
+        $content = "予約確認";
+        $reserve = $request['reserve'];
+        $date = date('Y年m月d日',strtotime($reserve["date"]));
+        $time = date('G時i分',strtotime($reserve["time"]));
+        $menu = $reserve["menu"];
+        
         //所要時間
         if ($menu == "カット"){
             $time_required = "30分";
@@ -116,12 +112,44 @@ class HomeController extends Controller
             $time_required = "1時間30分";
         }
         
+        
         return view('confirm_reserve')->with([
             'reserve' => $reserve,
             'date' => $date,
             'time' => $time,
             'menu' => $menu,
-            'time_require' => $time_required,]);
+            'time_require' => $time_required,
+            'content' => $content,
+            "salon_id" => $id]);
+    }
+    
+    public function edit_confirm(Request $request){
+        $edit = $request['edit'];
+        
+        //日時と時間の表示方式変更
+        $date = date('Y年m月d日',strtotime($edit["date"]));
+        $time = date('G時i分',strtotime($edit["time"]));
+        
+        $menu = Menu::query()->where('id',$edit['menu'])->value('menu');
+        $edit['stylist'] = Stylist::query()->where('id',$edit['stylist'])->value('name');
+        
+        if ($menu == "カット"){
+            $time_required = "30分";
+        }elseif ($menu == "カラー" || $menu == "パーマ"){
+            $time_required = "1時間";
+        }else{
+            $time_required = "1時間30分";
+        }
+        
+        $content = "変更確認";
+        
+        return view('confirm_reserve')->with([
+            'edit' => $edit,
+            'date' => $date,
+            'time' => $time,
+            'menu' => $menu,
+            'time_require' => $time_required,
+            'content' => $content]);
     }
     
     
@@ -281,8 +309,11 @@ class HomeController extends Controller
     }
     
     
-    public function update(){
-        
+    public function update(Request $request, Reserve $reserve){
+        $update = $request['edit'];
+        dd($update);
+        $reserve->fill($update)->save();
+        return redirect('/mypage');
     }
     
     public function delete(Request $request){

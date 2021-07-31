@@ -11,4 +11,9 @@ class file_Image extends Model
     
     
     protected $table = 'file_images';
+    
+    public function stylist()
+    {
+        return $this->belongsTo('App\Stylist');
+    }
 }

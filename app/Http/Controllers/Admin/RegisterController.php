@@ -4,11 +4,13 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
-use App\Admin;
-use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\Request;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Support\Facades\Auth;
+use App\Admin;
 
 class RegisterController extends Controller
 {
@@ -23,7 +25,7 @@ class RegisterController extends Controller
     |
     */
 
-    //use RegistersAdmins;
+    use RegistersUsers;
 
     /**
      * Where to redirect users after registration.
@@ -55,7 +57,8 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'name'     => ['required', 'string', 'max:255'],
+            'email'    => ['required', 'string', 'email', 'max:255', 'unique:admins'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
     }
@@ -86,14 +89,33 @@ class RegisterController extends Controller
             "password" => Hash::make($admins['password']),
             ]);
             
-        return $this->registered($request, $admin)
+        return $this->register($request, $admins)
                         ?: redirect($this->redirectPath());
     }
-    protected function create(Request $data)
+    protected function create(array $data)
     {
         return Admin::create([
+            'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
+    }
+    
+    protected function createAdmin(Request $request)
+    {
+        $this->validator($request->all())->validate();
+        
+        
+        $admin = Admin::create([
+            'name' => $request['name'],
+            'email' => $request['email'],
+            'password' => Hash::make($request['password']),
+        ]);
+        
+        $salon_id = Admin::query()->where("name",$request['name'])->value('id');
+        $salon_name = $request['name'];
+        return redirect('/home')->with([
+            "salon_id" => $salon_id,
+            "name" => $salon_name]);
     }
 }

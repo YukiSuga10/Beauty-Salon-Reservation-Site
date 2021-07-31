@@ -14,6 +14,10 @@ class Reserve extends Model
         return $this->belongsTo('App\Stylist');
     }
     
+    public function admin(){
+        return $this->belongsTo('App\Admin');
+    }
+    
     public function users(){
         return $this->belongsTo('App\User');
     }

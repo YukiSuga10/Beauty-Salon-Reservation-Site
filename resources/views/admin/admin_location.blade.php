@@ -5,8 +5,8 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">スタイリスト一覧<div style = "text-align: right"><a href="/admin/{{ $salon_id }}/register_stylist">新規登録する</a></div></div>
-                
+                <div class="card-header">アクセス　<a href = "edit_access">編集する</a></div>
+
                 <div class="card-body">
                     @if (session('status'))
                         <div class="alert alert-success" role="alert">
@@ -22,16 +22,10 @@
                     <main class="mt-4">
                         @yield('content')
                     </main>
-                    
-                        @foreach ($stylists as $stylist)
-                            <img src='{{ $stylist->file_images->path }}' style = "width:50%">
-                            <br>
-                            <p>スタイリスト名：{{ $stylist->name }}</p>
-                            <p>性別：{{ $stylist->gender }}</p>
-                            <p><a href = "/{{ $stylist->id }}/show_review">この美容師の口コミを見る</a></p>
-                            <div style = "text-align: right"><a href="/edit">編集する</a></div>
-                            <hr>
-                        @endforeach
+                    <div id="map" style="height:500px">
+            	   </div>
+            	   <script src= "https://maps.googleapis.com/maps/api/js?language=ja&region=JP&key=AIzaSyBLDbSsnWgTPX3-l8E6eP-2NJPdFww_ZI0&callback=initMap" async defer>
+            	   </script>
                 </div>
             </div>
         </div>

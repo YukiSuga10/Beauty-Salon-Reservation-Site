@@ -20,7 +20,7 @@
                     <main class="mt-4">
                         @yield('content')
                     </main>
-                    <form method ="POST" action="/reserve_time_menu">
+                    <form method ="POST" action="/salon/{{$salon_id}}/reserve_time_menu">
                         @csrf
                         <div class = "date">
                             <p>1:カレンダーから日付を選択してください</p>
@@ -30,11 +30,11 @@
                         <hr>
                          
                         <div class = "stylist">
-                            <p>2:美容師を選択してください　<a href = "/info_stylist">※美容師の詳細はこちら</a></p>
+                            <p>2:美容師を選択してください　<a href = "/salon/{{$salon_id}}/info_stylist">※美容師の詳細はこちら</a></p>
                             <select name = "reserve[stylist]" id = "stylist" required>
                                 <option value = "">選択してください</option>
                                 @foreach ($stylists as $stylist)
-                                    <option value = {{ $stylist }}>{{ $stylist }}</option>
+                                    <option value = {{ $stylist->name }}>{{ $stylist->name }}</option>
                                 @endforeach
                             </select>
                         </div>

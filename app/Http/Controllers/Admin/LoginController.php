@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Auth;
+use App\Admin;
 
 class LoginController extends Controller
 {
@@ -21,14 +22,14 @@ class LoginController extends Controller
     |
     */
 
-    use AuthenticatesUsers;
+    // use AuthenticatesUsers;
 
     /**
      * Where to redirect users after login.
      *
      * @var string
      */
-    protected $redirectTo = '/admin/home';
+    protected $redirectTo = RouteServiceProvider::ADMIN_HOME;
     /**
      * Create a new controller instance.
      *
@@ -37,7 +38,7 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest:admin')->except('logout');
-        $this->middleware('guest')->except('logout');
+        
     }
     
     public function show_LoginForm()
@@ -55,13 +56,17 @@ class LoginController extends Controller
     {
         $this->validate($request, [
             'email'   => 'required|email',
-            'password' => 'required|min:6'
+            'password' => 'required|min:8'
         ]);
-
+        
         if (Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $request->password], $request->get('remember'))) {
-
-            return redirect('/home');
+            $salon_id = Auth::guard('admin')->user()->id;
+            $salon_name = Admin::find($salon_id)->value('name');
+            return view('admin.home')->with([
+                "salon_id" => $salon_id,
+                "name" => $salon_name]);
         }
+
         return back()->withInput($request->only('email', 'remember'));
     }
 
@@ -74,6 +79,6 @@ class LoginController extends Controller
         $request->session()->flush();
         $request->session()->regenerate();
  
-        return redirect('/admin/login'); 
+        return redirect('/login_corporation'); 
     }
 }

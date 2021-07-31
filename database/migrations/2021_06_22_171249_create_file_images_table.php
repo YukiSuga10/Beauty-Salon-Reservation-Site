@@ -14,10 +14,14 @@ class CreateFileImagesTable extends Migration
     public function up()
     {
         Schema::create('file_images', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->unsignedBigInteger('user_id');
+            $table->Increments('id');
+            $table->unsignedInteger('admin_id');
+            $table->unsignedInteger('stylist_id');
             $table->string('path');
             $table->timestamps();
+            
+            $table->foreign('admin_id')->references('id')->on('admins')->onDelete('cascade');
+            $table->foreign('stylist_id')->references('id')->on('stylists')->onDelete('cascade');
         });
     }
 

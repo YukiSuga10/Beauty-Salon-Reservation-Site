@@ -5,7 +5,7 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">マイページ</div>
+                <div class="card-header">ようこそ！！</div>
 
                 <div class="card-body">
                     @if (session('status'))
@@ -17,31 +17,23 @@
                             <div class="flash_message">
                                 {{ session('flash_message') }}
                             </div>
-                    @endif
+                        @endif
                         
                     <main class="mt-4">
                         @yield('content')
                     </main>
-                    <h4>予約一覧</h4>
-                        <a href = "/past_reserve/">※過去のご利用履歴はこちら</a>
-                    <hr>
-                    </form>
-                    
-                    @if ($newDate != null)
-                    <div class = "reserves">
-                        @foreach ($newDate as $date)
-                            <div class = "reserve">
-                                <a href='/show_reserve/{{ $date  }}'><h5 class = "">・{{ $date }}</h5></a>
-                                
-                            </div>
+                    <div class = 'show_salon'>
+                        <p><h5>▶サロン一覧</h5></p>
+                        @foreach($admins as $admin)
+                            <p><a href = "/salon/{{$admin->id}}">{{ $admin->name }}</a></p>
                         @endforeach
                     </div>
-                    
-                    @else
-                     <p>ご予約は入っておりません</p>
-                    @endif
-                    
-                    
+                    <hr>
+                    <div>
+                        <p><h5>▶予約確認</h5></p>
+                        <a href = "/mypage">予約確認はこちらから</a>
+                    </div>
+                    <br>
                 
                 </div>
             </div>

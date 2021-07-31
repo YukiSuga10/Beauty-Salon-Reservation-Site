@@ -12,7 +12,17 @@ class Stylist extends Model
         return $this->belongsToMany('App\User');
     }
     
+    public function admin(){
+        return $this->belongsTo('App\Admin');
+    }
+    
     public function reviews(){
         return $this->hasMany('App\StylistReview');
     }
+    
+    public function file_images(){
+        return $this->hasOne('App\file_Image');
+    }
+    
+    
 }

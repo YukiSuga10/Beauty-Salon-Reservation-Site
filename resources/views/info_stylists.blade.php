@@ -23,7 +23,7 @@
                         @yield('content')
                     </main>
                     <p>空き状況検索はこちらから</p>
-                    <form method ="POST" action='/able_time'>
+                    <form method ="POST" action='/salon/{{$salon_id}}/able_time'>
                                 @csrf
                                 <div style = "display:inline-flex">
                                     <input type = "date" name = "search[date]" value = "{{ old('search[date]') }}" required>
@@ -31,37 +31,34 @@
                                 </div>
                     <hr>
                         @foreach ($stylists as $stylist)
-                            @foreach ($stylist_images as $stylist_image)
-                                @if ($stylist->id == $stylist_image->id)
-                                    <img src="{{ $stylist_image->path }}"　width="200px" height = "200px">
-                                @else
-                                    <p></p>
-                                @endif 
-                        @endforeach
-
+                                    <img src="{{ $stylist->file_images->path }}"　width="200px" height = "200px">
                             <p>スタイリスト名：{{ $stylist->name }}</p>
                             <p>性別：{{ $stylist->gender }}</p>
-                            <p><a href = "/{{ $stylist->id }}/show_review">この美容師の口コミを見る</a></p>
+                            <p><a href = "salon/{{ $salon_id }}/{{ $stylist->id }}/show_review">この美容師の口コミを見る</a></p>
                             
                             @if($stylist_times == null)
                             <hr>
                             @else
-                                @foreach ($stylist_times as $key => $stylist_time)
-                                        @if ($stylist->id == $key)
-                                            <p>〜{{$date}}日の空き状況〜</p>
-                                            <select>
-                                                @foreach ($stylist_time as $time => $correction)
-                                                    <option value = {{$time}}>{{$time}}：{{$correction}}</option>
-                                                @endforeach
-                                            </select>
-                                            <hr>
+                                @foreach ($stylist_times[$stylist->name] as $stylist_time)
+                                    <p>〜{{$date}}日の空き状況〜</p>
+                                    <select>
+                                    @foreach($times as $time)
+                                        @if ($time == $stylist_time)
+                                            <option value = {{$time}}>{{$time}}：×</option>
                                         @else
-                                            @continue
+                                            <option value = {{$time}}>{{$time}}：○</option>
                                         @endif
+                                    @endforeach
+                                    </select>
                                 @endforeach
+                                <hr>
                             @endif
                         @endforeach
                     </form>
+                    <div class = "back">
+                        <input type="button" onclick="window.history.back();" value="戻る">
+                    </div>
+                    
                 </div>
             </div>
         </div>

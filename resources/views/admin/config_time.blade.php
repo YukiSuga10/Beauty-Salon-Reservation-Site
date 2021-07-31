@@ -5,33 +5,36 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">スタイリスト一覧<div style = "text-align: right"><a href="/admin/{{ $salon_id }}/register_stylist">新規登録する</a></div></div>
-                
+                <div class="card-header">メニューの設定</div>
                 <div class="card-body">
+                    
+
+                
+                    
                     @if (session('status'))
                         <div class="alert alert-success" role="alert">
                             {{ session('status') }}
                         </div>
                     @endif
+                    美容院の営業時間を設定してください
+                    (※9:00〜20：00までの間で設定してください)
                     @if (session('flash_message'))
                             <div class="flash_message">
                                 {{ session('flash_message') }}
                             </div>
                     @endif
-
                     <main class="mt-4">
                         @yield('content')
                     </main>
+                    <hr>
+                    <form action="/admin/{{$id}}/config_time" method="POST" onSubmit="return checkTime(this)">
+                        @csrf
+                        <p><input type="time" id = "startTime" name="time[startTime]" required>　〜　<input type="time" id = "endTime" name="time[endTime]" required></p>
+                        <br>
+                        <input type = "submit" value = "登録">
+                    </form>
+                    <script src="{{ asset('/js/result.js') }}"></script>
                     
-                        @foreach ($stylists as $stylist)
-                            <img src='{{ $stylist->file_images->path }}' style = "width:50%">
-                            <br>
-                            <p>スタイリスト名：{{ $stylist->name }}</p>
-                            <p>性別：{{ $stylist->gender }}</p>
-                            <p><a href = "/{{ $stylist->id }}/show_review">この美容師の口コミを見る</a></p>
-                            <div style = "text-align: right"><a href="/edit">編集する</a></div>
-                            <hr>
-                        @endforeach
                 </div>
             </div>
         </div>

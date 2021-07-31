@@ -20,7 +20,7 @@
                     <main class="mt-4">
                         @yield('content')
                     </main>
-                    <form action="/upload/image" method="POST" enctype="multipart/form-data">
+                    <form action="/admin/{{$id}}/upload/stylist" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class = 'stylist_name'>
                             <p>1:名前</p>
@@ -44,7 +44,7 @@
                         <p></p>
                         <div class = 'stylist_image'>
                             <p for="photo">3:写真</p>
-                            <input type="file" name="file">
+                            <input type="file" name="file" required>
                         </div>
                         <p></p>
                         <input type = "submit" value = "登録">
