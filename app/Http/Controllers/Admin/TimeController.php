@@ -49,7 +49,7 @@ class TimeController extends Controller
             "endTime" => $endTime
             ]);
         
-        return redirect('/home')->with([
+        return redirect('admin/home')->with([
             "salon_id" => $id,
             'flash_message' => '設定が完了しました',
             ]);

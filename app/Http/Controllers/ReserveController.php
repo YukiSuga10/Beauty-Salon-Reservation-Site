@@ -43,7 +43,7 @@ class ReserveController extends Controller
         $input = $request['reserve'];
         
         $salon = Admin::find($id)->first();
-     
+
         //営業時間の取得
         $startTime = time::query()->where("admin_id",$id)->value('startTime');
         $endTime = time::query()->where("admin_id",$id)->value('endTime');
@@ -105,8 +105,39 @@ class ReserveController extends Controller
             "times" => $times,
             "menus" => $salon_menu,
             "reserve" => $input,
-            "salon_id" => $id
+            "salon_id" => $id,
+
             ]);
+    }
+    
+    public function confirm($id,Request $request)
+    {
+        $salon = Admin::find($id)->first();
+        
+        $content = "予約確認";
+        $reserve = $request['reserve'];
+        $date = date('Y年m月d日',strtotime($reserve["date"]));
+        $time = date('G時i分',strtotime($reserve["time"]));
+        $menu = $reserve["menu"];
+        
+        //所要時間
+        if ($menu == "カット"){
+            $time_required = "30分";
+        }elseif ($menu == "カラー" || $menu == "パーマ"){
+            $time_required = "1時間";
+        }else{
+            $time_required = "1時間30分";
+        }
+        
+        
+        return view('confirm_reserve')->with([
+            'reserve' => $reserve,
+            "salon" => $salon,
+            'date' => $date,
+            'time' => $time,
+            'time_require' => $time_required,
+            'content' => $content,
+            "salon_id" => $id]);
     }
     
     public function reserve($id,Request $request){
@@ -137,7 +168,7 @@ class ReserveController extends Controller
         if ($num_rows > 0){
             
             $user_id = Auth::id();
-            $stylist_id = $salon->stylist->where('name','LIKE',"%{$input["stylist"]}%")>value('id');
+            $stylist_id = $salon->stylists->where('name','LIKE',"%{$input["stylist"]}%")->value('id');
             
             
             if ($input['menu'] == "カット"){

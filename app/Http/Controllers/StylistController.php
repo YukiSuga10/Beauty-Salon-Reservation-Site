@@ -79,73 +79,57 @@ class StylistController extends Controller
     }
     
     
-    public function show_review($id, $stylist){
-        $reviews = StylistReview::query()->where('stylist_id',$stylist)->get();
+    public function show_review($salon_id, $stylist_id){
+        $reviews = StylistReview::query()->where('stylist_id',$stylist_id)->get();
         
         //全ユーザとメニューの取得
         $users = User::query()->get();
-        $menus = Menu::query()->get();
         
         //評価の平均値取得
-        $review_avg = StylistReview::query()->where('stylist_id',$stylist)->pluck('evaluation')->avg();
-
-
+        $review_avg = StylistReview::query()->where('stylist_id',$stylist_id)->pluck('evaluation')->avg();
+        
         return view('show_review')->with([
             "reviews" => $reviews, 
             "average" => $review_avg,
             "users" => $users,
-            "menus" => $menus]);
+            ]);
     }
     
     public function show_create_reviw(Request $request){
         $reserves = $request['reserve'];
-        $stars = [
+        $evaluation = [
             '5' => '非常に良かった',
             '4' => '良かった',
             '3' => 'ふつう',
             '2' => '悪かった',
             '1' => '非常に悪かった',
             ];
-        return view('create_review')->with(["stars" => $stars, "reserves" => $reserves]);
+        return view('create_review')->with([
+            "evaluation" => $evaluation, 
+            "reserves" => $reserves]);
     }
     
-    public function create_review(Request $request){
+    public function create_review($reserve_id ,Request $request){
         $reseult = false;
-        $input = $request['review'];
+        $review = $request['review'];
+        $reserve = Reserve::find($reserve_id);
         
-        //日付の表示変更
-        $input['date'] = str_replace('日','',$input['date']);
-        $input['date'] = str_replace('月','-',$input['date']);
-        $input['date'] = str_replace('年','-',$input['date']);
-        
-        //時間の表示形式変更
-        $input['time'] = str_replace('時',':',$input['time']);
-        $input['time'] = str_replace('分',':',$input['time']);
-        $s = '00';
-        $input['time'] = $input['time'].$s;
-        
-        //スタイリストIDとメニューIDの取得
-        $input['stylist'] = Stylist::query()->where('name',$input['stylist'])->value('id');
-        $input['menu'] = Menu::query()->where('menu',$input['menu'])->value('id');
         
         $user_id = Auth::id();
-        $exists = StylistReview::query()->where('user_id', $user_id)->where('stylist_id', $input['stylist'])->where('menu_id', $input['menu'])->where('date', $input['date'])->exists();
+        $exists = StylistReview::query()->where('reserve_id', $reserve_id)->exists();
         if($exists){
             die('すでにレビューは投稿済みです。');
         }else{
             $review= StylistReview::insert([
-                            "stylist_id" => $input['stylist'],
-                            "user_id" =>  $user_id,
-                            "menu_id" => $input['menu'],
-                            "date" => $input['date'],
-                            "startTime" => $input['time'],
-                            "evaluation" => $input['evaluation'],
-                            "comment" => $input['comment'],
+                            "reserve_id" => $reserve_id,
+                            "stylist_id" => $reserve->stylist_id,
+                            "evaluation" => $review['evaluation'],
+                            "comment" => $review['comment'],
                             "created_at" => now(),
                             "updated_at" => now(),
                           ]);
 
-            return redirect('/past_reserve');
+            return redirect('/salon/mypage/past_reserve/{user}');
         }
         
         }

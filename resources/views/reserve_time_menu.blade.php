@@ -49,7 +49,7 @@
                         <hr>
                         <input type = "submit" value = "予約する"> 
                         <p></p>
-                        <div class='back'>[<a href='/reserve'>戻る</a>]</div>
+                        <div class='back'>[<a href='javascript:history.back()'>戻る</a>]</div>
                     </form>
     
                 </div>

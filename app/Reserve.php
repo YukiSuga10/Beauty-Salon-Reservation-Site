@@ -10,8 +10,14 @@ class Reserve extends Model
     'date'
     ];
     
+    
+    
     public function stylists(){
-        return $this->belongsTo('App\Stylist');
+        return $this->hasOne('App\Stylist');
+    }
+    
+    public function review(){
+        return $this->hasOne('App\StylistReview');
     }
     
     public function admin(){

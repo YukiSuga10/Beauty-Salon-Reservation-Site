@@ -62,7 +62,7 @@ class ImageController extends Controller
                 ]);
             
             
-            return redirect('/home')->with([
+            return redirect('/admin/home')->with([
                 "salon_id" => $id,
                 'flash_message' => '登録が完了しました']);
         }else{

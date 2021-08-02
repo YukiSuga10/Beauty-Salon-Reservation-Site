@@ -24,19 +24,15 @@
                     </main>
                     <p>〜過去利用履歴〜</p>
                    <hr>
-                    @if ($pastDate != null)
+                    @if ($past_reserves != null)
                     
                     <div class = "reserves">
-                        @foreach ($pastDate as $date)
+                        @foreach ($past_reserves as $past_reserve)
                             <div class = "reserve">
-                                <a href='/show_reserve/{{ $date  }}'><h5 class = "">・{{ $date }}</h5></a>
-               
+                                <a href='/salon/show_reserve/{{ $past_reserve->id  }}/past'><h5 >・{{ $past_reserve->date }}</h5></a>
                             </div>
                         @endforeach
                     </div>
-                    
-                    
-                    
                     @else
                     <p>過去のご利用はございません</p>
                     @endif

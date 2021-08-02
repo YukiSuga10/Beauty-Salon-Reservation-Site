@@ -35,9 +35,7 @@ class MailController extends Controller
     {
         //ログインしているユーザ名の取得
         $user_id = Auth::id();
-        $query_user = User::query();
-        $query_user -> where('id',$user_id);
-        $user_name = $query_user->value('name');
+        $user_name = User::query()->where('id',$user_id)->value('name');
         
         $mail_name = $user_name;
         $mail_text = $user_name.'様';
@@ -49,10 +47,8 @@ class MailController extends Controller
         //日付の表示形式変更
         $reserves['date'] = date('Y年m月d日',strtotime($reserves['date']));
         //メールアドレスの取得
-        $user_mail = $query_user->value('email');
+        $mail_to = User::query()->where('id',$user_id)->value('email');
         
-        $mail_to = $user_mail;
-  
         
         Mail::to($mail_to)->send( new ReserveConfirm($mail_name, $mail_text, $reserves) );
         

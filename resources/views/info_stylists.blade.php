@@ -34,7 +34,7 @@
                                     <img src="{{ $stylist->file_images->path }}"　width="200px" height = "200px">
                             <p>スタイリスト名：{{ $stylist->name }}</p>
                             <p>性別：{{ $stylist->gender }}</p>
-                            <p><a href = "salon/{{ $salon_id }}/{{ $stylist->id }}/show_review">この美容師の口コミを見る</a></p>
+                            <p><a href = "/salon/{{ $salon_id }}/{{ $stylist->id }}/show_review">この美容師の口コミを見る</a></p>
                             
                             @if($stylist_times == null)
                             <hr>

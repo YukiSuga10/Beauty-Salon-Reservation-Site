@@ -17,42 +17,36 @@
                     <main class="mt-4">
                         @yield('content')
                     </main>
+                    
                     <div class = "date">
-                        <p>日付 : {{ $date }}<p>
+                        <p>{{ $reserve->admin->name }}<p>
+                    </div>
+                    <div class = "date">
+                        <p>日付 : {{ $reserve->date }}<p>
                     </div>
                     
                     <div class = "time">
-                        <p>来店時間 : {{ $time }} (所要時間 : {{$time_required}}程度)</p>
+                        <p>来店時間 : {{ $reserve->startTime }} (所要時間 : {{$time_required}}程度)</p>
                     </div>
-
                     <div class = "stylist">
-                       <p>スタイリスト : {{ $stylist }} </p>
+                       <p>スタイリスト : {{ $stylist->name }} </p>
                     </div>
-
                     <div class = "menu">
-                       <p>メニュー : {{ $menu }}</p>
+                       <p>メニュー：{{ $reserve->menu }}</p>
                     </div>
-                    
+                    <hr>
                     @if ($last == "mypage")
                         <div style = "display:inline-flex">
                             <form action = "/edit" method = "POST">
                                 {{ csrf_field() }}
-                                {{-- 隠しデータ送信 --}}
-                                <input type = 'hidden' name = 'reserve[date]' value = {{ $date}}>
-                                <input type = 'hidden' name = 'reserve[time]' value = {{ $time}}>
-                                <input type = 'hidden' name = 'reserve[stylist]' value = {{ $stylist}}>
-                                <input type = 'hidden' name = 'reserve[menu]' value = {{ $menu}}>
+                                
                                 
                                 <input type = "submit" value = "予約変更">
                             </form>
                             <form action = '/delete' method = "POST">
                                 {{ csrf_field() }}
                                 {{ method_field('delete') }}
-                                {{-- 隠しデータ送信 --}}
-                                <input type = 'hidden' name = 'reserve[date]' value = {{ $date}}>
-                                <input type = 'hidden' name = 'reserve[time]' value = {{ $time}}>
-                                <input type = 'hidden' name = 'reserve[stylist]' value = {{ $stylist}}>
-                                <input type = 'hidden' name = 'reserve[menu]' value = {{ $menu}}>
+                                
                                 
                                 <input type = "submit" value = "予約キャンセル" id = "reserve" onclick = "return deleteReserve(this);">
                             </form>
@@ -68,13 +62,8 @@
                         }
                         </script>
                     @else
-                    <form method = 'POST', action = '/show_create_review'>
+                    <form method = 'POST', action = '/salon/{{ $reserve->id }}/review'>
                         {{ csrf_field() }}
-                        {{-- 隠しデータ送信 --}}
-                        <input type = 'hidden' name = 'reserve[date]' value = {{ $date}}>
-                        <input type = 'hidden' name = 'reserve[time]' value = {{ $time}}>
-                        <input type = 'hidden' name = 'reserve[stylist]' value = {{ $stylist}}>
-                        <input type = 'hidden' name = 'reserve[menu]' value = {{ $menu}}>
                         <input type = 'submit' value = 'レビューを書く'>
                     </form>
                     @endif

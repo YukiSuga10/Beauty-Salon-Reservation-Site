@@ -114,7 +114,7 @@ class RegisterController extends Controller
         
         $salon_id = Admin::query()->where("name",$request['name'])->value('id');
         $salon_name = $request['name'];
-        return redirect('/home')->with([
+        return redirect('/admin/home')->with([
             "salon_id" => $salon_id,
             "name" => $salon_name]);
     }

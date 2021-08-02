@@ -49,7 +49,7 @@
                         <p></p>
                         <input type = "submit" value = "登録">
                     </form>
-                    
+                    <img id="preview" width="200px">
                 </div>
             </div>
         </div>

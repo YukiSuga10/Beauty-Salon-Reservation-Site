@@ -93,35 +93,7 @@ class HomeController extends Controller
     
     
     
-    public function confirm($id,Request $request)
-    {
-        $salon = Admin::find($id)->first();
-        
-        $content = "予約確認";
-        $reserve = $request['reserve'];
-        $date = date('Y年m月d日',strtotime($reserve["date"]));
-        $time = date('G時i分',strtotime($reserve["time"]));
-        $menu = $reserve["menu"];
-        
-        //所要時間
-        if ($menu == "カット"){
-            $time_required = "30分";
-        }elseif ($menu == "カラー" || $menu == "パーマ"){
-            $time_required = "1時間";
-        }else{
-            $time_required = "1時間30分";
-        }
-        
-        
-        return view('confirm_reserve')->with([
-            'reserve' => $reserve,
-            'date' => $date,
-            'time' => $time,
-            'menu' => $menu,
-            'time_require' => $time_required,
-            'content' => $content,
-            "salon_id" => $id]);
-    }
+    
     
     public function edit_confirm(Request $request){
         $edit = $request['edit'];
@@ -154,80 +126,49 @@ class HomeController extends Controller
     
     
     
-    public function past_reserve(){
-        $user_id = Auth::id();
-        $query = Reserve::query();
-        $query -> where('user_id',$user_id)->orderBy('date', 'ASC');
-        $reserves = $query->pluck('date');
+    public function past_reserve($id){
+        $past_reserves = Reserve::query()->where('user_id',$id)->where('date','<',date('Y-m-d H:i:s'))->orderBy('date', 'ASC')->get();
         
-        $pastDate = [];
-        //過去の来店日時の取得
-        foreach ($reserves as $reserve) {
-            $dateNow = strtotime(date('Y-m-d'));
-            $date = strtotime($reserve);
-    
-            if ($date < $dateNow){
-                $date = date('Y年m月d日',$date);
-                array_push($pastDate,$date);
-            }else{
-                continue;
-            }
+        foreach ($past_reserves as $past_reserve) {
+            $past_reserve->date = date('Y年m月d日',strtotime($past_reserve->date));
         }
-        return view('past_reserve')->with(['pastDate' => $pastDate]);
+
+        return view('past_reserve')->with([
+            'past_reserves' => $past_reserves
+            ]);
     }
     
     
-    public function show_reserve($date){
-        //date型の変換
-        $Redate = str_replace('日','',$date);
-        $Redate = str_replace('月','-',$Redate);
-        $Redate = str_replace('年','-',$Redate);
+    public function show_reserve($reserve_id){
+        //予約の取得
+        $reserve = Reserve::find($reserve_id);
+        //日付・時間の変換
+        $reserve->startTime = date('G時i分',strtotime($reserve->startTime));
+        $reserve->date = date('Y年m月d日',strtotime($reserve->date));
         
-        //ユーザの指定日時の予約詳細取得
-        $user_id = Auth::id();
-        $query = Reserve::query();
-        $query -> where('user_id',$user_id);
-        $query -> where('date',$Redate);
-        $reserves = $query->get();
-       
-        //時間の取得・変換
-        $time = $query->value('startTime');
-        $time = date('G時i分',strtotime($time));
-
         //スタイリスト取得
-        $stylist_id = $query->value('stylist_id');
-        $query2 = Stylist::query();
-        $query2 -> where('id',$stylist_id);
-        $stylist = $query2->value('name');
-        
-        //メニュー取得
-        $menu_id = $query->value('menu_id');
-        $query3 = Menu::query();
-        $query3 -> where('id',$menu_id);
-        $menu = $query3->value("menu");
-
+        $stylist = Stylist::find($reserve->stylist_id);
         //所要時間
-        if ($menu == "カット"){
+        if ($reserve['menu'] == "カット"){
             $time_required = "30分";
-        }elseif ($menu == "カラー" || $menu == "パーマ"){
+        }elseif ($reserve['menu'] == "カラー" || $reserve['menu'] == "パーマ"){
             $time_required = "1時間";
         }else{
             $time_required = "1時間30分";
         }
         
         //URL取得
-        $url = url()->previous();
+        $url = url()->current();
         $key = parse_url($url);
         $path = explode("/", $key['path']);
         $last = end($path);
 
         return view('show_reserve')->with([
-            'date' => $date,
-            'time' => $time,
-            'stylist' => $stylist,
-            'time_required' => $time_required,
-            'menu' => $menu,
-            'last' => $last]);
+            "reserve" => $reserve,
+             "stylist" => $stylist,
+             "time_required" => $time_required,
+             "last" => $last
+            ]);
     }
     
     

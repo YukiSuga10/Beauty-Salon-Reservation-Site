@@ -23,7 +23,7 @@
                         @yield('content')
                     </main>
                     <h4>予約一覧</h4>
-                        <a href = "/past_reserve/">※過去のご利用履歴はこちら</a>
+                        <a href = "/salon/mypage/past_reserve/{{Auth::id()}}">※過去のご利用履歴はこちら</a>
                     <hr>
                     </form>
                     

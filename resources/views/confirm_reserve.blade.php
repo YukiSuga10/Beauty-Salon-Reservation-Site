@@ -35,6 +35,10 @@
                         <input type = 'hidden' name = 'reserve[stylist]' value = {{ $reserve['stylist']}}>
                         <input type = 'hidden' name = 'reserve[menu]' value = {{ $reserve['menu']}}>
                         
+                        <div class = "time">
+                            <p>{{ $salon->name }}</p>
+                        </div>
+                        
                         <div class = "date">
                             <p name = "reserve">日付 : {{ $date }}<p>
                         </div>
@@ -48,7 +52,7 @@
                         </div>
 
                         <div class = "menu">
-                           <p>メニュー : {{ $menu }}</p>
+                           <p>メニュー : {{ $reserve['menu'] }}</p>
                         </div>
                         <hr>
                         <input type = "submit" value = "予約する">
@@ -80,9 +84,11 @@
                         </div>
                         <hr>
                         <input type = "submit" value = "変更する">
+                        
                     </form>
                     @endif
-    
+                    <br>
+                    <div class='back'>[<a href='javascript:history.back()'>戻る</a>]</div>
                 </div>
             </div>
         </div>

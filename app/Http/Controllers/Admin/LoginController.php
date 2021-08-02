@@ -62,7 +62,7 @@ class LoginController extends Controller
         if (Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $request->password], $request->get('remember'))) {
             $salon_id = Auth::guard('admin')->user()->id;
             $salon_name = Admin::find($salon_id)->value('name');
-            return view('admin.home')->with([
+            return redirect('/admin/home')->with([
                 "salon_id" => $salon_id,
                 "name" => $salon_name]);
         }

@@ -27,19 +27,13 @@
                     現在レビューはありません
                     @else
                     @foreach ($reviews as $review)
-                    
                             @foreach ($users as $user)
-                                @if($review->user_id == $user->id)
-                                    @yield('css')
+                                @if($review->reserve->user_id == $user->id)
                                     <h4 class = "user_name"><h7 style="font-size:15px">ユーザ名：</h7>{{$user->name}}さん</h4>
                                     <h5 class = "evaluation" style="margin-bottom:10px; ">総合評価：{{$review->evaluation}}点</h5>
                                     <p>〜コメント〜</p>
                                     <p class = "comment">{{$review->comment}}</p>
-                                    @foreach ($menus as $menu)
-                                        @if ($review->menu_id == $menu->id)
-                                            <p class = "menu"><予約時のメニュー>：{{$menu->menu}}</p>
-                                        @endif
-                                    @endforeach
+                                    <p class = "menu"><予約時のメニュー>：{{$review->reserve->menu}}</p>
                                     <hr>
                                 @endif
                             @endforeach

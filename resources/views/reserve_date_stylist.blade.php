@@ -41,7 +41,7 @@
                         <hr>
                         <input type = "submit" value = "次へ">
                         <p></p>
-                        <div class='back'>[<a href='/'>戻る</a>]</div>
+                        <div class='back'>[<a href='javascript:history.back()'>戻る</a>]</div>
                     </form>
     
                 </div>

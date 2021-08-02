@@ -12,6 +12,10 @@ class Stylist extends Model
         return $this->belongsToMany('App\User');
     }
     
+    public function reserve(){
+        return $this->belongsTo('App\Reserve');
+    }
+    
     public function admin(){
         return $this->belongsTo('App\Admin');
     }

@@ -17,11 +17,11 @@
                     <main class="mt-4">
                         @yield('content')
                     </main>
-                    <form action='/create_review' method='POST'>
+                    <form action='review/create' method='POST'>
                         @csrf
                         <div class="star">
                             <h5>評価</h5>
-                                @foreach ($stars as $key => $value)
+                                @foreach ($evaluation as $key => $value)
                                     <input type = 'radio' name = 'review[evaluation]' value = {{$key}} required>{{$key}}：{{$value}}</br>
                                 @endforeach
                         </div>
@@ -31,11 +31,7 @@
                             <textarea name = 'review[comment]' ></textarea>
                         </div>
                         
-                        {{-- 隠しデータ送信 --}}
-                        <input type = 'hidden' name = 'review[date]' value = {{ $reserves['date']}}>
-                        <input type = 'hidden' name = 'review[time]' value = {{ $reserves['time']}}>
-                        <input type = 'hidden' name = 'review[stylist]' value = {{ $reserves['stylist']}}>
-                        <input type = 'hidden' name = 'review[menu]' value = {{ $reserves['menu']}}>
+                        
                         
                         <input type='submit' value='投稿する'>
                     </form>
