@@ -23,6 +23,7 @@ Route::get('/salon/{admin}/reserve', 'ReserveController@reserve_date_stylist');
 Route::get('/salon/{admin}/reserve_time_menu', 'ReserveController@reserve_time_menu');
 Route::get('/info_stylist', 'HomeController@info_stylist');
 
+Route::get('/salon/mypage','LoginController@login');
 Route::get('/salon/mypage/{user}','HomeController@mypage')->name('salon.mypage');
 Route::get('/salon/mypage/show_reserve/{reserve}', 'HomeController@show_reserve');
 Route::get('/salon/show_reserve/{reserve}/past', 'HomeController@show_reserve');
