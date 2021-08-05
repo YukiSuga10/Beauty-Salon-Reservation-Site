@@ -23,7 +23,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:admin');
+        $this->middleware('auth:admin')->except('index');
     }
 
     /**
@@ -35,7 +35,8 @@ class HomeController extends Controller
     public function index()
     {
         $salon_id = Auth::guard('admin')->user()->id;
-        $salon_name = Admin::find($salon_id)->value('name');
+        $salon_name = Admin::query()->where("id",$salon_id)->value('name');
+        dd($salon_name);
         return view('admin.home')->with([
             "salon_id" => $salon_id,
             "name" => $salon_name]);
