@@ -22,10 +22,42 @@
                         @yield('content')
                     </main>
                     <hr>
+                    @if( @count($selected_menu) == 1 )
                     <form action="/admin/{{$id}}/config_menu" method="POST">
                         @csrf
                         <p>[メニュー]</p>
-                        
+                        @if ($selected_menu->cut == 1)
+                        <input type = "checkbox" checked="checked" name = "menu[]" value = "0">カット<br>
+                        @else
+                        <input type = "checkbox" name = "menu[]" value = "0">カット<br>
+                        @endif
+                        @if ($selected_menu->color == 1)
+                        <input type = "checkbox" checked="checked" name = "menu[]" value = "1">カラー<br>
+                        @else
+                        <input type = "checkbox" name = "menu[]" value = "1">カラー<br>
+                        @endif
+                        @if ($selected_menu->perm == 1)
+                        <input type = "checkbox" checked="checked" name = "menu[]" value = "2">パーマ<br>
+                        @else
+                        <input type = "checkbox" name = "menu[]" value = "2">パーマ<br>
+                        @endif
+                        @if ($selected_menu->cut・color == 1)
+                        <input type = "checkbox" checked="checked" name = "menu[]" value = "3" >カット・カラー<br>
+                        @else
+                        <input type = "checkbox" name = "menu[]" value = "3">カット・カラー<br>
+                        @endif
+                        @if ($selected_menu->cut・perm == 1)
+                        <input type = "checkbox" checked="checked" name = "menu[]" value = "4" >カット・パーマ<br>
+                        @else
+                        <input type = "checkbox" name = "menu[]" value = "4">カット・パーマ<br>
+                        @endif
+                        <p></p>
+                        <input type = "submit" value = "変更">
+                    </form>
+                    @else
+                    <form action="/admin/{{$id}}/config_menu" method="POST">
+                        @csrf
+                        <p>[メニュー]</p>
                         <input type = "checkbox" name = "menu[]" value = "0">カット<br>
                         <input type = "checkbox" name = "menu[]" value = "1">カラー<br>
                         <input type = "checkbox" name = "menu[]" value = "2">パーマ<br>
@@ -34,7 +66,7 @@
                         <p></p>
                         <input type = "submit" value = "登録">
                     </form>
-                    
+                    @endif
                 </div>
             </div>
         </div>

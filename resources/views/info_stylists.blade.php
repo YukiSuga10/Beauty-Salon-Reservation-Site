@@ -35,22 +35,20 @@
                             <p>スタイリスト名：{{ $stylist->name }}</p>
                             <p>性別：{{ $stylist->gender }}</p>
                             <p><a href = "/salon/{{ $salon_id }}/{{ $stylist->id }}/show_review">この美容師の口コミを見る</a></p>
-                            
-                            @if($stylist_times == null)
+                            @if(@count($stylist_times) == 0)
                             <hr>
                             @else
-                                @foreach ($stylist_times[$stylist->name] as $stylist_time)
-                                    <p>〜{{$date}}日の空き状況〜</p>
+                                <p>〜{{$date}}日の空き状況〜</p>
                                     <select>
-                                    @foreach($times as $time)
-                                        @if ($time == $stylist_time)
-                                            <option value = {{$time}}>{{$time}}：×</option>
-                                        @else
-                                            <option value = {{$time}}>{{$time}}：○</option>
-                                        @endif
-                                    @endforeach
+                                        @foreach($times as $time)
+                                                @if ( @in_array($time,$stylist_times[$stylist->name]->toArray()))
+                                                <option value = {{$time}}>{{@date("H:i",@strtotime($time))}}：×</option>
+                                                @else
+                                                <option value = {{$time}}>{{@date("H:i",@strtotime($time))}}：○</option>
+                                                @endif
+                                        @endforeach
                                     </select>
-                                @endforeach
+                                
                                 <hr>
                             @endif
                         @endforeach

@@ -64,10 +64,18 @@ class HomeController extends Controller
     }
     
     public function show_menuPage($id){
-        return view('admin.config_menu')->with(["id" => $id]);
+        $selected_menu = Menu::query()->where("admin_id",$id)->first();
+        return view('admin.config_menu')->with([
+            "id" => $id,
+            "selected_menu" => $selected_menu]);
     }
     
     public function show_timePage($id){
-        return view('admin.config_time')->with(["id" => $id]);
+        $setTime = time::query()->where("admin_id",$id)->first();
+        return view('admin.config_time')->with([
+            "id" => $id,
+            "setTime" => $setTime,]);
     }
+    
+    
 }

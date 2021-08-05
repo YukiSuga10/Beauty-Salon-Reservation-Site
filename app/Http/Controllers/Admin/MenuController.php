@@ -28,6 +28,7 @@ class MenuController extends Controller
     
     
     public function config_menu($id, Request $request){
+        
         $config_menus = $request->input('menu');
         $content = array_fill(0,5,0);
         foreach ($config_menus as $menu){

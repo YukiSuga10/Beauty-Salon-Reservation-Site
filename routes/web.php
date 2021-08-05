@@ -23,8 +23,8 @@ Route::get('/salon/{admin}/reserve', 'ReserveController@reserve_date_stylist');
 Route::get('/salon/{admin}/reserve_time_menu', 'ReserveController@reserve_time_menu');
 Route::get('/info_stylist', 'HomeController@info_stylist');
 
-Route::get('/salon/mypage/{user}','HomeController@mypage');
-Route::get('/salon/show_reserve/{reserve}', 'HomeController@show_reserve');
+Route::get('/salon/mypage/{user}','HomeController@mypage')->name('salon.mypage');
+Route::get('/salon/mypage/show_reserve/{reserve}', 'HomeController@show_reserve');
 Route::get('/salon/show_reserve/{reserve}/past', 'HomeController@show_reserve');
 Route::get('/salon/mypage/past_reserve/{user}', 'HomeController@past_reserve');
 //Route::get('/register_stylist','StylistController@register_stylist');
@@ -33,7 +33,7 @@ Route::get('/reserved', 'MailController@reserveComplete');
 Route::get('/api','ApiTestController@test');
 Route::get('/salon/{admin}/{stylist}/show_review','StylistController@show_review');
 Route::get('/edit', 'HomeController@edit');
-Route::get('/show_location', 'HomeController@show_locationPage');
+Route::get('/salon/{admin}/show_location', 'HomeController@show_locationPage');
 
 Route::post('/login', 'HomeController@start');
 Route::post('/salon/{admin}/reserve_time_menu', 'ReserveController@reserve_time_menu');
@@ -50,7 +50,7 @@ Route::post('/salon/{reserve}/review/create','StylistController@create_review');
 Route::put('/update', 'HomeController@update');
 
 
-Route::delete('/delete', 'HomeController@delete');
+Route::delete('/salon/{reserve}/delete', 'HomeController@delete');
 
 Auth::routes();
 
@@ -91,6 +91,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function() {
     
     //カレンダーページ
     Route::get('/show_calender', 'Admin\HomeController@show_calender');
+    
+    Route::put('/{admin}/edit_menu', 'Admin\MenuController@update_menu');
 });
 
 Route::get('/admin_access', 'Admin\HomeController@admin_access');

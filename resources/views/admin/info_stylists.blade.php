@@ -29,7 +29,7 @@
                             <p>スタイリスト名：{{ $stylist->name }}</p>
                             <p>性別：{{ $stylist->gender }}</p>
                             <p><a href = "/{{ $stylist->id }}/show_review">この美容師の口コミを見る</a></p>
-                            <div style = "text-align: right"><a href="/edit">編集する</a></div>
+                            <div style = "text-align: right"><a href="/admin/{{ $salon_id }}/{{$stylist->id}}/edit">編集する</a></div>
                             <hr>
                         @endforeach
                 </div>

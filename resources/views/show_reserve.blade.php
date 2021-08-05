@@ -35,7 +35,7 @@
                        <p>メニュー：{{ $reserve->menu }}</p>
                     </div>
                     <hr>
-                    @if ($last == "mypage")
+                    @if ($last == $reserve->id)
                         <div style = "display:inline-flex">
                             <form action = "/edit" method = "POST">
                                 {{ csrf_field() }}
@@ -43,7 +43,7 @@
                                 
                                 <input type = "submit" value = "予約変更">
                             </form>
-                            <form action = '/delete' method = "POST">
+                            <form action = '/salon/{{ $reserve->id }}/delete' method = "POST">
                                 {{ csrf_field() }}
                                 {{ method_field('delete') }}
                                 

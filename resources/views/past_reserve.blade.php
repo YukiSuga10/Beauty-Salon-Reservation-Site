@@ -24,8 +24,7 @@
                     </main>
                     <p>〜過去利用履歴〜</p>
                    <hr>
-                    @if ($past_reserves != null)
-                    
+                    @if (@count($past_reserves) != 0)
                     <div class = "reserves">
                         @foreach ($past_reserves as $past_reserve)
                             <div class = "reserve">

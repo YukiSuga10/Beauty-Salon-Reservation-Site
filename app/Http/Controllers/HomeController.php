@@ -56,7 +56,7 @@ class HomeController extends Controller
     public function info_stylist($id)
     {
         $stylists = Stylist::query()->where("admin_id",$id)->get();
-        $stylist_times = null;
+        $stylist_times = [];
         return view("info_stylists")->with([
             'stylists' => $stylists, 
             'stylist_times' => $stylist_times,
@@ -66,29 +66,15 @@ class HomeController extends Controller
     
     
     
-    public function mypage()
+    public function mypage($id)
     {
-        $user_id = Auth::id();
-        $query = Reserve::query();
-        $query -> where('user_id',$user_id)->orderBy('date', 'ASC');
-        $reserves = $query->pluck('date');
-        //まだ来店していない日にちの取得
-        $newDate = [];
-        foreach ($reserves as $reserve) {
-            $dateNow = strtotime(date('Y-m-d'));
-            $date = strtotime($reserve);
-            
-            if ($date >= $dateNow){
-                $date = date('Y年m月d日',$date);
-                array_push($newDate,$date);
-            }else{
-                continue;
-            }
-            
+        $reserves = Reserve::query()->where("user_id",$id)->where('date','>=',date('Y-m-d H:i:s'))->get();
+
+        foreach ($reserves as $reserve){
+            $reserve->date = date('Y年m月d日',strtotime($reserve->date));
         }
         
-
-        return view("mypage")->with(['newDate' => $newDate]);
+        return view("mypage")->with(['reserves' => $reserves]);
     }
     
     
@@ -162,7 +148,7 @@ class HomeController extends Controller
         $key = parse_url($url);
         $path = explode("/", $key['path']);
         $last = end($path);
-
+        
         return view('show_reserve')->with([
             "reserve" => $reserve,
              "stylist" => $stylist,
@@ -257,43 +243,10 @@ class HomeController extends Controller
         return redirect('/mypage');
     }
     
-    public function delete(Request $request){
-        $input = $request['reserve'];
-
-        //ユーザID取得
-        $user_id = Auth::id();
-        
-        //スタイリストID取得
-        $query_stylist = Stylist::query();
-        $query_stylist -> where('name',$input['stylist']);
-        $stylist_id = $query_stylist->value('id');
-        
-        //日付の表示形式変更
-        $Redate = str_replace('日','',$input['date']);
-        $Redate = str_replace('月','-',$Redate);
-        $Redate = str_replace('年','-',$Redate);
-        
-        //時間の表示形式変更
-        $reTime = str_replace('時',':',$input['time']);
-        $reTime = str_replace('分',':',$reTime);
-        $s = '00';
-        $reTime = $reTime.$s;
-        
-        //メニューIDの取得
-        $query_menu = Menu::query();
-        $query_menu -> where('menu',$input['menu']);
-        $menu_id = $query_menu->value('id');
-        
-        
-        $query = Reserve::query();
-        $query -> where('user_id',$user_id);
-        $query -> where('stylist_id',$stylist_id);
-        $query -> where('menu_id',$menu_id);
-        $query -> where('date',$Redate);
-        $query -> where('startTime',$reTime);
-        $query -> delete();
-        
-        return redirect('mypage');
+    public function delete($reserve_id){
+        $reserve = Reserve::find($reserve_id)->first();
+        $reserve->delete();
+        return redirect('/home')->with(['flash_message' => "予約がキャンセルされました"]);
     }
     
     public function show_locationPage()

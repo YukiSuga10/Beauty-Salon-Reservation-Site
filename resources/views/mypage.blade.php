@@ -27,12 +27,11 @@
                     <hr>
                     </form>
                     
-                    @if ($newDate != null)
+                    @if (@count($reserves) != 0)
                     <div class = "reserves">
-                        @foreach ($newDate as $date)
+                        @foreach ($reserves as $reserve)
                             <div class = "reserve">
-                                <a href='/show_reserve/{{ $date  }}'><h5 class = "">・{{ $date }}</h5></a>
-                                
+                                <a href='/salon/mypage/show_reserve/{{ $reserve->id  }}'><h5>・{{ $reserve->date }}</h5></a>
                             </div>
                         @endforeach
                     </div>

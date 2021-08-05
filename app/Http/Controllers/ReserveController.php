@@ -40,6 +40,7 @@ class ReserveController extends Controller
     
     public function reserve_time_menu($id, Request $request)
     {
+        
         $input = $request['reserve'];
         
         $salon = Admin::find($id)->first();
@@ -50,6 +51,7 @@ class ReserveController extends Controller
         
         $diff = strtotime($endTime)-strtotime($startTime);
         $count = $diff/1800;
+        
         $times = [];
         array_push($times,date('H:i',strtotime($startTime)));
         for ($i = 1;$i<= $count; $i++){
@@ -57,7 +59,8 @@ class ReserveController extends Controller
             $startTime = date('H:i',$startTime);
             array_push($times,$startTime);
         }
-
+        
+        
         //メニューの取得
         $salon_menu = [];
             if ($salon->menus->first()->cut == 1){
@@ -143,7 +146,7 @@ class ReserveController extends Controller
     public function reserve($id,Request $request){
         $input = $request['reserve'];
         $salon = Admin::find($id)->first();
-
+        
         
         //入力された日にちが過去の場合
         $date = strtotime($input['date']);
@@ -165,11 +168,11 @@ class ReserveController extends Controller
         $num_rows = mysqli_num_rows($res);
         mysqli_close($con);
         
+        $stylist_id = $salon->stylists->where('name',$input["stylist"])->first()->id;
+        
         if ($num_rows > 0){
             
             $user_id = Auth::id();
-            $stylist_id = $salon->stylists->where('name','LIKE',"%{$input["stylist"]}%")->value('id');
-            
             
             if ($input['menu'] == "カット"){
                 //データベースの接続

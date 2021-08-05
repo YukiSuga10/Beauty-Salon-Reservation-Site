@@ -42,14 +42,12 @@ class StylistController extends Controller
         $reserved_times = $salon->reserves()->where('date',$input['date'])->pluck('startTime');
         
         $stylists = Stylist::query()->get();
-        
         $stylist_times = [];
         foreach ($stylists as $stylist){
-            $time = $salon->reserves()->where('date',$input['date'])->where('stylist_id',$id)->pluck('startTime');
+            $time = $salon->reserves()->where('date',$input['date'])->where('admin_id',$id)->where("stylist_id",$stylist->id)->orderBy('startTime','ASC')->pluck('startTime');
             $stylist_times[$stylist->name] = $time;
         }
-
-
+        
         //営業時間の取得
         $startTime = time::query()->where("admin_id",$id)->value('startTime');
         $endTime = time::query()->where("admin_id",$id)->value('endTime');
@@ -57,18 +55,19 @@ class StylistController extends Controller
         $count = $diff/1800;
         $times = [];
         
-        array_push($times,date('H:i',strtotime($startTime)));
+        
+        array_push($times,$startTime);
         for ($i = 1; $i <= $count; $i++){
             $startTime = strtotime('+30 minutes', strtotime($startTime));
-            $startTime = date('H:i',$startTime);
+            $startTime = date('H:i:s',$startTime);
             array_push($times,$startTime);
         }
-        
         //日にちの取得
         $date = $input['date'];
         $date = date('m月d日',strtotime($date));
         
         
+
         return view('info_stylists')->with([
             'stylist_times' => $stylist_times,
             'stylists' => $stylists,

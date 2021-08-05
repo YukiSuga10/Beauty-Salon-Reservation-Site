@@ -29,9 +29,15 @@
                     <hr>
                     <form action="/admin/{{$id}}/config_time" method="POST" onSubmit="return checkTime(this)">
                         @csrf
+                        @if (@count($setTime) != 0)
+                        <p><input type="time" id = "startTime" name="time[startTime]" value = "{{ $setTime->startTime }}" required>　〜　<input type="time" id = "endTime" name="time[endTime]" value = "{{ $setTime->endTime }}" required></p>
+                        <br>
+                        <input type = "submit" value = "変更">
+                        @else
                         <p><input type="time" id = "startTime" name="time[startTime]" required>　〜　<input type="time" id = "endTime" name="time[endTime]" required></p>
                         <br>
                         <input type = "submit" value = "登録">
+                        @endif
                     </form>
                     <script src="{{ asset('/js/result.js') }}"></script>
                     

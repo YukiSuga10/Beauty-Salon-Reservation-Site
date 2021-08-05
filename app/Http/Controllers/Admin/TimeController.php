@@ -33,7 +33,6 @@ class TimeController extends Controller
      */
     
     public function config_time($id, Request $request){
-        
         $time = new DateTime();
         $minStartTime = $time->setTime(9,00)->format('H:i:s');
         $maxEndTime = $time->setTime(20,00)->format('H:i:s');
@@ -42,13 +41,14 @@ class TimeController extends Controller
         $startTime = $request['time']['startTime'];
         $endTime = $request['time']['endTime'];
         
-        
-        $times = time::insert([
-            "admin_id" => $id,
+
+        time::updateOrCreate(
+            ["admin_id" => $id],
+            ["admin_id" => $id,
             "startTime" => $startTime,
-            "endTime" => $endTime
-            ]);
-        
+            "endTime" => $endTime]
+            );
+
         return redirect('admin/home')->with([
             "salon_id" => $id,
             'flash_message' => '設定が完了しました',
