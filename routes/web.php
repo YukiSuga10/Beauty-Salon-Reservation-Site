@@ -17,14 +17,14 @@ Route::get('/', 'HomeController@show_salon');
 Route::get('/home', 'HomeController@show_salon');
 Route::get('/register', 'RegisterController@show_RegisterForm');
 Route::get('/show_salon', 'HomeController@show_salon');
+Route::get('/salon/mypage','HomeController@mypage')->name('salon.mypage');
 Route::get('/salon/{admin}','HomeController@show_salonPage');
 Route::get('/salon/{admin}/info_stylist','HomeController@info_stylist');
 Route::get('/salon/{admin}/reserve', 'ReserveController@reserve_date_stylist');
 Route::get('/salon/{admin}/reserve_time_menu', 'ReserveController@reserve_time_menu');
 Route::get('/info_stylist', 'HomeController@info_stylist');
 
-Route::get('/salon/mypage','HomeController@mypage');
-Route::get('/salon/mypage/{user}','HomeController@mypage')->name('salon.mypage');
+
 Route::get('/salon/mypage/show_reserve/{reserve}', 'HomeController@show_reserve');
 Route::get('/salon/show_reserve/{reserve}/past', 'HomeController@show_reserve');
 Route::get('/salon/mypage/past_reserve/{user}', 'HomeController@past_reserve');

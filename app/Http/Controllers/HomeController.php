@@ -31,6 +31,17 @@ class HomeController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
     
+    public function mypage()
+    {
+        $reserves = Reserve::query()->where("user_id",Auth::id())->where('date','>=',date('Y-m-d H:i:s'))->get();
+
+        foreach ($reserves as $reserve){
+            $reserve->date = date('Y年m月d日',strtotime($reserve->date));
+        }
+
+        return view("mypage")->with(['reserves' => $reserves]);
+    }
+    
     public function show_salon(){
         $admins = Admin::query()->get();
         return view('first_launch')->with(["admins" => $admins]);
@@ -66,16 +77,7 @@ class HomeController extends Controller
     
     
     
-    public function mypage($id)
-    {
-        $reserves = Reserve::query()->where("user_id",$id)->where('date','>=',date('Y-m-d H:i:s'))->get();
-
-        foreach ($reserves as $reserve){
-            $reserve->date = date('Y年m月d日',strtotime($reserve->date));
-        }
-        
-        return view("mypage")->with(['reserves' => $reserves]);
-    }
+    
     
     
     

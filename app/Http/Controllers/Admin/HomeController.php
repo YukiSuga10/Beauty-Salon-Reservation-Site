@@ -36,7 +36,6 @@ class HomeController extends Controller
     {
         $salon_id = Auth::guard('admin')->user()->id;
         $salon_name = Admin::query()->where("id",$salon_id)->value('name');
-        dd($salon_name);
         return view('admin.home')->with([
             "salon_id" => $salon_id,
             "name" => $salon_name]);
