@@ -31,7 +31,7 @@
                     <hr>
                     <div>
                         <p><h5>▶予約確認</h5></p>
-                        <a href = "/salon/mypage/{{Auth::id()}}">予約確認はこちらから</a>
+                        <a href = "/salon/mypage">予約確認はこちらから</a>
                     </div>
                     <br>
                 
