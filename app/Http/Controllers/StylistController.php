@@ -41,7 +41,7 @@ class StylistController extends Controller
         //既存の予約が入っている時間の取り出し
         $reserved_times = $salon->reserves()->where('date',$input['date'])->pluck('startTime');
         
-        $stylists = Stylist::query()->get();
+        $stylists = Stylist::query()->where("admin_id",$id)->get();
         $stylist_times = [];
         foreach ($stylists as $stylist){
             $time = $salon->reserves()->where('date',$input['date'])->where('admin_id',$id)->where("stylist_id",$stylist->id)->orderBy('startTime','ASC')->pluck('startTime');
