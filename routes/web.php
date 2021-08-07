@@ -34,7 +34,7 @@ Route::get('/reserved', 'MailController@reserveComplete');
 Route::get('/api','ApiTestController@test');
 Route::get('/salon/{admin}/{stylist}/show_review','StylistController@show_review');
 Route::get('/edit', 'HomeController@edit');
-Route::get('/salon/{admin}/show_location', 'HomeController@show_locationPage');
+Route::get('/salon/{admin}/show_location', 'GmapsController@show_maps');
 
 Route::post('/login', 'HomeController@start');
 Route::post('/salon/{admin}/reserve_time_menu', 'ReserveController@reserve_time_menu');
@@ -90,10 +90,16 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function() {
     Route::get('/{admin}/config_menu','Admin\HomeController@show_menuPage');
     Route::post('/{admin}/config_menu','Admin\MenuController@config_menu');
     
+    //アクセス設定
+    Route::get('/{admin}/admin_access', 'Admin\HomeController@show_configAccess');
+    Route::post('/{admin}/set_address','Admin\GmapsController@set_address');
+    
     //カレンダーページ
     Route::get('/show_calender', 'Admin\HomeController@show_calender');
     
     Route::put('/{admin}/edit_menu', 'Admin\MenuController@update_menu');
+    
+    
 });
 
 Route::get('/admin_access', 'Admin\HomeController@admin_access');

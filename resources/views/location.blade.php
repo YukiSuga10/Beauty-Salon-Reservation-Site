@@ -8,6 +8,8 @@
                 <div class="card-header">アクセス</div>
 
                 <div class="card-body">
+                    <p>[住所]</p>
+                    <p id = "address">{{ $address }}</p>
                     @if (session('status'))
                         <div class="alert alert-success" role="alert">
                             {{ session('status') }}
@@ -22,11 +24,12 @@
                     <main class="mt-4">
                         @yield('content')
                     </main>
-                    <div id="map" style="height:500px">
-            	   </div>
-            	   <script src="{{ asset('/js/result.js') }}"></script>
-            	   <script src= "https://maps.googleapis.com/maps/api/js?language=ja&region=JP&key=AIzaSyBLDbSsnWgTPX3-l8E6eP-2NJPdFww_ZI0&callback=initMap" async defer>
-            	   </script>
+                    
+                    <p id="salonName" hidden>{{$salon->name}}</p>
+                   <div id="map" style="height:500px"></div>
+                    <script src="{{ asset('/js/result.js') }}"></script>
+                　  <script src= "https://maps.googleapis.com/maps/api/js?language=ja&region=JP&key=AIzaSyBLDbSsnWgTPX3-l8E6eP-2NJPdFww_ZI0&callback=initMap" async defer>
+                    </script>
                 </div>
             </div>
         </div>

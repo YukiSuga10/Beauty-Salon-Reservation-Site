@@ -66,7 +66,7 @@ class ImageController extends Controller
                 "salon_id" => $id,
                 'flash_message' => '登録が完了しました']);
         }else{
-            return redirect('/admin/{{id}}/register_stylist');
+            return redirect('/admin/'.$id.'/register_stylist');
         }
     }
     

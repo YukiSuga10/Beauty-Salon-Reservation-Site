@@ -63,6 +63,14 @@ class HomeController extends Controller
         return view('admin.edit_location');
     }
     
+    public function show_configAccess($id){
+        $setAccess = Admin::find($id)->first()->address;
+        return view("admin.config_access")->with([
+            "address" => $setAccess,
+            "id" => $id,
+            ]);
+    }
+    
     public function show_menuPage($id){
         $selected_menu = Menu::query()->where("admin_id",$id)->first();
         return view('admin.config_menu')->with([

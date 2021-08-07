@@ -1,25 +1,37 @@
 function initMap() {
-    // welcome.blade.phpで描画領域を設定するときに、id=mapとしたため、その領域を取得し、mapに格納します。
     map = document.getElementById("map");
     
-    var address = document.getElementById("address");
-    // 東京タワーの緯度は35.6585769,経度は139.7454506と事前に調べておいた
-    let tokyoTower = {lat: 35.6585769, lng: 139.7454506};
-    // オプションを設定
+    var address = document.getElementById("address").textContent;
+    var salonName = document.getElementById("salonName").textContent;
+
+    var geocoder = new google.maps.Geocoder();
+
+    geocoder.geocode({ address : address }, function(results, status){
+    if (status == google.maps.GeocoderStatus.OK) {
+    var ll = results[0].geometry.location;
+    var glat = ll.lat();
+    var glng = ll.lng();
+    let salon = {lat: glat, lng: glng};
+    
     opt = {
-        zoom: 13, //地図の縮尺を指定
-        center: tokyoTower, //センターを東京タワーに指定
+        zoom: 13, //地図の縮尺の設定
+        center: salon, //センターの設定
     };
-    // 地図のインスタンスを作成します。第一引数にはマップを描画する領域、第二引数にはオプションを指定
     mapObj = new google.maps.Map(map, opt);
     
     marker = new google.maps.Marker({
-        // ピンを差す位置を決めます。
-        position: tokyoTower,
-	// ピンを差すマップを決めます。
+    //ピンを差す位置の決定
+        position: salon,
+	// ピンを差すマップ指定
         map: mapObj,
-	// ホバーしたときに「tokyotower」と表示されるようにします。
-        title: 'tokyotower',
+	//ホバー時の表示
+        title: salonName,
+    });
+    
+    map.setCenter(ll);
+    }else{
+    alert(status+" : ジオコードに失敗しました");
+    }
     });
 }
 
@@ -45,4 +57,6 @@ function checkTime(f) {
     
     
 }
+
+
 
