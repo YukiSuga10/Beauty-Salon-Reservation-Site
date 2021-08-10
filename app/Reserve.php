@@ -12,7 +12,7 @@ class Reserve extends Model
     
     
     
-    public function stylists(){
+    public function stylist(){
         return $this->hasOne('App\Stylist');
     }
     

@@ -5,14 +5,10 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
-use App\Reserve;
 use App\Stylist;
-use App\User;
 use App\Menu;
-use App\file_Image;
 use App\Admin;
 use App\time;
-use DateTime;
 
 class HomeController extends Controller
 {
@@ -64,8 +60,10 @@ class HomeController extends Controller
     }
     
     public function show_configAccess($id){
-        $setAccess = Admin::find($id)->first()->address;
+        $salon = Admin::query()->where("id",$id)->first();
+        $setAccess = $salon->address;
         return view("admin.config_access")->with([
+            "salon" => $salon,
             "address" => $setAccess,
             "id" => $id,
             ]);

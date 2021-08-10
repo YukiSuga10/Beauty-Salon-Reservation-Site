@@ -58,14 +58,9 @@
                         <input type = "submit" value = "予約する">
                     </form>
                     @else
-                    <form method ="POST" action="/update">
+                    <form method ="POST" action="/salon/{{ $reserve->id }}/update">
                         @csrf
                         @method('PUT')
-                        {{-- 隠しデータ送信 --}}
-                        <input type = 'hidden' name = 'edit[date]' value = {{ $edit['date']}}>
-                        <input type = 'hidden' name = 'edit[time]' value = {{ $edit['time']}}>
-                        <input type = 'hidden' name = 'edit[stylist]' value = {{ $edit['stylist']}}>
-                        <input type = 'hidden' name = 'edit[menu]' value = {{ $edit['menu']}}>
                         
                         <div class = "date">
                             <p name = "reserve">日付 : {{ $date }}<p>
@@ -80,7 +75,7 @@
                         </div>
 
                         <div class = "menu">
-                           <p>メニュー : {{ $menu }}</p>
+                           <p>メニュー : {{ $edit['menu'] }}</p>
                         </div>
                         <hr>
                         <input type = "submit" value = "変更する">

@@ -21,32 +21,31 @@
                         @yield('content')
                     </main>
 
-                    <form action = "/edit_time_menu" method = "POST">
+                    <form action = "/salon/{{ $reserve->id }}/edit_time_menu" method = "POST">
                         @csrf
                         <div class = "date">
                             <p>1:ご変更希望日時を選択してください</p>
-                            <input type = "date" name = "edit[date]" value = {{$reserve['date']}} required>
+                            <input type = "date" name = "edit[date]" value = {{$reserve->date}} required>
                         </div>
+                        
                         <hr>
+                        
                         <div class = "stylist">
-                            <p>2:美容師を変更する場合は選択してください　<a href = "/info_stylist">※美容師の詳細はこちら</a></p>
+                            <p>2:美容師を変更する場合は選択してください　<a href = "/salon/{{ $reserve->admin_id }}/info_stylist">※美容師の詳細はこちら</a></p>
                             <select name = "edit[stylist]" required>
                                 <option value = "">選択してください</option>
                                 @foreach ($stylists as $stylist)
-                                    @if ($reserve['stylist'] == $stylist->name)
-                                        <option value = {{ $stylist->id }} selected>{{ $stylist->name }}</option>
+                                    @if ($reserve->stylist_id == $stylist->id)
+                                        <option value = {{ $stylist->name }} selected>{{ $stylist->name }}</option>
                                     @else
-                                        <option value = {{ $stylist->id }}>{{ $stylist->name }}</option>
+                                        <option value = {{ $stylist->name }}>{{ $stylist->name }}</option>
                                     @endif
                                 @endforeach
                             </select>
                         </div>
                         
-                        {{-- 隠しデータ送信 --}}
-                        <input type = 'hidden' name = 'edit[time]' value = {{ $reserve['time'] }}>
-                        <input type = 'hidden' name = 'edit[menu]' value = {{ $reserve['menu'] }}>
-    
                         <hr>
+                        
                         <input type = "submit" value = "次へ">
                         <p></p>
                         <div class='back'>[<a href='/mypage'>戻る</a>]</div>

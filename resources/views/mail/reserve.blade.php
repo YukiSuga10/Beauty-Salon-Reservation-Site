@@ -3,7 +3,7 @@
     <body>
         <p>{{$text}}</p></br>
         <p>ご予約ありがとうございました！</p>
-        <p>[ご予約内容]</p>
+        <p>▶︎ご予約内容</p>
         <div class = "content">
             <p>日付：{{ $reserves['date'] }}</p>
             <p>時間：{{ $reserves['time'] }}〜</p>

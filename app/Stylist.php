@@ -8,7 +8,7 @@ class Stylist extends Model
 {
     protected $table = 'stylists';
     
-    public function reserves(){
+    public function users(){
         return $this->belongsToMany('App\User');
     }
     

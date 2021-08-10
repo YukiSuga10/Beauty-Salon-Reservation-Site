@@ -37,7 +37,7 @@
                     <hr>
                     @if ($last == $reserve->id)
                         <div style = "display:inline-flex">
-                            <form action = "/edit" method = "POST">
+                            <form action = "/salon/{{ $reserve->id }}/edit" method = "POST">
                                 {{ csrf_field() }}
                                 
                                 

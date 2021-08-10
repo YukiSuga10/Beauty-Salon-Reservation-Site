@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class ReserveConfirm extends Mailable
+class EditConfirm extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -20,11 +20,11 @@ class ReserveConfirm extends Mailable
     protected $text; 
      
      
-    public function __construct($name, $text, $reserves)
+    public function __construct($name, $text, $edit)
     {
         $this->title = sprintf('%s様',$name);
         $this->text = $text;
-        $this->reserves = $reserves;
+        $this->edit = $edit;
     }
 
     /**
@@ -34,11 +34,11 @@ class ReserveConfirm extends Mailable
      */
     public function build()
     {
-        return $this->view('mail.reserve')
+        return $this->view('mail.edit')
                     ->subject($this->title)
                     ->with([
                         'text' => $this->text,
-                        'reserves' => $this->reserves,
+                        'edit' => $this->edit,
                       ]);
     }
 }

@@ -48,10 +48,17 @@
                             </div>
                             <br>
                             住所:
-                            <input type="text" name="住所" size="40" id = "address" value= "{{ $address }}" required>
+                            <input type="text" name="住所" size="40" value= "{{ $address }}" required>
                             <hr>
                             <input type="submit" value = "変更">
                         </form>
+                        <br>
+                        <p id = "address" hidden>{{ $address }}</p>
+                        <p id = "salonName" hidden>{{$salon->name}}</p>
+                        <div id="map" style="height:500px"></div>
+                        <script src="{{ asset('/js/result.js') }}"></script>
+                        <script src= "https://maps.googleapis.com/maps/api/js?language=ja&region=JP&key=AIzaSyBLDbSsnWgTPX3-l8E6eP-2NJPdFww_ZI0&callback=initMap" async defer>
+                        </script>
                     @endif
                     
                     

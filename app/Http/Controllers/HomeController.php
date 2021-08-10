@@ -33,7 +33,7 @@ class HomeController extends Controller
     
     public function mypage()
     {
-        $reserves = Reserve::query()->where("user_id",Auth::id())->where('date','>=',date('Y-m-d H:i:s'))->get();
+        $reserves = Reserve::query()->where("user_id",Auth::id())->where('date','>=',date('Y-m-d H:i:s'))->orderBy("date","ASC")->get();
 
         foreach ($reserves as $reserve){
             $reserve->date = date('Y年m月d日',strtotime($reserve->date));
@@ -76,26 +76,21 @@ class HomeController extends Controller
     }
     
     
-    
-    
-    
-    
-    
-    
-    
-    public function edit_confirm(Request $request){
+
+    public function edit_confirm($id,Request $request){
+        $reserve = Reserve::query()->where("id",$id)->first();
         $edit = $request['edit'];
-        
+        $edit["date"] = session()->get('date');
+        $edit["stylist"] = session()->get('stylist');
+
         //日時と時間の表示方式変更
         $date = date('Y年m月d日',strtotime($edit["date"]));
         $time = date('G時i分',strtotime($edit["time"]));
+
         
-        $menu = Menu::query()->where('id',$edit['menu'])->value('menu');
-        $edit['stylist'] = Stylist::query()->where('id',$edit['stylist'])->value('name');
-        
-        if ($menu == "カット"){
+        if ($edit["menu"] == "カット"){
             $time_required = "30分";
-        }elseif ($menu == "カラー" || $menu == "パーマ"){
+        }elseif ($edit["menu"] == "カラー" || $edit["menu"] == "パーマ"){
             $time_required = "1時間";
         }else{
             $time_required = "1時間30分";
@@ -103,11 +98,16 @@ class HomeController extends Controller
         
         $content = "変更確認";
         
+        session()->put('edit[date]', $edit['date']);
+        session()->put('edit[time]', $edit['time']);
+        session()->put('edit[menu]', $edit['menu']);
+        session()->put('edit[stylist]', $edit['stylist']);
+        
         return view('confirm_reserve')->with([
+            'reserve' => $reserve,
             'edit' => $edit,
             'date' => $date,
             'time' => $time,
-            'menu' => $menu,
             'time_require' => $time_required,
             'content' => $content]);
     }
@@ -160,89 +160,103 @@ class HomeController extends Controller
     }
     
     
-    public function edit(Request $request){
-        $reserve = $request['reserve'];
-        
-        //時間の表示形式変更
-        $reserve['date'] = str_replace('日','',$reserve['date']);
-        $reserve['date'] = str_replace('月','-',$reserve['date']);
-        $reserve['date'] = str_replace('年','-',$reserve['date']);
-        
-        //スタイリストの取得
-        $stylists = Stylist::query()->get();
-        
-        //時間の取得と表示形式変更
-        $times = time::query()->pluck('time');
-        foreach($times as $key => $time){
-            $times[$key] = date('G時i分',strtotime($time));
-        }
-        
-        
+    public function show_editForm($id){
+        $reserve = Reserve::query()->where("id",$id)->first();
+        $stylists = Stylist::query()->where("admin_id",$reserve->admin_id)->get();
         return view('edit_date_stylist')->with([
-            "reserve" => $reserve, 
-            "stylists" => $stylists,
-            "times" => $times]);
+            "reserve" => $reserve,
+            "stylists" => $stylists
+            ]);
     }
     
-    public function edit_time_menu(Request $request){
-        $edit = $request['edit'];
+    public function edit_time_menu($id,Request $request){
+        $edit_content = $request['edit'];
+        session()->put('date', $edit_content['date']);
+        session()->put('stylist', $edit_content['stylist']);
         
-        //時間の取得と表示形式変更
-        $times = time::query()->pluck('time');
-        foreach($times as $key => $time){
-            $times[$key] = date('H:i',strtotime($time));
-        }
+        $reserve = Reserve::query()->where("id",$id)->first();
+        
 
-        //時間の表示形式変更
-        $edit['time'] = str_replace('時',':',$edit['time']);
-        $edit['time'] = str_replace('分',':',$edit['time']);
-        $s = '00';
-        $edit['time'] = $edit['time'].$s;
-        $edit['time'] = date('H:i',strtotime($edit['time']));
+        //営業時間の取得
+        $startTime = time::query()->where("admin_id",$reserve->admin_id)->value('startTime');
+        $endTime = time::query()->where("admin_id",$reserve->admin_id)->value('endTime');
+        $diff = strtotime($endTime)-strtotime($startTime);
+        $count = $diff/1800;
         
-        //全メニューの取得
-        $menus = Menu::query()->get();
-        
-        //選択された日付と美容師の予約の入っている時間
-        $not_abletime = Reserve::query()->where('stylist_id',$edit['stylist'])->where('date',$edit['date'])->pluck('startTime');
-        
-        //予約不可の時間の表示形式変更
-        $not_times = [];
-        foreach ($not_abletime as $time){
-            $time = date('H:i',strtotime($time));
-            array_push($not_times,$time);
+        $times = [];
+        array_push($times,date('H:i',strtotime($startTime)));
+        for ($i = 1;$i<= $count; $i++){
+            $startTime = strtotime('+30 minutes', strtotime($startTime));
+            $startTime = date('H:i:s',$startTime);
+            array_push($times,$startTime);
         }
         
-        $not_times = array_diff($not_times,array($edit['time']));
-        $not_times = array_values($not_times);
+        //予約の入っている時間の取得
+        $reserved_time = Reserve::query()->where("stylist_id",$reserve->stylist_id)->where("date",$reserve->date)->pluck('startTime');
         
-        //予約可能時間の取得
-        if (count($not_times) == 0 ){
-            //時間の取得
-            $possible_time = $times;
-        }else{
-            //時間の取得
-            $possible_time = [];
-            foreach ($times as $time){
-                if (!(in_array($time,$not_times))){
-                    array_push($possible_time,$time);
+        foreach ($times as $time){
+            if (!(in_array($time, $reserved_time->toArray(), true))){
+                continue;
+            }else{
+                if ($time == $reserve->startTime){
+                    continue;
+                }else{
+                    $times = array_diff($times,array($time));
                 }
             }
         }
+
         
+        foreach ($times as $key => $time){
+            $time = date('H:i',strtotime($time));
+            $times[$key] = $time;
+        }
+
+        //メニューの取得
+        $salon_menu = [];
+            if ($reserve->admin->menus->first()->cut == 1){
+                array_push($salon_menu,"カット");
+            }
+            if ($reserve->admin->menus->first()->color == 1){
+                array_push($salon_menu,"カラー");
+            }
+            if ($reserve->admin->menus->first()->perm == 1){
+                array_push($salon_menu,"パーマ");
+            }
+            if ($reserve->admin->menus->first()->cut・color == 1){
+                array_push($salon_menu,"カット・カラー");
+            }
+            if ($reserve->admin->menus->first()->cut・perm == 1){
+                array_push($salon_menu,"カット・パーマ");
+            }
+            
         
+        $reserve->startTime = date("H:i",strtotime($reserve->startTime));    
+            
         return view('edit_time_menu')->with([
-            "edit" => $edit, 
-            "menus" => $menus,
-            "possible_times" => $possible_time]);;
+            "edit" => $edit_content, 
+            "menus" => $salon_menu,
+            "times" => $times,
+            "reserve" => $reserve]);;
     }
     
     
-    public function update(Request $request, Reserve $reserve){
-        $update = $request['edit'];
-        dd($update);
-        $reserve->fill($update)->save();
-        return redirect('/mypage');
+    public function update($id){
+        //変更情報の取得
+        $edit["date"] = session()->get('edit[date]');
+        $edit["stylist"] = session()->get('edit[stylist]');
+        $edit["startTime"] = session()->get('edit[time]');
+        $edit["menu"] = session()->get('edit[menu]');
+        
+        //既存の予約の取得
+        $reserve = Reserve::query()->where("id",$id)->first();
+        $reserve->date = $edit['date'];
+        $reserve->stylist = $edit['stylist'];
+        $reserve->startTime = $edit['startTime'];
+        $reserve->menu = $edit['menu'];
+        $reserve->update();
+        
+        return redirect('/salon/mypage')->with(["flash_message" => "変更が完了しました"]);
     }
     
     public function delete($reserve_id){

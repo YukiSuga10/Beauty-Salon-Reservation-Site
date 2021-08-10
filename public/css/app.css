@@ -711,6 +711,7 @@ pre code {
   width: 100%;
   padding-right: 15px;
   padding-left: 15px;
+  
 }
 
 .col {
@@ -10941,7 +10942,9 @@ a.text-dark:focus {
     border-color: #dee2e6;
   }
   
-
+  .search{
+    float: right;
+  }
   
 }
 

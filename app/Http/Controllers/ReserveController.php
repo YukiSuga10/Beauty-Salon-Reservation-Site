@@ -115,7 +115,7 @@ class ReserveController extends Controller
     
     public function confirm($id,Request $request)
     {
-        $salon = Admin::find($id)->first();
+        $salon = Admin::query()->where("id",$id)->first();
         
         $content = "予約確認";
         $reserve = $request['reserve'];
@@ -145,8 +145,7 @@ class ReserveController extends Controller
     
     public function reserve($id,Request $request){
         $input = $request['reserve'];
-        $salon = Admin::find($id)->first();
-        
+        $salon = Admin::query()->where("id",$id)->first();
         
         //入力された日にちが過去の場合
         $date = strtotime($input['date']);
@@ -158,7 +157,7 @@ class ReserveController extends Controller
         }else{
             
         //データベースのレコード数取得
-        $con = mysqli_connect('localhost', 'dbuser', 'yuki121028', 'salon');
+        $con = mysqli_connect('127.0.0.1', 'dbuser', 'yuki121028', 'salon');
         if(!$con) {
             die('接続に失敗しました');
         }
@@ -176,7 +175,7 @@ class ReserveController extends Controller
             
             if ($input['menu'] == "カット"){
                 //データベースの接続
-                $con = mysqli_connect('localhost', 'dbuser', 'yuki121028', 'salon');
+                $con = mysqli_connect('127.0.0.1', 'dbuser', 'yuki121028', 'salon');
                 if(!$con) {
                     die('接続に失敗しました');
                 }
@@ -261,7 +260,7 @@ class ReserveController extends Controller
                 }
             }elseif ($input['menu'] == "カラー"){
                     //データベースの接続
-                    $con = mysqli_connect('localhost', 'dbuser', 'yuki121028', 'salon');
+                    $con = mysqli_connect('127.0.0.1', 'dbuser', 'yuki121028', 'salon');
                     if(!$con) {
                         die('接続に失敗しました');
                     }
@@ -348,7 +347,7 @@ class ReserveController extends Controller
                     }
                 }elseif ($input['menu'] == "パーマ"){
                     //データベースの接続
-                    $con = mysqli_connect('localhost', 'dbuser', 'yuki121028', 'salon');
+                    $con = mysqli_connect('127.0.0.1', 'dbuser', 'yuki121028', 'salon');
                     if(!$con) {
                         die('接続に失敗しました');
                     }
@@ -430,7 +429,7 @@ class ReserveController extends Controller
                     }
                 }elseif ($input['menu'] = "カット・カラー"){
                     //データベースの接続
-                    $con = mysqli_connect('localhost', 'dbuser', 'yuki121028', 'salon');
+                    $con = mysqli_connect('127.0.0.1', 'dbuser', 'yuki121028', 'salon');
                     if(!$con) {
                         die('接続に失敗しました');
                     }
@@ -513,7 +512,7 @@ class ReserveController extends Controller
                     }
                 }elseif ($input['menu'] == "カット・パーマ"){
                     //データベースの接続
-                    $con = mysqli_connect('localhost', 'dbuser', 'yuki121028', 'salon');
+                    $con = mysqli_connect('127.0.0.1', 'dbuser', 'yuki121028', 'salon');
                     if(!$con) {
                         die('接続に失敗しました');
                     }

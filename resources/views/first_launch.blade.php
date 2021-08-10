@@ -3,7 +3,13 @@
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-8">
+        <div class="col-md-8" >
+            
+            <div class = "search"　>
+                <input type = "text" placeholder = "美容院名">
+                <input type = "submit" value = "検索">
+            </div>
+            
             <div class="card">
                 <div class="card-header">ようこそ！！</div>
 
@@ -17,7 +23,7 @@
                             <div class="flash_message">
                                 {{ session('flash_message') }}
                             </div>
-                        @endif
+                    @endif
                         
                     <main class="mt-4">
                         @yield('content')
@@ -39,5 +45,7 @@
             </div>
         </div>
     </div>
+    <br>
+    
 </div>
 @endsection

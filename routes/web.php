@@ -22,33 +22,30 @@ Route::get('/salon/{admin}','HomeController@show_salonPage');
 Route::get('/salon/{admin}/info_stylist','HomeController@info_stylist');
 Route::get('/salon/{admin}/reserve', 'ReserveController@reserve_date_stylist');
 Route::get('/salon/{admin}/reserve_time_menu', 'ReserveController@reserve_time_menu');
-Route::get('/info_stylist', 'HomeController@info_stylist');
 
 
 Route::get('/salon/mypage/show_reserve/{reserve}', 'HomeController@show_reserve');
 Route::get('/salon/show_reserve/{reserve}/past', 'HomeController@show_reserve');
 Route::get('/salon/mypage/past_reserve/{user}', 'HomeController@past_reserve');
-//Route::get('/register_stylist','StylistController@register_stylist');
 Route::get('/able_time','StylistController@able_time');
 Route::get('/reserved', 'MailController@reserveComplete');
 Route::get('/api','ApiTestController@test');
 Route::get('/salon/{admin}/{stylist}/show_review','StylistController@show_review');
-Route::get('/edit', 'HomeController@edit');
 Route::get('/salon/{admin}/show_location', 'GmapsController@show_maps');
 
 Route::post('/login', 'HomeController@start');
 Route::post('/salon/{admin}/reserve_time_menu', 'ReserveController@reserve_time_menu');
 Route::post('/salon/{admin}/confirm', 'ReserveController@confirm');
 Route::post('/salon/{admin}/reserve', 'ReserveController@reserve');
-Route::post('/edit', 'HomeController@edit');
-Route::post('/edit_time_menu', 'HomeController@edit_time_menu');
-Route::post('/edit_confirm', 'HomeController@edit_confirm');
+Route::post('/salon/{reserve}/edit', 'HomeController@show_editForm');
+Route::post('/salon/{reserve}/edit_time_menu', 'HomeController@edit_time_menu');
+Route::post('/salon/{reserve}/edit_confirm', 'HomeController@edit_confirm');
 Route::post("/store_stylist",'StylistController@store');
 Route::post('/salon/{admin}/able_time','StylistController@able_time');
 Route::post('/salon/{reserve}/review','StylistController@show_create_reviw');
 Route::post('/salon/{reserve}/review/create','StylistController@create_review');
 
-Route::put('/update', 'HomeController@update');
+Route::put('/salon/{reserve}/update', 'MailController@editComplete');
 
 
 Route::delete('/salon/{reserve}/delete', 'HomeController@delete');
