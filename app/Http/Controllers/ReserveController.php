@@ -123,6 +123,8 @@ class ReserveController extends Controller
         $time = date('G時i分',strtotime($reserve["time"]));
         $menu = $reserve["menu"];
         
+        $cut_reserved = Reserve::query()->where("menu","カット")->get();
+        dd(count($reserved));
         //所要時間
         if ($menu == "カット"){
             $time_required = "30分";
@@ -157,15 +159,8 @@ class ReserveController extends Controller
         }else{
             
         //データベースのレコード数取得
-        $con = mysqli_connect('127.0.0.1', 'dbuser', 'yuki121028', 'salon');
-        if(!$con) {
-            die('接続に失敗しました');
-        }
-        mysqli_set_charset($con, 'utf8');
-        $sql = "SELECT * FROM reserves";
-        $res = mysqli_query($con, $sql);
-        $num_rows = mysqli_num_rows($res);
-        mysqli_close($con);
+        $reserved = Reserve::query()->get();
+        $num_rows = count($reserved);
         
         $stylist_id = $salon->stylists->where('name',$input["stylist"])->first()->id;
         
@@ -174,16 +169,8 @@ class ReserveController extends Controller
             $user_id = Auth::id();
             
             if ($input['menu'] == "カット"){
-                //データベースの接続
-                $con = mysqli_connect('127.0.0.1', 'dbuser', 'yuki121028', 'salon');
-                if(!$con) {
-                    die('接続に失敗しました');
-                }
-                mysqli_set_charset($con, 'utf8');
-                $sql = "SELECT * FROM stylist_cuts";
-                $res = mysqli_query($con, $sql);
-                $num_rows = mysqli_num_rows($res);
-                mysqli_close($con);
+                $cut_reserved = Reserve::query()->where("menu","カット")->get();
+                $num_rows = count($cut_reserved);
                 
                 //同じスタイリストの同時刻のカラー取得
                 $color_time = stylist_color::query()->where("stylist_id",$stylist_id)->where("date", $input['date'])->where("startTime", $input['time'])->value("startTime");
@@ -260,18 +247,8 @@ class ReserveController extends Controller
                 }
             }elseif ($input['menu'] == "カラー"){
                     //データベースの接続
-                    $con = mysqli_connect('127.0.0.1', 'dbuser', 'yuki121028', 'salon');
-                    if(!$con) {
-                        die('接続に失敗しました');
-                    }
-                    // 文字コード
-                    mysqli_set_charset($con, 'utf8');
-                    // SQLの発行と出力
-                    $sql = "SELECT * FROM stylist_colors";
-                    $res = mysqli_query($con, $sql);
-                    $num_rows = mysqli_num_rows($res);
-            
-                    mysqli_close($con);
+                    $color_reserved = Reserve::query()->where("menu","カラー")->get();
+                    $num_rows = count($color_reserved);
                     
                     //同じスタイリストの同時刻のカット取得
                     $cut_time = stylist_cut::query()->where("stylist_id",$stylist_id)->where("date", $input['date'])->where("startTime", $input['time'])->value("startTime");
@@ -346,19 +323,8 @@ class ReserveController extends Controller
                         }
                     }
                 }elseif ($input['menu'] == "パーマ"){
-                    //データベースの接続
-                    $con = mysqli_connect('127.0.0.1', 'dbuser', 'yuki121028', 'salon');
-                    if(!$con) {
-                        die('接続に失敗しました');
-                    }
-                    // 文字コード
-                    mysqli_set_charset($con, 'utf8');
-                    // SQLの発行と出力
-                    $sql = "SELECT * FROM stylist_colors";
-                    $res = mysqli_query($con, $sql);
-                    $num_rows = mysqli_num_rows($res);
-            
-                    mysqli_close($con);
+                    $perm_reserved = Reserve::query()->where("menu","パーマ")->get();
+                    $num_rows = count($perm_reserved);
                     
                     //同じスタイリストの同時刻のカット取得
                     $cut_time = stylist_cut::query()->where("stylist_id",$stylist_id)->where("date", $input['date'])->where("startTime", $input['time'])->value("startTime");
@@ -428,19 +394,8 @@ class ReserveController extends Controller
                         }
                     }
                 }elseif ($input['menu'] = "カット・カラー"){
-                    //データベースの接続
-                    $con = mysqli_connect('127.0.0.1', 'dbuser', 'yuki121028', 'salon');
-                    if(!$con) {
-                        die('接続に失敗しました');
-                    }
-                    // 文字コード
-                    mysqli_set_charset($con, 'utf8');
-                    // SQLの発行と出力
-                    $sql = "SELECT * FROM stylist_cut_and_colors";
-                    $res = mysqli_query($con, $sql);
-                    $num_rows = mysqli_num_rows($res);
-                    
-                    mysqli_close($con);
+                    $cut_color_reserved = Reserve::query()->where("menu","カット・カラー")->get();
+                    $num_rows = count($cut_color_reserved);
                     
                     //同じスタイリストの同時刻のカット取得
                     $cut_time = stylist_cut::query()->where("stylist_id",$stylist_id)->where("date", $input['date'])->where("startTime", $input['time'])->value("startTime");
@@ -511,19 +466,8 @@ class ReserveController extends Controller
                         }
                     }
                 }elseif ($input['menu'] == "カット・パーマ"){
-                    //データベースの接続
-                    $con = mysqli_connect('127.0.0.1', 'dbuser', 'yuki121028', 'salon');
-                    if(!$con) {
-                        die('接続に失敗しました');
-                    }
-                    // 文字コード
-                    mysqli_set_charset($con, 'utf8');
-                    // SQLの発行と出力
-                    $sql = "SELECT * FROM stylist_cut_and_perms";
-                    $res = mysqli_query($con, $sql);
-                    $num_rows = mysqli_num_rows($res);
-                    
-                    mysqli_close($con);
+                    $cut_perm_reserved = Reserve::query()->where("menu","カット・パーマ")->get();
+                    $num_rows = count($cut_perm_reserved);
                     
                     //同じスタイリストの同時刻のカット取得
                     $cut_time = stylist_cut::query()->where("stylist_id",$stylist_id)->where("date", $input['date'])->where("startTime", $input['time'])->value("startTime");
