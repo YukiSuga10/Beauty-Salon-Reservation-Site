@@ -123,8 +123,8 @@ class ReserveController extends Controller
         $time = date('G時i分',strtotime($reserve["time"]));
         $menu = $reserve["menu"];
         
-        $cut_reserved = Reserve::query()->where("menu","カット")->get();
-        dd(count($reserved));
+        
+        
         //所要時間
         if ($menu == "カット"){
             $time_required = "30分";
