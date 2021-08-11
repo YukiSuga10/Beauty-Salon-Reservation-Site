@@ -43,7 +43,7 @@ class HomeController extends Controller
     }
     
     public function show_salon(){
-        $admins = Admin::query()->get();
+        $admins = Admin::query()->orderBy("id","ASC")->get();
         return view('first_launch')->with(["admins" => $admins]);
     }
     
@@ -52,11 +52,6 @@ class HomeController extends Controller
         return view('salonPage')->with(["salon" => $salon]);
     }
     
-    
-    public function start()
-    {
-        return view('first_launch');
-    }
     
     public function launch_corporation()
     {
@@ -260,14 +255,11 @@ class HomeController extends Controller
     }
     
     public function delete($reserve_id){
-        $reserve = Reserve::find($reserve_id)->first();
+        $reserve = Reserve::where("id",$reserve_id)->first();
         $reserve->delete();
         return redirect('/home')->with(['flash_message' => "予約がキャンセルされました"]);
     }
     
-    public function show_locationPage()
-    {
-        return view('location');
-    }
+    
     
 }

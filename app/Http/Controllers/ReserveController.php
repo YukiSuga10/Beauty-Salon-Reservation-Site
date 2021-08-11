@@ -60,7 +60,6 @@ class ReserveController extends Controller
             array_push($times,$startTime);
         }
         
-        
         //メニューの取得
         $salon_menu = [];
             if ($salon->menus->first()->cut == 1){

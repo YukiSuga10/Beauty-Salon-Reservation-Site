@@ -45,6 +45,10 @@ Route::post('/salon/{admin}/able_time','StylistController@able_time');
 Route::post('/salon/{reserve}/review','StylistController@show_create_reviw');
 Route::post('/salon/{reserve}/review/create','StylistController@create_review');
 
+Route::post('/salon/search_admin','SearchController@result');
+
+
+
 Route::put('/salon/{reserve}/update', 'MailController@editComplete');
 
 
@@ -94,9 +98,16 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function() {
     //カレンダーページ
     Route::get('/show_calender', 'Admin\HomeController@show_calender');
     
+    Route::get('/{admin}/{stylist}/edit', 'Admin\HomeController@edit');
+    
+    //美容院の紹介関連
+    Route::get('/{admin}/salon_images', 'Admin\HomeController@register_salonImage');
+    
+    //更新処理
     Route::put('/{admin}/edit_menu', 'Admin\MenuController@update_menu');
+    Route::put('/{stylist}/edit', 'Admin\HomeController@update_stylist');
     
-    
+    Route::delete('/{admin}/{reserve}/delete', 'Admin\HomeController@delete');
 });
 
 Route::get('/admin_access', 'Admin\HomeController@admin_access');

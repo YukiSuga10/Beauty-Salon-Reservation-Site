@@ -7,7 +7,7 @@
         <div class="col-md-8" >
             
             <div class="card">
-                <div class="card-header">ようこそ！！</div>
+                <div class="card-header">{{$condition}}の検索結果</div>
 
                 <div class="card-body">
                     @if (session('status'))
@@ -24,30 +24,38 @@
                     <main class="mt-4">
                         @yield('content')
                     </main>
+                    
+                    @if ($numbers == 0)
+                    <p>申し訳ございません。お探しの美容院は見つかりませんでした。</p>
+                    <p>条件を変えてお探しください</p>
+                    <hr>
+                    <div class = "back">
+                        <input type="button" onclick="window.history.back();" value="戻る">
+                    </div>
+                    @else
+                    <p>{{ $numbers }}件の結果がヒットしました</p>
                     <div class = 'show_salon'>
                         <p><h5>▶サロン一覧</h5></p>
-                        @foreach($admins as $admin)
-                            <p><a href = "/salon/{{$admin->id}}">{{ $admin->name }}</a></p>
+                        @foreach($results as $result)
+                            <p><a href = "/salon/{{$result->id}}">{{ $result->name }}</a></p>
                         @endforeach
                     </div>
                     <hr>
-                    <div>
-                        <p><h5>▶予約確認</h5></p>
-                        <a href = "/salon/mypage">予約確認はこちらから</a>
+                    <div class = "back">
+                        <input type="button" onclick="window.history.back();" value="戻る">
                     </div>
-                    <br>
-                
+                    @endif
+                    
                 </div>
             </div>
         </div>
         <div class = "search"　>
             <form method="POST", action="/salon/search_admin">
                 @csrf
-                <input type = "text" name = "search[salonName]" placeholder = "美容院名">
+                <input type = "text" name = "search[salonName]" value={{$condition}}  placeholder = "美容院名">
                 <input type = "submit" value = "検索">
             </form>
         </div>
-        
     </div>
     <br>
     

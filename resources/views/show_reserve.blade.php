@@ -51,16 +51,6 @@
                                 <input type = "submit" value = "予約キャンセル" id = "reserve" onclick = "return deleteReserve(this);">
                             </form>
                         </div>
-                        <script>
-                        function deleteReserve(e){
-                            'use strict';　
-                            if(confirm('一度キャンセルすると元には戻せません \n本当にキャンセルしますか？')) {
-                                document.getElementById('reserve').submit();
-                            }else{
-                                return false;
-                            }
-                        }
-                        </script>
                     @else
                     <form method = 'POST', action = '/salon/{{ $reserve->id }}/review'>
                         {{ csrf_field() }}

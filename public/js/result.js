@@ -59,4 +59,25 @@ function checkTime(f) {
 }
 
 
+function deleteReserve(e){
+    'use strict';
+    var id = document.getElementById("reserve");
+    if(confirm('一度キャンセルすると元には戻せません \n本当にキャンセルしますか？')) {
+        document.getElementById(id).submit();
+    }else{
+        return false;
+    }
+}
+
+function deleteStylist(e){
+    'use strict';
+    var id = document.getElementById("stylist");
+    if(confirm('一度削除すると元には戻せません \n本当に削除しますか？')) {
+        document.getElementById(id).submit();
+    }else{
+        return false;
+    }
+}
+
+
 

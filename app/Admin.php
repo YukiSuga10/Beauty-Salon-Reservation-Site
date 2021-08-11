@@ -57,4 +57,8 @@ class Admin extends Authenticatable
         return $this->hasMany('App\StylistReview');
     }
     
+    public function salon_images(){
+        return $this->hasMany('App\SalonImage');
+    }
+    
 }

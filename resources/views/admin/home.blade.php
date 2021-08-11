@@ -30,7 +30,7 @@
 
                     <hr>
                     <div class = 'confirm-reserve'>
-                        <a href = '/admin/{{ $salon_id }}/info_stylist'>▶美容師の確認</a>
+                        <a href = '/admin/{{ $salon_id }}/info_stylist'>▶美容師の確認・編集</a>
                     </div>
                     <hr>
                     <div class = 'config-time'>
@@ -47,6 +47,10 @@
                     <hr>
                     <div class = 'edit_access'>
                         <a href = '/admin/{{ $salon_id }}/admin_access'>▶アクセスの編集</a>
+                    </div>
+                    <hr>
+                    <div class = 'salon_images'>
+                        <a href = '/admin/{{ $salon_id }}/salon_images'>▶美容院の紹介画像投稿</a>
                     </div>
                 </div>
             </div>

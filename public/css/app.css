@@ -1213,7 +1213,9 @@ pre code {
   .col-md-8 {
     flex: 0 0 66.6666666667%;
     max-width: 66.6666666667%;
+    float: right;
   }
+  
 
   .col-md-9 {
     flex: 0 0 75%;
