@@ -38,10 +38,11 @@
                             @endif
                         </select>
                         </p>
+                        <p>(※写真を変更する場合は下記から選択してください)</p>
                         <p>写真：
                         <input type="file" name="edit[file]">
                         </p>
-                        <p>(※写真を変更する場合は上記から選択してください)</p>
+    
                         
                         <input type = "submit" value = "変更する">
                         </form>

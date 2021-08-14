@@ -22,7 +22,7 @@ class SearchController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth')->except('result');
+        $this->middleware('auth')->except('result_salon','result_region');
     }
 
     /**
@@ -31,7 +31,7 @@ class SearchController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
      
-     public function result(Request $request){
+     public function result_salon(Request $request){
         $search = $request['search'];
         $searchResult = Admin::query()->where("name",'LIKE', "%{$search['salonName']}%")->get();
         
@@ -41,6 +41,21 @@ class SearchController extends Controller
             "results" => $searchResult,
             "numbers" => $result_num,
             "condition" => $search['salonName']]);
+     }
+     
+     public function result_region(Request $request){
+         $search = $request->input('search');
+         
+         $salons = Admin::query()->where("region",$search[0])->get();
+         
+         $result_num = count($salons);
+         
+         return view('search_result')->with([
+             "results" => $salons,
+             "numbers" => $result_num,
+             "condition" => $search[0]
+            ]);
+         
      }
     
     

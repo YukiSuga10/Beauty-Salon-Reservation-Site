@@ -45,7 +45,8 @@ Route::post('/salon/{admin}/able_time','StylistController@able_time');
 Route::post('/salon/{reserve}/review','StylistController@show_create_reviw');
 Route::post('/salon/{reserve}/review/create','StylistController@create_review');
 
-Route::post('/salon/search_admin','SearchController@result');
+Route::post('/salon/search_admin','SearchController@result_salon');
+Route::post('/salon/search_region','SearchController@result_region');
 
 
 

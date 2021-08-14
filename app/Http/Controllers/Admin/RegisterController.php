@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
 use App\Admin;
+use Carbon\Carbon;
 
 class RegisterController extends Controller
 {
@@ -59,6 +60,7 @@ class RegisterController extends Controller
         return Validator::make($data, [
             'name'     => ['required', 'string', 'max:255'],
             'email'    => ['required', 'string', 'email', 'max:255', 'unique:admins'],
+            'region'    => ['required', 'string'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
     }
@@ -97,6 +99,7 @@ class RegisterController extends Controller
         return Admin::create([
             'name' => $data['name'],
             'email' => $data['email'],
+            'region' => $data['region'],
             'password' => Hash::make($data['password']),
         ]);
     }
@@ -105,13 +108,15 @@ class RegisterController extends Controller
     {
         $this->validator($request->all())->validate();
         
-        
-        $admin = Admin::create([
-            'name' => $request['name'],
-            'email' => $request['email'],
-            'password' => Hash::make($request['password']),
-        ]);
-        
+        $admin = new Admin;
+        $admin->name = $request['name'];
+        $admin->email = $request['email'];
+        $admin->region = $request['region'];
+        $admin->password = Hash::make($request['password']);
+        $admin->created_at = Carbon::now();
+        $admin->updated_at = Carbon::now();
+        $admin->save();
+    
         $salon_id = Admin::query()->where("name",$request['name'])->value('id');
         $salon_name = $request['name'];
         return redirect('/admin/home')->with([

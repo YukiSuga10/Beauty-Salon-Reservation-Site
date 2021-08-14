@@ -7,10 +7,6 @@
             <div class="card">
                 <div class="card-header">アクセスの設定</div>
                 <div class="card-body">
-                    
-
-                
-                    
                     @if (session('status'))
                         <div class="alert alert-success" role="alert">
                             {{ session('status') }}
@@ -60,9 +56,6 @@
                         <script src= "https://maps.googleapis.com/maps/api/js?language=ja&region=JP&key=AIzaSyBLDbSsnWgTPX3-l8E6eP-2NJPdFww_ZI0&callback=initMap" async defer>
                         </script>
                     @endif
-                    
-                    
-                    
                 </div>
             </div>
         </div>
