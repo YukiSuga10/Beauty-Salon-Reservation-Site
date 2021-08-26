@@ -11,6 +11,7 @@ use App\User;
 use App\Menu;
 use App\time;
 use App\file_Image;
+use App\SalonImage;
 use DateTime;
 
 class HomeController extends Controller
@@ -44,18 +45,20 @@ class HomeController extends Controller
     
     public function show_salon(){
         $admins = Admin::query()->orderBy("id","ASC")->get();
-        return view('first_launch')->with(["admins" => $admins]);
+        $admin_images = SalonImage::query()->get();
+
+        return view('first_launch')->with([
+            "admins" => $admins,
+            "images" => $admin_images]);
     }
     
     public function show_salonPage($id){
-        $salon = Admin::find($id);
-        return view('salonPage')->with(["salon" => $salon]);
-    }
-    
-    
-    public function launch_corporation()
-    {
-        return view('/corporation_views/launch_corporation');
+        $salon = Admin::where("id",$id)->first();
+        $images = SalonImage::query()->where("admin_id",$id)->get();
+        
+        return view('salonPage')->with([
+            "salon" => $salon,
+            "images" => $images]);
     }
     
     

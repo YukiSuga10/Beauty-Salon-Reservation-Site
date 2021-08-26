@@ -2,12 +2,12 @@
 
 @section('content')
 <div class="container">
+    
     <div class="row justify-content-center">
-        
         <div class="col-md-8" >
             
             <div class="card">
-                <div class="card-header">ようこそ！！</div>
+                <div class="card-header" style="background-color:#faebd7;">ようこそ！！</div>
 
                 <div class="card-body">
                     @if (session('status'))
@@ -24,15 +24,39 @@
                     <main class="mt-4">
                         @yield('content')
                     </main>
-                    <div class = 'show_salon'>
-                        <p><h5>▶サロン一覧</h5></p>
+                    <div class ='show_salon'>
+                        <p><h5 style="border-bottom: 3px double #7C7B7B;">▶サロン一覧</h5></p>
+                        
                         @foreach($admins as $admin)
-                            <p><a href = "/salon/{{$admin->id}}">{{ $admin->name }}</a></p>
-                        @endforeach
+                            <div class="each_salon">
+                                <a class="salonName" href = "/salon/{{$admin->id}}">{{ $admin->name }}</a><p class="region" style="color:#383333;">{{$admin->region}}</p>
+                                
+                                <hr class="division">
+                                <div align="center" class="salonImage">
+                                    @foreach ($images as $image)
+                                        @if ($image->admin_id == $admin->id)
+                                            <img src="{{ $image->path }}"　width="70" height = "120">
+                                        @endif
+                                    @endforeach
+                                </div>
+                                <hr>
+                                <div class="introduction">
+                                <p style="margin-top:20px;">〜美容院から一言〜</p>
+                                <label>{{ $admin->introduction }}</label>
+                                <div class="reserveBTN">
+                                    <section>
+                                      <a href="/salon/{{$admin->id}}/reserve" class="reserveBtn">予約する</a>
+                                    </section>
+                                </div>
+                                </div>
+                        
                     </div>
-                    <hr>
+                        @endforeach       
+                        
+                    </div>
+                    <br>
                     <div>
-                        <p><h5>▶予約確認</h5></p>
+                        <p><h5 style="border-bottom: 3px double ;">▶予約確認</h5></p>
                         <a href = "/salon/mypage">予約確認はこちらから</a>
                     </div>
                     <br>
@@ -40,40 +64,13 @@
                 </div>
             </div>
         </div>
-        <div>
-            <div class = "search"　>
-                <form method="POST", action="/salon/search_admin">
-                    @csrf
-                    <input type = "text" name = "search[salonName]" placeholder = "美容院名">
-                    <input type = "submit" value = "検索">
-                </form>
-            </div>
-            <hr>
-            <div class = "search[]"　>
-                <form method="POST", action="/salon/search_region">
-                    @csrf
-                    <input type = "radio" name = "search[]" value="北海道" >北海道
-                    <input type = "radio" name = "search[]" value="東北" style="margin-left:10px">東北
-                    <br>
-                    <input type = "radio" name = "search[]" value="北信越">北信越
-                    <input type = "radio" name = "search[]" value="関東" style="margin-left:10px">関東　
-                    <br>
-                    <input type = "radio" name = "search[]" value="東海">東海
-                    <input type = "radio" name = "search[]" value="中国" style="margin-left:24px">中国
-                    <br>
-                    <input type = "radio" name = "search[]" value="関西">関西
-                    <input type = "radio" name = "search[]" value="四国" style="margin-left:24px">四国
-                    <br>
-                    <input type = "radio" name = "search[]" value="九州・沖縄"　>九州・沖縄
-                    <br>
-                    <input type = "submit" value = "絞り込む" style="margin-top:10px">
-                    <hr>
-                </form>
-            </div>
-            
-        </div>
+        
+            @include('search.search_name_region')
+
     </div>
+    
     <br>
+    
     
 </div>
 @endsection

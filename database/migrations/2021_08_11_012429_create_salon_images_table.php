@@ -16,7 +16,6 @@ class CreateSalonImagesTable extends Migration
         Schema::create('salon_images', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedInteger('admin_id');
-            $table->text("introduction");
             $table->string('path');
             $table->timestamps();
             

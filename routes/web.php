@@ -103,6 +103,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function() {
     
     //美容院の紹介関連
     Route::get('/{admin}/salon_images', 'Admin\HomeController@register_salonImage');
+    Route::post('/{admin}/upload/introduction','Admin\HomeController@upload_introduction');
     
     //更新処理
     Route::put('/{admin}/edit_menu', 'Admin\MenuController@update_menu');

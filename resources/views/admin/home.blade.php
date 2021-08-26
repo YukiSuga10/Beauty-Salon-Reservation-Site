@@ -1,8 +1,10 @@
 @extends('layouts.app_admin')
 
 @section('content')
+
 <div class="container">
     <div class="row justify-content-center">
+        @include('admin.sidemenu')
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">{{$name}}管理画面</div>
@@ -24,37 +26,35 @@
                     </main>
                     
                     
-                    <div class = 'new-reserve'>
-                        <a href = '/admin/{{ $salon_id }}/register_stylist'>▶美容師の登録</a>
+                    <div class ='show_salon'>
+                        <p><h5 style="border-bottom: 3px double #7C7B7B;">▶サロン画面</h5></p>
+                        
+                            <div class="each_salon">
+                                <a class="salonName" href = "/salon/{{$admin->id}}">{{ $admin->name }}</a><p class="region" style="color:#383333;">{{$admin->region}}</p>
+                                
+                                <hr class="division">
+                                <a href="/" style="text-align:right;" class="edit">編集</a>
+                                <div align="center" class="salonImage">
+                                    @foreach ($images as $image)
+                                        @if ($image->admin_id == $admin->id)
+                                            <img src="{{ $image->path }}"　width="70" height = "120">
+                                        @endif
+                                    @endforeach
+                                </div>
+                                
+                                <hr>
+                                <a href="/" style="text-align:right;" class="edit">編集</a>
+                                <div class="introduction">
+                                <p style="margin-top:20px;">〜美容院から一言〜</p>
+                                <label>{{ $admin->introduction }}</label>
+                                </div>
+              
                     </div>
-
-                    <hr>
-                    <div class = 'confirm-reserve'>
-                        <a href = '/admin/{{ $salon_id }}/info_stylist'>▶美容師の確認・編集</a>
-                    </div>
-                    <hr>
-                    <div class = 'config-time'>
-                        <a href = '/admin/{{ $salon_id }}/config_time'>▶営業時間の設定</a>
-                    </div>
-                    <hr>
-                    <div class = 'config-menu'>
-                        <a href = '/admin/{{ $salon_id }}/config_menu'>▶メニューの設定</a>
-                    </div>
-                    <hr>
-                    <div class = 'confirm_calender'>
-                        <a href = '/admin/{{ $salon_id }}/show_calender'>▶予約カレンダーの確認</a>
-                    </div>
-                    <hr>
-                    <div class = 'edit_access'>
-                        <a href = '/admin/{{ $salon_id }}/admin_access'>▶アクセスの編集</a>
-                    </div>
-                    <hr>
-                    <div class = 'salon_images'>
-                        <a href = '/admin/{{ $salon_id }}/salon_images'>▶美容院の紹介画像投稿</a>
-                    </div>
+                    
                 </div>
             </div>
         </div>
     </div>
 </div>
+
 @endsection

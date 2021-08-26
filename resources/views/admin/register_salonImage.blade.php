@@ -1,6 +1,7 @@
 @extends('layouts.app_admin')
 
 @section('content')
+
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
@@ -17,14 +18,35 @@
                                 {{ session('flash_message') }}
                             </div>
                     @endif
-                    <form action="/admin/{{$id}}/upload/stylist" method="POST" enctype="multipart/form-data">
+                    <form action="/admin/{{$id}}/upload/introduction" method="POST" enctype="multipart/form-data">
                         @csrf
                         <h6>~美容院紹介文~</h6><br>
-                        <textarea rows="10" cols="60"></textarea><hr>
+                        
+                        @if (isset($introduction))
+                            <textarea rows="3" cols="60" name = "introduction[]">{{ $introduction }}</textarea><hr>
+                        @else
+                            <textarea rows="3" cols="60" name = "introduction[]"></textarea><hr>
+                        @endif
+                        
+                        
+                        
                         <h6>~美容院紹介画像（3枚まで可）~</h6><br>
-                        <input type="file" name="salon[photo]" multiple>
+                        @if (count($images)==3)
+                            
+                            @foreach ($images as $image)
+                                <img src="{{ $image->path }}"　width="70" height = "120">
+                            @endforeach
+                        @else
+                            <input type="file" name="photo[]" multiple="multiple">
+                        @endif
+                        
                         <hr>
-                        <input type = "submit" value = "登録">
+                        
+                        @if (isset($introduction) || count($images)==3)
+                            <input type = "submit" value = "変更">
+                        @else
+                            <input type = "submit" value = "登録">
+                        @endif
                     </form>
                     <main class="mt-4">
                         @yield('content')

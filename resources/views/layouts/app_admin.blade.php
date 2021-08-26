@@ -20,7 +20,9 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-    <style>body{background-color: #FFCCCC;}</style>
+    <link href="{{ asset('css/admin/home.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.1/css/all.css">
+    <style>body{background-image: url(../images/22081359_m.jpg); }</style>
 </head>
 <body>
     <div id="app">

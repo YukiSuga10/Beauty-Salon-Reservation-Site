@@ -61,8 +61,10 @@ class ImageController extends Controller
                 "path" => $path,
                 ]);
             
+            $name = Admin::query()->where("id",$id)->value('name');
             
             return redirect('/admin/home')->with([
+                "name" => $name,
                 "salon_id" => $id,
                 'flash_message' => '登録が完了しました']);
         }else{

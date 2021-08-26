@@ -49,13 +49,7 @@
                 </div>
             </div>
         </div>
-        <div class = "search"　>
-            <form method="POST", action="/salon/search_admin">
-                @csrf
-                <input type = "text" name = "search[salonName]" value={{$condition}}  placeholder = "美容院名">
-                <input type = "submit" value = "検索">
-            </form>
-        </div>
+        @include('search.search_name_region')
     </div>
     <br>
     

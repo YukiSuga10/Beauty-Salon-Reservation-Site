@@ -3,7 +3,7 @@
 use Illuminate\Database\Seeder;
 use DateTime;
 
-class DatabaseSeeder extends Seeder
+class AdminSeeder extends Seeder
 {
     /**
      * Seed the application's database.

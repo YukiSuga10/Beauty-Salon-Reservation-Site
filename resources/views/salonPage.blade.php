@@ -22,6 +22,12 @@
                     <main class="mt-4">
                         @yield('content')
                     </main>
+                    <div align = "center">
+                        @foreach ($images as $image)
+                            <img src="{{ $image->path }}"　width="70" height = "120">
+                        @endforeach
+                    </div>
+                    <hr>
                     <div class = 'new-reserve'>
                         <a href = '/salon/{{$salon->id}}/reserve'>▶︎新規予約はこちら</a>
                     </div>

@@ -31,9 +31,13 @@ class ReserveController extends Controller
         //スタイリストの取得
         $stylists = Stylist::query()->where("admin_id",$id)->get();
         
+        //美容院の取得
+        $salon = Admin::query()->where("id",$id)->first();
+
         return view('reserve_date_stylist')->with([
             "stylists" => $stylists,
-            "salon_id" => $id
+            "salon_id" => $id,
+            "salon" => $salon
             ]);
     }
     

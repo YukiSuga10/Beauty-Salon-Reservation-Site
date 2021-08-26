@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use App\Stylist;
 use App\file_Image;
+use App\SalonImage;
 use App\Menu;
 use App\Admin;
 use App\time;
@@ -31,11 +33,15 @@ class HomeController extends Controller
     
     public function index()
     {
+        $admin = Admin::query()->where("id",Auth::id())->first();
+        $admin_images = SalonImage::query()->where("admin_id",Auth::id())->get();
         $salon_id = Auth::guard('admin')->user()->id;
         $salon_name = Admin::query()->where("id",$salon_id)->value('name');
         return view('admin.home')->with([
             "salon_id" => $salon_id,
-            "name" => $salon_name]);
+            "name" => $salon_name,
+            "admin" => $admin,
+            "images" => $admin_images]);
     }
     
     public function show_info($id)
@@ -61,9 +67,38 @@ class HomeController extends Controller
     }
     
     public function register_salonImage($id){
+        $introduction = Admin::query()->where("id",$id)->value('introduction');
+        $upload_images = SalonImage::query()->where("admin_id",$id)->get();
+
         return view('admin.register_salonImage')->with([
-            "id" => $id
+            "id" => $id,
+            "introduction" => $introduction,
+            "images" => $upload_images
             ]);
+    }
+    
+    public function upload_introduction($id, Request $request){
+        $files = $request['photo'];
+        foreach ($files as $file){
+            if ($file->isValid([])){
+                $upload_info = Storage::disk('s3')->putFile('/salonImage', $file, 'public');
+                $path = Storage::disk('s3')->url($upload_info);
+                
+                $salon_image = new SalonImage;
+                $salon_image->admin_id = $id;
+                $salon_image->path = $path;
+                $salon_image->save();
+            }
+        }
+        
+        $salon = Admin::query()->where("id",$id)->first();
+        $salon->introduction = $request['introduction'][0];
+        $salon->save();
+        
+        return redirect('/admin/home')->with([
+                "name" => $salon->name,
+                "salon_id" => $id,
+                'flash_message' => '登録が完了しました']);
     }
     
     public function show_configAccess($id){
