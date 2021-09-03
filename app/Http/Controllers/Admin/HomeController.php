@@ -54,6 +54,8 @@ class HomeController extends Controller
             ]);
     }
     
+    
+    
     public function show_calender(){
         return view('admin.show_calender');
     }
@@ -153,5 +155,7 @@ class HomeController extends Controller
         return redirect("/admin/".$salon_id."/info_stylist")->with(['flash_message' => "完了しました"]);
         
     }
+    
+    
     
 }

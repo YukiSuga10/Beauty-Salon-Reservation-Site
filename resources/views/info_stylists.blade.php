@@ -5,8 +5,16 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">スタイリスト一覧</div>
-
+                <div class="card-header" style="background-color:#fff1e0;">スタイリスト一覧</div>
+                <div id="nav">
+                    <ul>
+                        <li><a href = '/salon/{{$salon_id}}'><i class="fas fa-home"></i> ホーム</a></li>
+                        <li class="current"><a href = '/salon/{{$salon_id}}/info_stylist'><i class="fas fa-cut"></i> スタイリスト</a></li>
+                        <li><a href = '/salon/{{$salon_id}}/salon_review'><i class="fas fa-comment-dots"></i> 口コミ</a></li>
+                        <li><a href = '/salon/{{$salon_id}}/show_location'><i class="fas fa-map-marker-alt"></i> アクセス</a></li>
+                    </ul>
+                </div>
+                
                 <div class="card-body">
                     @if (session('status'))
                         <div class="alert alert-success" role="alert">
@@ -31,24 +39,23 @@
                                 </div>
                     <hr>
                         @foreach ($stylists as $stylist)
-                                    <img src="{{ $stylist->file_images->path }}"　width="200px" height = "200px">
+                            <img src="{{ $stylist->file_images->path }}"　width="200px" height = "200px">
                             <p>スタイリスト名：{{ $stylist->name }}</p>
                             <p>性別：{{ $stylist->gender }}</p>
                             <p><a href = "/salon/{{ $salon_id }}/{{ $stylist->id }}/show_review">この美容師の口コミを見る</a></p>
                             @if(@count($stylist_times) == 0)
-                            <hr>
+                                <hr>
                             @else
                                 <p>〜{{$date}}日の空き状況〜</p>
-                                    <select>
-                                        @foreach($times as $time)
-                                                @if ( @in_array($time,$stylist_times[$stylist->name]->toArray()))
+                                <select>
+                                    @foreach($times as $time)
+                                            @if ( @in_array($time,$stylist_times[$stylist->name]->toArray()))
                                                 <option value = {{$time}}>{{@date("H:i",@strtotime($time))}}：×</option>
-                                                @else
+                                            @else
                                                 <option value = {{$time}}>{{@date("H:i",@strtotime($time))}}：○</option>
-                                                @endif
-                                        @endforeach
-                                    </select>
-                                
+                                            @endif
+                                    @endforeach
+                                </select>
                                 <hr>
                             @endif
                         @endforeach

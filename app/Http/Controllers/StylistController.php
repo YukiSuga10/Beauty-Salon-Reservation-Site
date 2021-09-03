@@ -87,7 +87,7 @@ class StylistController extends Controller
         //評価の平均値取得
         $review_avg = StylistReview::query()->where('stylist_id',$stylist_id)->pluck('evaluation')->avg();
         
-        return view('show_review')->with([
+        return view('review.stylist')->with([
             "reviews" => $reviews, 
             "average" => $review_avg,
             "users" => $users,
@@ -128,7 +128,7 @@ class StylistController extends Controller
                             "updated_at" => now(),
                           ]);
 
-            return redirect('/salon/mypage/past_reserve/{user}');
+            return redirect('/salon/mypage/past_reserve/'.$user_id);
         }
         
         }

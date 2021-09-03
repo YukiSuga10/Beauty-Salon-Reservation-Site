@@ -22,8 +22,7 @@ Route::get('/salon/{admin}','HomeController@show_salonPage');
 Route::get('/salon/{admin}/info_stylist','HomeController@info_stylist');
 Route::get('/salon/{admin}/reserve', 'ReserveController@reserve_date_stylist');
 Route::get('/salon/{admin}/reserve_time_menu', 'ReserveController@reserve_time_menu');
-
-
+Route::get('/salon/{admin}/salon_review', 'HomeController@reviewPage');
 Route::get('/salon/mypage/show_reserve/{reserve}', 'HomeController@show_reserve');
 Route::get('/salon/show_reserve/{reserve}/past', 'HomeController@show_reserve');
 Route::get('/salon/mypage/past_reserve/{user}', 'HomeController@past_reserve');
@@ -44,6 +43,7 @@ Route::post("/store_stylist",'StylistController@store');
 Route::post('/salon/{admin}/able_time','StylistController@able_time');
 Route::post('/salon/{reserve}/review','StylistController@show_create_reviw');
 Route::post('/salon/{reserve}/review/create','StylistController@create_review');
+Route::post('/salon/{admin}/salon_review','SearchController@refine_review');
 
 Route::post('/salon/search_admin','SearchController@result_salon');
 Route::post('/salon/search_region','SearchController@result_region');

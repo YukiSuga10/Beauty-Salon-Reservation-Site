@@ -12,6 +12,7 @@ use App\Menu;
 use App\time;
 use App\file_Image;
 use App\SalonImage;
+use App\StylistReview;
 use DateTime;
 
 class HomeController extends Controller
@@ -23,7 +24,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth')->except('start','info_stylist','show_locationPage','show_salon','show_salonPage');
+        $this->middleware('auth')->except('start','info_stylist','show_locationPage','show_salon','show_salonPage',"reviewPage");
     }
 
     /**
@@ -44,12 +45,49 @@ class HomeController extends Controller
     }
     
     public function show_salon(){
-        $admins = Admin::query()->orderBy("id","ASC")->get();
         $admin_images = SalonImage::query()->get();
+        $admins = Admin::query()->orderBy("id","ASC")->get();
+        $reviews = StylistReview::query()->get();
+        $averages = [];
+        foreach ($admins as $admin){
+            $sum = 0;
+            $count = 0;
+            foreach($reviews as $review){
+                if ($review->reserve->admin_id == $admin->id){
+                    $sum += $review->evaluation;
+                    $count += 1;
+                }else{
+                    continue;
+                }
+            }
+            
+            if ($count == 0){
+                $average = 0;
+            }else{
+                $average = $sum/$count;
+            }
+            $averages[$admin->id] =
+                array (
+                    "id" => $admin->id,
+                    "name" => $admin->name,
+                    "evaluation" => $average
+                    );
+        }
+        
+    
+       foreach ($averages as $key => $value) {
+            $sort[$key] = $value['evaluation'];
+        }
+        
+        array_multisort($sort, SORT_DESC, $averages);
 
+        
+        
         return view('first_launch')->with([
             "admins" => $admins,
-            "images" => $admin_images]);
+            "images" => $admin_images,
+            "averages" => $averages,
+            ]);
     }
     
     public function show_salonPage($id){
@@ -73,8 +111,35 @@ class HomeController extends Controller
             ]);
     }
     
-    
+    public function reviewPage($id){
+        $salon = Admin::query()->where("id",$id)->first();
+        $reviews = StylistReview::query()->get();
+        $salonReviews = [];
+        $sum = 0;
+        foreach ($reviews as $review){
+            if ($review->reserve->admin_id == $id){
+                array_push($salonReviews,$review);
+                $sum += $review->evaluation;
+            }else{
+                continue;
+            }
+        }
+        //平均値の取得
+        $review_avg = $sum/count($salonReviews);
 
+        //全ユーザの取得
+        $users = User::query()->get();
+        
+        return view("review.salon")->with([
+            "reviews" => $salonReviews,
+            "average" => (int)$review_avg,
+            "users" => $users,
+            "salon" => $salon,
+            "refine" => null
+            ]);
+    }
+    
+    
     public function edit_confirm($id,Request $request){
         $reserve = Reserve::query()->where("id",$id)->first();
         $edit = $request['edit'];
@@ -85,7 +150,6 @@ class HomeController extends Controller
         $date = date('Y年m月d日',strtotime($edit["date"]));
         $time = date('G時i分',strtotime($edit["time"]));
 
-        
         if ($edit["menu"] == "カット"){
             $time_required = "30分";
         }elseif ($edit["menu"] == "カラー" || $edit["menu"] == "パーマ"){

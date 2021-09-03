@@ -49,7 +49,7 @@
                 </div>
             </div>
         </div>
-        @include('search.search_name_region')
+        @include('search.name_region')
     </div>
     <br>
     

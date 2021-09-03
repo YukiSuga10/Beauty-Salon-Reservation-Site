@@ -7,7 +7,7 @@
         <div class="col-md-8" >
             
             <div class="card">
-                <div class="card-header" style="background-color:#faebd7;">ようこそ！！</div>
+                <div class="card-header" style="background-color:#fff1e0;">ようこそ！！</div>
 
                 <div class="card-body">
                     @if (session('status'))
@@ -65,8 +65,8 @@
             </div>
         </div>
         
-            @include('search.search_name_region')
-
+            @include('search.name_region_ranking')
+            
     </div>
     
     <br>
