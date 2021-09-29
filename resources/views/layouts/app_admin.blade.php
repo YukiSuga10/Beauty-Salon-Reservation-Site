@@ -22,6 +22,7 @@
     <link rel="preload" href="{{ asset('images/22081359_m.jpg') }}" as="image">
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/admin/home.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/admin/calendar.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.1/css/all.css">
     
 </head>

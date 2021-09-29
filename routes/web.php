@@ -96,14 +96,19 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function() {
     Route::get('/{admin}/admin_access', 'Admin\HomeController@show_configAccess');
     Route::post('/{admin}/set_address','Admin\GmapsController@set_address');
     
-    //カレンダーページ
-    Route::get('/show_calender', 'Admin\HomeController@show_calender');
-    
-    Route::get('/{admin}/{stylist}/edit', 'Admin\HomeController@edit');
-    
     //美容院の紹介関連
     Route::get('/{admin}/salon_images', 'Admin\HomeController@register_salonImage');
     Route::post('/{admin}/upload/introduction','Admin\HomeController@upload_introduction');
+    
+    //カレンダーページ
+    Route::get('/{admin}/show_calender', 'Admin\CalendarController@show_calender');
+    Route::get('/reserve/{reserve}', 'Admin\CalendarController@show_reserve');
+    Route::get('/{admin}/pre/{date}', 'Admin\CalendarController@pre_month');
+    Route::get('/{admin}/next/{date}', 'Admin\CalendarController@next_month');
+    Route::get('/{admin}/{date}', 'Admin\CalendarController@date_reserves');
+    Route::get('/{admin}/{stylist}/edit', 'Admin\HomeController@edit');
+    
+    
     
     //更新処理
     Route::put('/{admin}/edit_menu', 'Admin\MenuController@update_menu');

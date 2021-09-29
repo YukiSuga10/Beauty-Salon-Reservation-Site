@@ -40,7 +40,7 @@ class User extends Authenticatable
     ];
     
     public function reserves(){
-        return $this->hasMany('App\Stylist');
+        return $this->hasMany('App\Reserve');
     }
     
     public function reviews(){

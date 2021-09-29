@@ -12,6 +12,7 @@ use App\SalonImage;
 use App\Menu;
 use App\Admin;
 use App\time;
+use App\Calendar\CalendarView;
 
 class HomeController extends Controller
 {
@@ -56,9 +57,7 @@ class HomeController extends Controller
     
     
     
-    public function show_calender(){
-        return view('admin.show_calender');
-    }
+   
     
     public function admin_access(){
         return view('admin.admin_location');

@@ -1,0 +1,67 @@
+.day-blank {
+	background-color: #efefef;
+}
+
+
+.calendar table td {	
+	padding: 3px;
+	border: solid 1px #999;
+}
+.calendar table td:before {
+	display: block;
+	float: left;
+	height: 50px;
+	content: "";
+}
+
+.calendar table td:hover{
+    background-color: #c4e8ff;
+}
+.calendar table td .day {
+	margin-bottom: 0;
+}
+.calendar table th {
+	text-align: center;
+	border: solid 1px #999;
+}
+
+.reserve_list{
+	width: 80%;
+	margin-bottom: 30px;
+}
+
+.reserve_list td, .reserve_list th{
+	
+	padding: 5px;
+	text-align: center;
+}
+
+.title{
+	text-align: center;
+}
+
+.info{
+	margin-left: 10%;
+	margin-bottom: 5px;
+	display: block;
+}
+
+.box{
+	display: flex;
+}
+
+.next{
+	margin-left: auto;
+}
+
+.pre,.next{
+	margin-bottom: 5px;
+}
+
+.saturday{
+	color: blue;
+}
+
+.sunday{
+	color: red;
+}

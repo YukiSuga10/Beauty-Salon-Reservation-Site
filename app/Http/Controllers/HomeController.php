@@ -74,10 +74,12 @@ class HomeController extends Controller
                     );
         }
         
-    
+    $sort = [];
        foreach ($averages as $key => $value) {
             $sort[$key] = $value['evaluation'];
         }
+        
+        
         
         array_multisort($sort, SORT_DESC, $averages);
 
