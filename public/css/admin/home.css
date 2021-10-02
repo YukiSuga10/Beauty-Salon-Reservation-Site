@@ -26,6 +26,10 @@
   margin-top: 30px;
 }
 
+.salonImage img{
+  margin-left: 10%;
+}
+
 
 .menu_head{
   position: relative;

@@ -46,16 +46,28 @@
                             @if(@count($stylist_times) == 0)
                                 <hr>
                             @else
-                                <p>〜{{$date}}日の空き状況〜</p>
-                                <select>
-                                    @foreach($times as $time)
-                                            @if ( @in_array($time,$stylist_times[$stylist->name]->toArray()))
-                                                <option value = {{$time}}>{{@date("H:i",@strtotime($time))}}：×</option>
-                                            @else
-                                                <option value = {{$time}}>{{@date("H:i",@strtotime($time))}}：○</option>
-                                            @endif
-                                    @endforeach
-                                </select>
+                                <p class="info _date">〜{{$date}}日の空き状況〜</p>
+                                <p class="info">○＝空き</p>
+                                @foreach($stylist_times as $key => $stylist_time)
+                                    @if($key == $stylist->name)
+                                    <div class="able_time">
+                                        <table border="1">
+                                            <tr>
+                                                @foreach($times as $time)
+                                                    <td>{{@date("H:i",@strtotime($time))}}</td>
+                                                @endforeach
+                                                <tr>
+                                                    @foreach($stylist_time as $condition)
+                                                        <td>{{ $condition }}</td>
+                                                    @endforeach
+                                                </tr>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    @else
+                                        @continue
+                                    @endif
+                                @endforeach
                                 <hr>
                             @endif
                         @endforeach

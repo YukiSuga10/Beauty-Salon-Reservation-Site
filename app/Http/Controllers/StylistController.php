@@ -36,17 +36,7 @@ class StylistController extends Controller
     public function able_time($id,Request $request)
     {
         $input = $request['search'];
-        $salon = Admin::find($id)->first();
-        
-        //既存の予約が入っている時間の取り出し
-        $reserved_times = $salon->reserves()->where('date',$input['date'])->pluck('startTime');
-        
-        $stylists = Stylist::query()->where("admin_id",$id)->get();
-        $stylist_times = [];
-        foreach ($stylists as $stylist){
-            $time = $salon->reserves()->where('date',$input['date'])->where('admin_id',$id)->where("stylist_id",$stylist->id)->orderBy('startTime','ASC')->pluck('startTime');
-            $stylist_times[$stylist->name] = $time;
-        }
+        $salon = Admin::query()->where("id",$id)->first();
         
         //営業時間の取得
         $startTime = time::query()->where("admin_id",$id)->value('startTime');
@@ -62,10 +52,31 @@ class StylistController extends Controller
             $startTime = date('H:i:s',$startTime);
             array_push($times,$startTime);
         }
+        
+
+        
+        $stylists = Stylist::query()->where("admin_id",$id)->get();
+        $stylist_times = [];
+        foreach ($stylists as $stylist){
+            $reserved_times = $salon->reserves()->where('date',$input['date'])->where('admin_id',$id)->where("stylist_id",$stylist->id)->orderBy('startTime','ASC')->pluck('startTime');
+            if (count($reserved_times) == 0){
+                foreach($times as $time){
+                    $stylist_times[$stylist->name][date('H:i',strtotime($time))] = "○";
+                }
+            }else{
+                foreach($times as $time){
+                    if (in_array($time,(array)$reserved_times->toArray())){
+                        $stylist_times[$stylist->name][date('H:i',strtotime($time))] = "×";
+                    }else{
+                        $stylist_times[$stylist->name][date('H:i',strtotime($time))] = "○";
+                    }
+                }
+            }
+        }
+        
         //日にちの取得
         $date = $input['date'];
         $date = date('m月d日',strtotime($date));
-        
         
 
         return view('info_stylists')->with([

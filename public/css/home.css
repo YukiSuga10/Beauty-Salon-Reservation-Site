@@ -264,3 +264,23 @@ a.reserveBtn:hover:before {
   background-size: contain;
   padding-left: 45px;
 }
+
+.able_time table {
+  display: block;
+  overflow-x: scroll;
+  white-space: nowrap;
+  -webkit-overflow-scrolling: touch;
+  text-align: center;
+}
+
+.able_time table td{
+  padding: 5px 10px;
+}
+
+.info{
+  margin-bottom: 5px;
+}
+
+.info_date{
+  margin-bottom: 8px;
+}

@@ -35,7 +35,7 @@ class HomeController extends Controller
     public function index()
     {
         $admin = Admin::query()->where("id",Auth::id())->first();
-        $admin_images = SalonImage::query()->where("admin_id",Auth::id())->get();
+        $admin_images = SalonImage::query()->where("admin_id",Auth::guard('admin')->user()->id)->get();
         $salon_id = Auth::guard('admin')->user()->id;
         $salon_name = Admin::query()->where("id",$salon_id)->value('name');
         return view('admin.home')->with([
