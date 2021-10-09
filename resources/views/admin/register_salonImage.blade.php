@@ -32,7 +32,8 @@
                         
                         <h6>~美容院紹介画像（3枚まで可）~</h6><br>
                         @if (count($images)==3)
-                            <p>変更・削除する画像を選択してください</p>
+                            <p>※登録できる写真は3枚までです。</p>
+                            <p>画像変更の場合は、以下の写真を消してください</p>
                             
                             <br>
                             <div class="salon_image">
@@ -47,9 +48,13 @@
                             @endforeach
                             </div>
                             
-                            <div>
-                                <p>新しい写真を登録する場合は選択してください</p>
-                            </div>
+                            <form action = '/admin/{{ $id }}/{{$image->id}}/delete' method = "POST">
+                                {{ csrf_field() }}
+                                {{ method_field('delete') }}
+                                
+                                
+                                <input type = "submit" value = "削除" id = "salon_image" onclick = "return deleteReserve(this);">
+                            </form>
                         @else
                             <input type="file" name="photo[]" multiple="multiple">
                         @endif
