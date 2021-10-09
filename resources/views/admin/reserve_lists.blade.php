@@ -37,7 +37,9 @@
                                                 <td>○</td>
                                         @else
                                             @foreach($value as $key => $reserve)
-                                                <td><a href="/admin/reserve/{{$reserve->id}}">予約あり</a></td>
+                                                <td>
+                                                    <a href="/admin/reserve/{{$reserve->id}}">予約あり</a>
+                                                </td>
                                             @endforeach
                                         @endif
 

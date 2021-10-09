@@ -32,19 +32,23 @@
                         
                         <h6>~美容院紹介画像（3枚まで可）~</h6><br>
                         @if (count($images)==3)
-                            <p>サイズを選択してください</p>
+                            <p>変更・削除する画像を選択してください</p>
                             
                             <br>
                             <div class="salon_image">
                             @foreach ($images as $key => $image)
                                 @if ($key == 0)
-                                    <input type="radio" name="sizeSelect" value="small" id="sizeSelectSmall" checked><label for="sizeSelectSmall" style="background-image: url({{$image->path}})"></label>
+                                    <input type="radio" name="sizeSelect" value="small" id="sizeSelectSmall" checked><label for="sizeSelectSmall" style="background-image: url({{$image->path}}); background-size:cover;"></label>
                                 @elseif($key == 1)
-                                    <input type="radio" name="sizeSelect" value="medium" id="sizeSelectMedium"><label for="sizeSelectMedium" style="background-image: url({{$image->path}})"></label>
+                                    <input type="radio" name="sizeSelect" value="medium" id="sizeSelectMedium"><label for="sizeSelectMedium" style="background-image: url({{$image->path}}); background-size:cover;"></label>
                                 @else
-                                    <input type="radio" name="sizeSelect" value="large" id="sizeSelectLarge"><label for="sizeSelectLarge" style="background-image: url({{$image->path}})"></label>
+                                    <input type="radio" name="sizeSelect" value="large" id="sizeSelectLarge"><label for="sizeSelectLarge" style="background-image: url({{$image->path}}); background-size:cover;"></label>
                                 @endif
                             @endforeach
+                            </div>
+                            
+                            <div>
+                                <p>新しい写真を登録する場合は選択してください</p>
                             </div>
                         @else
                             <input type="file" name="photo[]" multiple="multiple">

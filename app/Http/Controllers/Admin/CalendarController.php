@@ -139,7 +139,7 @@ class CalendarController extends Controller
     
     public function show_reserve($id){
         $reserve = Reserve::query()->where("id",$id)->first();
-        dd($reserve->user());
+
         
         return view("admin.reserve_detail")->with([
             "reserve" => $reserve

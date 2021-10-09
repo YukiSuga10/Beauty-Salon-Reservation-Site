@@ -7,7 +7,7 @@
         <div class="col-md-8" >
             
             <div class="card">
-                <div class="card-header" style="background-color:#fff1e0;">ようこそ！！</div>
+                <div class="card-header">ようこそ！！</div>
 
                 <div class="card-body">
                     @if (session('status'))

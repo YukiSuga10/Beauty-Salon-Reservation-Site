@@ -30,7 +30,8 @@ function initMap() {
     
     map.setCenter(ll);
     }else{
-    alert(status+" : ジオコードに失敗しました");
+    const message = "住所が設定されていません"
+    return message;
     }
     });
 }
