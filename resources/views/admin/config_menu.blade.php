@@ -22,7 +22,7 @@
                         @yield('content')
                     </main>
                     <hr>
-                    @if( @count($selected_menu) == 1 )
+                    @if(isset($selected_menu))
                     <form action="/admin/{{$id}}/config_menu" method="POST">
                         @csrf
                         <p>[メニュー]</p>
@@ -55,7 +55,7 @@
                         <input type = "submit" value = "変更">
                     </form>
                     @else
-                    <form action="/admin/{{$id}}/config_menu" method="POST">
+                     <form action="/admin/{{$id}}/config_menu" method="POST">
                         @csrf
                         <p>[メニュー]</p>
                         <input type = "checkbox" name = "menu[]" value = "0">カット<br>

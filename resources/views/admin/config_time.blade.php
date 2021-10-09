@@ -29,7 +29,7 @@
                     <hr>
                     <form action="/admin/{{$id}}/config_time" method="POST" onSubmit="return checkTime(this)">
                         @csrf
-                        @if (@count($setTime) != 0)
+                        @if (isset($setTime))
                         <p><input type="time" id = "startTime" name="time[startTime]" value = "{{ $setTime->startTime }}" required>　〜　<input type="time" id = "endTime" name="time[endTime]" value = "{{ $setTime->endTime }}" required></p>
                         <br>
                         <input type = "submit" value = "変更">
