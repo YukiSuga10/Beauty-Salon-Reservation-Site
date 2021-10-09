@@ -9,6 +9,14 @@
   margin-top: 30px;
 }
 
+.salonImage img{
+  margin-left: 20px;
+  margin-right:20px;
+  height: 130px;
+  width: 130px;
+}
+
+
 .each_salon,.each_review{
   
   padding: 10px; 
@@ -271,6 +279,7 @@ a.reserveBtn:hover:before {
   white-space: nowrap;
   -webkit-overflow-scrolling: touch;
   text-align: center;
+  
 }
 
 .able_time table td{
@@ -283,4 +292,39 @@ a.reserveBtn:hover:before {
 
 .info_date{
   margin-bottom: 8px;
+  margin-top: 40px;
+}
+
+.each_stylist img{
+  height: auto;
+  width: 180px;
+}
+
+.each_stylist{
+  position: relative;
+  height: auto;
+  
+}
+
+.stylist_info{
+  display: block;
+  float: right;
+  position: absolute;
+    top: 70%;
+    left: 55%;
+    transform: translate(-50%, -50%);
+    -webkit-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+  border: 2px 
+  solid 
+  #E8E8E8; 
+  border-radius: 10px;
+  padding-right: 100px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 10px;
+}
+
+.review{
+  margin-bottom: 0px;
 }

@@ -32,10 +32,20 @@
                         
                         <h6>~美容院紹介画像（3枚まで可）~</h6><br>
                         @if (count($images)==3)
+                            <p>サイズを選択してください</p>
                             
-                            @foreach ($images as $image)
-                                <img src="{{ $image->path }}"　width="70" height = "120">
+                            <br>
+                            <div class="salon_image">
+                            @foreach ($images as $key => $image)
+                                @if ($key == 0)
+                                    <input type="radio" name="sizeSelect" value="small" id="sizeSelectSmall" checked><label for="sizeSelectSmall" style="background-image: url({{$image->path}})"></label>
+                                @elseif($key == 1)
+                                    <input type="radio" name="sizeSelect" value="medium" id="sizeSelectMedium"><label for="sizeSelectMedium" style="background-image: url({{$image->path}})"></label>
+                                @else
+                                    <input type="radio" name="sizeSelect" value="large" id="sizeSelectLarge"><label for="sizeSelectLarge" style="background-image: url({{$image->path}})"></label>
+                                @endif
                             @endforeach
+                            </div>
                         @else
                             <input type="file" name="photo[]" multiple="multiple">
                         @endif

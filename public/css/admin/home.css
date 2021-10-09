@@ -27,7 +27,10 @@
 }
 
 .salonImage img{
-  margin-left: 10%;
+  margin-left: 20px;
+  margin-right:20px;
+  height: 130px;
+  width: 130px;
 }
 
 
@@ -82,4 +85,28 @@
   background-size: cover;
  }
  
- 
+input[type=radio]+label:before{
+        content: "";
+        display: inline-block;
+        background-size: contain;
+        width: 240px;
+        height: 240px;
+    }
+    
+input[type=radio][value="small"]+label:before{
+      background-size: cover;
+      width: 200px;
+      height: 200px;
+    }
+input[type=radio][value="medium"]+label:before{
+      background-size: cover;
+      width: 200px;
+      height: 200px;
+    }
+input[type=radio][value="large"]+label:before{
+      background-size: cover;
+    }
+    
+.salon_image{
+  
+}

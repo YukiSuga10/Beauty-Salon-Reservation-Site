@@ -34,12 +34,31 @@
                     </div>
                     @else
                     <p>{{ $numbers }}件の結果がヒットしました</p>
-                    <div class = 'show_salon'>
-                        <p><h5>▶サロン一覧</h5></p>
+
+                        <p><h5 style="border-bottom: 3px double #7C7B7B;">▶サロン一覧</h5></p>
+                        <div class="each_salon">
                         @foreach($results as $result)
-                            <p><a href = "/salon/{{$result->id}}">{{ $result->name }}</a></p>
+                            <p><a href = "/salon/{{$result->id}}" class="salonName">{{ $result->name }}</a></p>
+                            <div align="center" class="salonImage">
+                                    @foreach ($images as $image)
+                                        @if ($image->admin_id == $result->id)
+                                            <img src="{{ $image->path }}">
+                                        @endif
+                                    @endforeach
+                                </div>
+                                <hr>
+                                <div class="introduction">
+                                    <p style="margin-top:20px;">〜美容院から一言〜</p>
+                                    <label>{{ $result->introduction }}</label>
+                                    <div class="reserveBTN">
+                                        <section>
+                                          <a href="/salon/{{$result->id}}/reserve" class="reserveBtn">予約する</a>
+                                        </section>
+                                    </div>
+                                </div>
                         @endforeach
-                    </div>
+                        </div>
+
                     <hr>
                     <div class = "back">
                         <input type="button" onclick="window.history.back();" value="戻る">

@@ -27,13 +27,13 @@
                     
                     
                     <div class ='show_salon'>
-                        <p><h5 style="border-bottom: 3px double #7C7B7B;">▶サロン画面</h5></p>
+                        <p><h5 style="border-bottom: 3px double #7C7B7B;">▶トップページ</h5></p>
                         
                             <div class="each_salon">
-                                <a class="salonName" href = "/salon/{{$admin->id}}">{{ $admin->name }}</a><p class="region" style="color:#383333;">{{$admin->region}}</p>
+                                <a class="salonName" >{{ $admin->name }}</a><p class="region" style="color:#383333;">{{$admin->region}}</p>
                                 
                                 <hr class="division">
-                                <a href="/" style="text-align:right;" class="edit">編集</a>
+                                <a href="/admin/{{ $admin->id }}/salon_images" style="text-align:right;" class="edit">編集</a>
                                 <div align="center" class="salonImage">
                                     @foreach ($images as $image)
                                         @if ($image->admin_id == $admin->id)
@@ -43,7 +43,6 @@
                                 </div>
                                 
                                 <hr>
-                                <a href="/" style="text-align:right;" class="edit">編集</a>
                                 <div class="introduction">
                                 <p style="margin-top:20px;">〜美容院から一言〜</p>
                                 <label>{{ $admin->introduction }}</label>

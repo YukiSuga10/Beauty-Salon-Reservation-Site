@@ -41,13 +41,13 @@
                                 </div>
                                 <hr>
                                 <div class="introduction">
-                                <p style="margin-top:20px;">〜美容院から一言〜</p>
-                                <label>{{ $admin->introduction }}</label>
-                                <div class="reserveBTN">
-                                    <section>
-                                      <a href="/salon/{{$admin->id}}/reserve" class="reserveBtn">予約する</a>
-                                    </section>
-                                </div>
+                                    <p style="margin-top:20px;">〜美容院から一言〜</p>
+                                    <label>{{ $admin->introduction }}</label>
+                                    <div class="reserveBTN">
+                                        <section>
+                                          <a href="/salon/{{$admin->id}}/reserve" class="reserveBtn">予約する</a>
+                                        </section>
+                                    </div>
                                 </div>
                         
                     </div>

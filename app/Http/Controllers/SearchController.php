@@ -11,6 +11,7 @@ use App\User;
 use App\Menu;
 use App\time;
 use App\file_Image;
+use App\SalonImage;
 use App\StylistReview;
 use DateTime;
 
@@ -23,7 +24,7 @@ class SearchController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth')->except('result_salon','result_region');
+        $this->middleware('auth')->except('result_salon','result_region',"refine_review");
     }
 
     /**
@@ -35,11 +36,12 @@ class SearchController extends Controller
      public function result_salon(Request $request){
         $search = $request['search'];
         $searchResult = Admin::query()->where("name",'LIKE', "%{$search['salonName']}%")->get();
-        
+        $salon_images = SalonImage::query()->get();
         $result_num = count($searchResult);
         
         return view('search_result')->with([
             "results" => $searchResult,
+            "images" => $salon_images,
             "numbers" => $result_num,
             "condition" => $search['salonName']]);
      }
@@ -80,7 +82,12 @@ class SearchController extends Controller
         }
         
         //平均値の取得
-        $review_avg = $sum/count($salonReviews);
+        if (count($salonReviews) == 0){
+            $review_avg = 0;
+        }else{
+            $review_avg = $sum/count($salonReviews);
+        }
+        
         
         $refine_reviews = [];
         if ($menu != "all" && $evaluation != "all"){

@@ -39,14 +39,19 @@
                                 </div>
                     <hr>
                         @foreach ($stylists as $stylist)
-                            <img src="{{ $stylist->file_images->path }}"　width="200px" height = "200px">
+                        <div class="each_stylist">
+                            <img src="{{ $stylist->file_images->path }}">
+                            <div class="stylist_info">
                             <p>スタイリスト名：{{ $stylist->name }}</p>
                             <p>性別：{{ $stylist->gender }}</p>
-                            <p><a href = "/salon/{{ $salon_id }}/{{ $stylist->id }}/show_review">この美容師の口コミを見る</a></p>
+                            <p class="review"><a href = "/salon/{{ $salon_id }}/{{ $stylist->id }}/show_review">この美容師の口コミを見る</a></p>
+                            </div>
+                        </div>
                             @if(@count($stylist_times) == 0)
                                 <hr>
                             @else
-                                <p class="info _date">〜{{$date}}日の空き状況〜</p>
+                            <div class="avail_stylist">
+                                <p class="info_date">〜{{$date}}日の空き状況〜</p>
                                 <p class="info">○＝空き</p>
                                 @foreach($stylist_times as $key => $stylist_time)
                                     @if($key == $stylist->name)
@@ -68,8 +73,10 @@
                                         @continue
                                     @endif
                                 @endforeach
+                            </div>
                                 <hr>
                             @endif
+                        
                         @endforeach
                     </form>
                     <div class = "back">

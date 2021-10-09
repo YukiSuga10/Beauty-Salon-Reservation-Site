@@ -48,6 +48,8 @@ class HomeController extends Controller
         $admin_images = SalonImage::query()->get();
         $admins = Admin::query()->orderBy("id","ASC")->get();
         $reviews = StylistReview::query()->get();
+        
+        //ランキング出力
         $averages = [];
         foreach ($admins as $admin){
             $sum = 0;
@@ -73,13 +75,10 @@ class HomeController extends Controller
                     "evaluation" => $average
                     );
         }
-        
-    $sort = [];
+       $sort = [];
        foreach ($averages as $key => $value) {
             $sort[$key] = $value['evaluation'];
         }
-        
-        
         
         array_multisort($sort, SORT_DESC, $averages);
 
@@ -127,7 +126,12 @@ class HomeController extends Controller
             }
         }
         //平均値の取得
-        $review_avg = $sum/count($salonReviews);
+        if(count($salonReviews) == 0){
+            $review_avg = 0;
+        }else{
+            $review_avg = $sum/count($salonReviews);
+        }
+        
 
         //全ユーザの取得
         $users = User::query()->get();
