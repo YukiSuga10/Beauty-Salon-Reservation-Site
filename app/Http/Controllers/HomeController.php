@@ -136,6 +136,10 @@ class HomeController extends Controller
         //全ユーザの取得
         $users = User::query()->get();
         
+        $refine = null;
+        
+
+        
         return view("review.salon")->with([
             "reviews" => $salonReviews,
             "average" => (int)$review_avg,

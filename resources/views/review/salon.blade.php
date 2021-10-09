@@ -32,6 +32,8 @@
                         <p>※標準点を３点としています</p>
                     </div>
                     
+                    @if (isset($refine))
+                    
                     <form action="/salon/{{ $salon->id }}/salon_review" method="POST">
                         @csrf
                         <div class="search_review" style="background-color:#eeeeee;">
@@ -64,6 +66,40 @@
                             <input class ="button" type="submit" value="絞り込む">
                         </div>
                     </form>
+                    @else
+                    <form action="/salon/{{ $salon->id }}/salon_review" method="POST">
+                        @csrf
+                        <div class="search_review" style="background-color:#eeeeee;">
+                            <label style="color:#7f7f7f;">絞り込み</label>：
+                            <div class="search_menu">
+                                <p>メニュー：
+                                <select name = "refine[menu]"style="width:200px;" >
+                                    <option value="all">全て</option>    
+                                    <option value="カット" >カット</option>    
+                                    <option value="カラー" >カラー</option>    
+                                    <option value="パーマ" >パーマ</option>
+                                    <option value="カラー・カラー" >カット・カラー</option>
+                                    <option value="カラー・パーマ">カット・パーマ</option>
+                                </select>
+                                </p>
+                            </div>   
+                            <br>
+                            <div class="search_evaluation">
+                                <p>点数：
+                                <select name = "refine[evaluation]" style="width:200px;">
+                                    <option value="all">全て</option>    
+                                    <option value="5">5点</option>    
+                                    <option value="4">4点</option>    
+                                    <option value="3">3点</option>  
+                                    <option value="2">2点</option>    
+                                    <option value="1">1点</option>    
+                                </select>
+                                </p>
+                            </div>
+                            <input class ="button" type="submit" value="絞り込む">
+                        </div>
+                    </form>
+                    @endif
                     
                     <hr style="margin-top:5px;">
                     <p><{{$salon->name}}の新着口コミ></p>
