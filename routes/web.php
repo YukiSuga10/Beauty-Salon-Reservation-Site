@@ -10,7 +10,8 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-
+Route::get('/login/google', 'Auth\LoginController@redirectToGoogle');
+Route::get('/login/google/callback', 'Auth\LoginController@handleGoogleCallback');
 
 //ユーザ側ルーティング
 Route::get('/', 'HomeController@show_salon');
@@ -31,6 +32,9 @@ Route::get('/reserved', 'MailController@reserveComplete');
 Route::get('/api','ApiTestController@test');
 Route::get('/salon/{admin}/{stylist}/show_review','StylistController@show_review');
 Route::get('/salon/{admin}/show_location', 'GmapsController@show_maps');
+
+
+
 
 Route::post('/login', 'HomeController@start');
 Route::post('/salon/{admin}/reserve_time_menu', 'ReserveController@reserve_time_menu');
@@ -99,6 +103,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function() {
     //美容院の紹介関連
     Route::get('/{admin}/salon_images', 'Admin\HomeController@register_salonImage');
     Route::post('/{admin}/upload/introduction','Admin\HomeController@upload_introduction');
+    Route::get('/{admin}/deletePage', 'Admin\HomeController@show_deletePage');
+    Route::delete('/{admin}/delete', 'Admin\HomeController@deleteImage');
     
     //カレンダーページ
     Route::get('/{admin}/show_calender', 'Admin\CalendarController@show_calender');
@@ -115,6 +121,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function() {
     Route::put('/{stylist}/edit', 'Admin\HomeController@update_stylist');
     
     Route::delete('/{admin}/{reserve}/delete', 'Admin\HomeController@delete');
+    
 });
 
 Route::get('/admin_access', 'Admin\HomeController@admin_access');
