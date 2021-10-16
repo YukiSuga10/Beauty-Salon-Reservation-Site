@@ -66,12 +66,7 @@ class LoginController extends Controller
     
     public function createUserByGoogle($gUser)
     {
-        dd($gUser);
-        $user = User::create([
-            'name'     => $gUser->name,
-            'email'    => $gUser->email,
-            'password' => \Hash::make(uniqid()),
-        ]);
-        return $user;
+
+        return redirect("/register");
     }
 }
