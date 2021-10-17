@@ -61,7 +61,6 @@ class LoginController extends Controller
             return view("auth.register_google")->with([
                 "name" => $gUser->name,
                 "email" => $gUser->email,
-                "flash_message" => "ユーザが見つからないため新規登録してください"
                 ]);
         }
         // ログイン処理

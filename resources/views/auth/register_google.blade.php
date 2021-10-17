@@ -8,12 +8,7 @@
                 <div class="card-header">{{ __('Register') }}</div>
 
                 <div class="card-body">
-                    @if (session('flash_message'))
-                            <div class="flash_message" style="color:red;">
-                                {{ session('flash_message') }}
-                            </div>
-                            <hr>
-                    @endif
+                    <p style="font-size:13px; color:red;">※ユーザが見つからないため新規登録してください</p><hr>
                     <form method="POST" action="{{ route('register') }}">
                         @csrf
 
