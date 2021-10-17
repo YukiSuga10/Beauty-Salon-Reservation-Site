@@ -53,12 +53,16 @@ class LoginController extends Controller
     {
 
         $gUser = Socialite::driver('google')->stateless()->user();
-        dd($gUser);
+
         // email が合致するユーザーを取得
         $user = User::where('email', $gUser->email)->first();
         // 見つからなければ新しくユーザーを作成
         if ($user == null) {
-            return redirect("/register");
+            return view("auth.register_google")->with([
+                "name" => $gUser->name,
+                "email" => $gUser->email,
+                "flash_message" => "ユーザが見つからないため新規登録してください"
+                ]);
         }
         // ログイン処理
         \Auth::login($user, true);
