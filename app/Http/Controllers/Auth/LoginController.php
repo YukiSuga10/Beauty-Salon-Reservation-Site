@@ -53,6 +53,7 @@ class LoginController extends Controller
     {
 
         $gUser = Socialite::driver('google')->stateless()->user();
+        dd($gUser);
         // email が合致するユーザーを取得
         $user = User::where('email', $gUser->email)->first();
         // 見つからなければ新しくユーザーを作成
