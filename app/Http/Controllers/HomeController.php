@@ -33,7 +33,15 @@ class HomeController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
     
-    public function mypage()
+    public function show_mypage(){
+        $user = Auth::user();
+
+        return view("mypage")->with([
+            "user" => $user
+            ]);
+    }
+
+    public function reserve_confirm()
     {
         $reserves = Reserve::query()->where("user_id",Auth::id())->where('date','>=',date('Y-m-d H:i:s'))->orderBy("date","ASC")->get();
 
@@ -41,8 +49,31 @@ class HomeController extends Controller
             $reserve->date = date('Y年m月d日',strtotime($reserve->date));
         }
 
-        return view("mypage")->with(['reserves' => $reserves]);
+        return view("reserve_confirm")->with(['reserves' => $reserves]);
     }
+    
+    public function show_profile(){
+        $user = Auth::user();
+
+        return view("profile")->with([
+            "user" => $user
+            ]);
+    }
+    
+    public function editProfile(Request $request){
+        $edit_content = $request['edit'];
+        $user = Auth::user();
+        
+        $profile = User::query()->where("id",$user->id)->first();
+
+        $profile->name = $edit_content['name'];
+        $profile->gender = $edit_content['gender'];
+        $profile->email = $edit_content['email'];
+        $profile->save();
+        
+        return redirect("/home")->with(["flash_message" => "変更が完了しました"]);
+    }
+    
     
     public function show_salon(){
         $admin_images = SalonImage::query()->get();

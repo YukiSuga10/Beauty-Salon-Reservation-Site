@@ -16,9 +16,11 @@ Route::get('/login/google/callback', 'Auth\LoginController@handleGoogleCallback'
 //ユーザ側ルーティング
 Route::get('/', 'HomeController@show_salon');
 Route::get('/home', 'HomeController@show_salon');
+Route::get('/salon/mypage', 'HomeController@show_mypage');
 Route::get('/register', 'RegisterController@show_RegisterForm');
 Route::get('/show_salon', 'HomeController@show_salon');
-Route::get('/salon/mypage','HomeController@mypage')->name('salon.mypage');
+Route::get('/salon/mypage/confirm','HomeController@reserve_confirm');
+Route::get('/salon/mypage/edit_profile','HomeController@show_profile');
 Route::get('/salon/{admin}','HomeController@show_salonPage');
 Route::get('/salon/{admin}/info_stylist','HomeController@info_stylist');
 Route::get('/salon/{admin}/reserve', 'ReserveController@reserve_date_stylist');
@@ -55,6 +57,7 @@ Route::post('/salon/search_region','SearchController@result_region');
 
 
 Route::put('/salon/{reserve}/update', 'MailController@editComplete');
+Route::put('/salon/profile/edit', 'HomeController@editProfile');
 
 
 Route::delete('/salon/{reserve}/delete', 'HomeController@delete');

@@ -95,23 +95,43 @@ input[type=radio]+label:before{
         content: "";
         display: inline-block;
         background-size: contain;
-        width: 120px;
-        height: 120px;
+        width: 130px;
+        height: 130px;
+
     }
+    
+
     
 input[type=radio][value="small"]+label:before{
       background-size: 100px 100px;
+
 
     }
 input[type=radio][value="medium"]+label:before{
       background-size: 100px 100px;
 
+
     }
 input[type=radio][value="large"]+label:before{
       background-size: 100px 100px;
+      
     }
     
+
+    
 .salon_image input[type=radio]{
-    margin:5%;
+    margin:3%;
 }
 
+.salon_image img{
+  display: inline-block;
+  margin-left: 5%;
+}
+
+.delete_image{
+  margin-left: 90%;
+}
+
+.introduction{
+  width: 90%;
+}
