@@ -4,7 +4,7 @@
 <div class="container">
     <div class="row justify-content-center">
         
-        <div class="col-md-8" >
+        <div class="col-md-9" >
             
             <div class="card">
                 <div class="card-header">{{$condition}}の検索結果</div>
@@ -38,7 +38,7 @@
                         <p><h5 style="border-bottom: 3px double #7C7B7B;">▶サロン一覧</h5></p>
                         <div class="each_salon">
                         @foreach($results as $result)
-                            <p><a href = "/salon/{{$result->id}}" class="salonName">{{ $result->name }}</a></p>
+                            <a href = "/salon/{{$result->id}}" class="salonName">{{ $result->name }}</a><p class="region" style="color:#383333;">{{$result->region}}</p>
                             <div align="center" class="salonImage">
                                     @foreach ($images as $image)
                                         @if ($image->admin_id == $result->id)

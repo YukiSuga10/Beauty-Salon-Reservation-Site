@@ -50,11 +50,12 @@ class SearchController extends Controller
          $search = $request->input('search');
          
          $salons = Admin::query()->where("region",$search[0])->get();
-         
+         $salon_images = SalonImage::query()->get();
          $result_num = count($salons);
          
          return view('search_result')->with([
              "results" => $salons,
+             "images" => $salon_images,
              "numbers" => $result_num,
              "condition" => $search[0]
             ]);
