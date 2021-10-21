@@ -22,24 +22,12 @@
                     <main class="mt-4">
                         @yield('content')
                     </main>
-                    <h4>予約一覧</h4>
-                        <a href = "/salon/mypage/past_reserve/{{Auth::id()}}">※過去のご利用履歴はこちら</a>
-                    <hr>
-                    </form>
-                    
-                    @if (@count($reserves) != 0)
-                    <div class = "reserves">
-                        @foreach ($reserves as $reserve)
-                            <div class = "reserve">
-                                <a href='/salon/mypage/show_reserve/{{ $reserve->id  }}'><h5>・{{ $reserve->date }}</h5></a>
-                            </div>
-                        @endforeach
-                    </div>
-                    
-                    @else
-                     <p>ご予約は入っておりません</p>
-                    @endif
-                    
+                    <h5 style="border-bottom: 3px double #7C7B7B; margin:16px; padding:5px;">{{ $user->name }}さん</h5>
+                    <ul>
+                        <li><a class = "btn_item" href = "/salon/mypage/edit_profile">プロフィール編集</a></li>
+                        <hr style="margin:10px;">
+                        <li><a class = "btn_item" href = "/salon/mypage/confirm">予約確認</a></li>
+                    </ul>
                     
                 
                 </div>
