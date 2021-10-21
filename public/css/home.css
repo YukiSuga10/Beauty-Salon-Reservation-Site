@@ -355,3 +355,92 @@ a.reserveBtn:hover:before {
 .review{
   margin-bottom: 0px;
 }
+
+.btn_item {
+  display: inline-block;
+  padding: 10px 20px;
+  text-decoration: none;
+  background: #fff0d5;
+  color: #000;
+  border-radius: 5px;
+  width: 80%;
+  text-align: center;
+  margin-left: 8%;
+}
+
+.btn_item:hover {
+  transition: all .2s linear;
+  background: rgb(249,194,112);
+}
+
+ul{
+  list-style: none;
+}
+
+.profile p{
+  display: inline-block;
+  width: 30%;
+  text-align: center;
+}
+
+.profile select{
+  width: 20%;
+  height: 30px;
+}
+
+.dynamic-line-center {
+        height: 30px;
+        width: 50%;
+        font-size: 16px;
+        border: none;
+        outline: none;
+        padding: 0;
+        border-bottom: 1px solid #b4b4b4;
+        cursor: pointer;
+    }
+
+    .underline-center {
+        width: 200px;
+        height: 2px;
+        background: rgb(255 0 106);
+        position: relative;
+        top: -2px;
+        transform-origin: center;
+        transform: scaleX(0);
+    }
+
+    .dynamic-line-center:focus + .underline-center {
+        transform: scaleX(1);
+        transition: transform 0.25s ease-out;
+        -webkit-transform: scaleX(1);
+        -webkit-transition: transform 0.5s ease-out;
+    }
+    
+  .profile input[type="submit"]{
+  appearance: none;
+  margin: 0;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0;
+  background: none;
+  border: none;
+  border-radius: 0;
+  outline: none;
+}
+.profile input[type="submit"]{
+  position: relative;
+  display: block;
+  padding: 1em 2em 1em 1em;
+  width: 175px;
+  color: #fff;
+    line-height: 1;
+  text-align: center;
+  background: #5bbee5;
+  background: linear-gradient(to right, #5bbee5, #52ddae);
+  border-radius: 1.5em;
+}
+
+.profile input[type="submit"]:hover{
+  color: #000;
+
+}
