@@ -71,8 +71,8 @@
 	background-color: #da3c41;
 }
 .menu a:hover:not(.active) {
-	color: #ffffff;
-	background-color: #a5dcff;
+	color: #000;
+	background-color: #ffc584;
 }
 
 .edit{
