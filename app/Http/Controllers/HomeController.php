@@ -112,11 +112,9 @@ class HomeController extends Controller
         }
         
         array_multisort($sort, SORT_DESC, $averages);
-
-        
         
         return view('first_launch')->with([
-            "admins" => $admins,
+            "admins" => $admins->paginate(20),
             "images" => $admin_images,
             "averages" => $averages,
             ]);
@@ -162,14 +160,11 @@ class HomeController extends Controller
         }else{
             $review_avg = $sum/count($salonReviews);
         }
-        
-
+    
         //全ユーザの取得
         $users = User::query()->get();
-        
+    
         $refine = null;
-        
-
         
         return view("review.salon")->with([
             "reviews" => $salonReviews,
@@ -217,13 +212,13 @@ class HomeController extends Controller
     
     
     
-    public function past_reserve($id){
-        $past_reserves = Reserve::query()->where('user_id',$id)->where('date','<',date('Y-m-d H:i:s'))->orderBy('date', 'ASC')->get();
-        
+    public function past_reserve($id, Reserve $past_reserves){
+        $past_reserves = Reserve::query()->where('user_id',$id)->where('date','<',date('Y-m-d H:i:s'))->orderBy('date', 'ASC')->get()->paginate(5);
         foreach ($past_reserves as $past_reserve) {
             $past_reserve->date = date('Y年m月d日',strtotime($past_reserve->date));
         }
-
+        
+        
         return view('past_reserve')->with([
             'past_reserves' => $past_reserves
             ]);

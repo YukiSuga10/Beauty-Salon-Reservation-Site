@@ -89,6 +89,7 @@ class ReserveController extends Controller
         
         //スタイリストIDの取得
         $stylist_id = $salon->stylists->first()->id;
+
         
         //予約できない時間の取得
         $notPossible_time = $salon->reserves->where('date',$input['date'])->where('stylist_id',$stylist_id)->pluck('startTime');
@@ -166,6 +167,7 @@ class ReserveController extends Controller
         $num_rows = count($reserved);
         
         $stylist_id = $salon->stylists->where('name',$input["stylist"])->first()->id;
+                
         
         if ($num_rows > 0){
             

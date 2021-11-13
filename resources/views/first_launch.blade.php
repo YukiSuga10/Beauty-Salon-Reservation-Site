@@ -10,6 +10,7 @@
                 <div class="card-header">ようこそ！！</div>
 
                 <div class="card-body">
+                    
                     @if (session('status'))
                         <div class="alert alert-success" role="alert">
                             {{ session('status') }}
@@ -52,8 +53,10 @@
                         
                     </div>
                         @endforeach       
-                        
-                    </div>
+                    <div class="d-flex justify-content-center">
+                        {{$admins->links()}}
+                    </div>        
+                </div>
                     <br>
                     <div>
                         <p><h5 style="border-bottom: 3px double ;">▶予約確認</h5></p>

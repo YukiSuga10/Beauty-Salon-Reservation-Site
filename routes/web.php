@@ -10,6 +10,8 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+
 Route::get('/login/google', 'Auth\LoginController@redirectToGoogle');
 Route::get('/login/google/callback', 'Auth\LoginController@handleGoogleCallback');
 
@@ -18,6 +20,7 @@ Route::get('/', 'HomeController@show_salon');
 Route::get('/home', 'HomeController@show_salon');
 Route::get('/salon/mypage', 'HomeController@show_mypage');
 Route::get('/register', 'RegisterController@show_RegisterForm');
+Route::get('/salon/search_admin','SearchController@result_salon');
 Route::get('/show_salon', 'HomeController@show_salon');
 Route::get('/salon/mypage/confirm','HomeController@reserve_confirm');
 Route::get('/salon/mypage/edit_profile','HomeController@show_profile');
@@ -35,7 +38,9 @@ Route::get('/api','ApiTestController@test');
 Route::get('/salon/{admin}/{stylist}/show_review','StylistController@show_review');
 Route::get('/salon/{admin}/show_location', 'GmapsController@show_maps');
 
-
+//検索機能
+Route::post('/salon/search_admin','SearchController@result_salon');
+Route::post('/salon/search_region','SearchController@result_region');
 
 
 Route::post('/login', 'HomeController@start');
@@ -51,8 +56,7 @@ Route::post('/salon/{reserve}/review','StylistController@show_create_reviw');
 Route::post('/salon/{reserve}/review/create','StylistController@create_review');
 Route::post('/salon/{admin}/salon_review','SearchController@refine_review');
 
-Route::post('/salon/search_admin','SearchController@result_salon');
-Route::post('/salon/search_region','SearchController@result_region');
+
 
 
 

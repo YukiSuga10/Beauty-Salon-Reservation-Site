@@ -40,7 +40,7 @@ class SearchController extends Controller
         $result_num = count($searchResult);
         
         return view('search_result')->with([
-            "results" => $searchResult,
+            "results" => $searchResult->paginate(20),
             "images" => $salon_images,
             "numbers" => $result_num,
             "condition" => $search['salonName']]);
@@ -54,7 +54,7 @@ class SearchController extends Controller
          $result_num = count($salons);
          
          return view('search_result')->with([
-             "results" => $salons,
+             "results" => $salons->paginate(20),
              "images" => $salon_images,
              "numbers" => $result_num,
              "condition" => $search[0]

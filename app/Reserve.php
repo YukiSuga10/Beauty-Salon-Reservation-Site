@@ -13,7 +13,7 @@ class Reserve extends Model
     
     
     public function stylist(){
-        return $this->hasOne('App\Stylist');
+        return $this->belongsTo('App\Stylist');
     }
     
     public function review(){
@@ -32,9 +32,9 @@ class Reserve extends Model
         return $this->belongsTo('App\Menu');
     }
     
-    public function getPaginateBylimit(int $limit_count = 10) 
+    public function getPaginateBylimit(int $limit_count) 
     {
-        return $this->orderBy('date', 'DESC')->paginate($limit_count);
+        return $this->paginate($limit_count);
     }
     
 }

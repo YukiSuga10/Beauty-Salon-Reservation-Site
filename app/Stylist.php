@@ -13,7 +13,7 @@ class Stylist extends Model
     }
     
     public function reserve(){
-        return $this->belongsTo('App\Reserve');
+        return $this->hasMany('App\Reserve');
     }
     
     public function admin(){

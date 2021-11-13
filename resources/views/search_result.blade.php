@@ -4,7 +4,7 @@
 <div class="container">
     <div class="row justify-content-center">
         
-        <div class="col-md-9" >
+        <div class="col-md-9">
             
             <div class="card">
                 <div class="card-header">{{$condition}}の検索結果</div>
@@ -36,10 +36,10 @@
                     <p>{{ $numbers }}件の結果がヒットしました</p>
 
                         <p><h5 style="border-bottom: 3px double #7C7B7B;">▶サロン一覧</h5></p>
-                        <div class="each_salon">
                         @foreach($results as $result)
+                        <div class="each_salon">
                             <a href = "/salon/{{$result->id}}" class="salonName">{{ $result->name }}</a><p class="region" style="color:#383333;">{{$result->region}}</p>
-                            <div align="center" class="salonImage">
+                                <div align="center" class="salonImage">
                                     @foreach ($images as $image)
                                         @if ($image->admin_id == $result->id)
                                             <img src="{{ $image->path }}">
@@ -56,10 +56,13 @@
                                         </section>
                                     </div>
                                 </div>
-                        @endforeach
                         </div>
-
+                        @endforeach
+                    <div class="d-flex justify-content-center">
+                        {{$results->links()}}
+                    </div>   
                     <hr>
+                    
                     <div class = "back">
                         <input type="button" onclick="window.history.back();" value="戻る">
                     </div>

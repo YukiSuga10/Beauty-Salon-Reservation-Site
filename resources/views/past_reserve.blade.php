@@ -29,9 +29,16 @@
                         @foreach ($past_reserves as $past_reserve)
                             <div class = "reserve">
                                 <a href='/salon/show_reserve/{{ $past_reserve->id  }}/past'><h5 >・{{ $past_reserve->date }}</h5></a>
+                                <p style="margin-left:50px;">メニュー：{{$past_reserve->menu}}</p>
+                                <p style="margin-left:50px;">スタイリスト：{{$past_reserve->stylist()->first()->name}}</p>
+                                <hr>
                             </div>
                         @endforeach
                     </div>
+                    <div class="d-flex justify-content-center">
+                        {{$past_reserves->links()}}
+                    </div>
+                    
                     @else
                     <p>過去のご利用はございません</p>
                     @endif
