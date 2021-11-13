@@ -155,6 +155,35 @@ class HomeController extends Controller
         
     }
     
+    public function show_deletePage($id){
+        $images = SalonImage::query()->where("admin_id",$id)->get();
+
+        return view("admin.delete_salonImage")->with([
+            "images" => $images,
+            "id" => $id
+            ]);
+        
+    }
+    
+    public function deleteImage($id,Request $request){
+        $image_id = (int)$request["image_id"];
+        
+        $image = SalonImage::query()->where("id",$image_id)->first();
+        $image->delete();
+        
+        $introduction = Admin::query()->where("id",$id)->value('introduction');
+        $upload_images = SalonImage::query()->where("admin_id",$id)->get();
+        
+        return redirect("/admin/".$id."/salon_images")->with([
+            'flash_message' => "完了しました",
+            "introduction" => $introduction,
+            "images" => $upload_images
+            ]);
+        
+        
+        
+    }
+    
     
     
 }

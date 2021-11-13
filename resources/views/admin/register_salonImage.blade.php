@@ -23,50 +23,41 @@
                         <h6>~美容院紹介文~</h6><br>
                         
                         @if (isset($introduction))
-                            <textarea rows="3" cols="60" name = "introduction[]">{{ $introduction }}</textarea><hr>
+                            <textarea rows="3" cols="60" class = "introduction" name = "introduction[]">{{ $introduction }}</textarea><hr>
                         @else
-                            <textarea rows="3" cols="60" name = "introduction[]"></textarea><hr>
+                            <textarea rows="3" cols="60" class = "introduction" name = "introduction[]"></textarea><hr>
                         @endif
                         
                         
                         
                         <h6>~美容院紹介画像（3枚まで可）~</h6><br>
                         @if (count($images)==3)
-                            <p>※登録できる写真は3枚までです。</p>
-                            <p>画像変更の場合は、以下の写真を消してください</p>
+                            <p style="color:red;">※登録できる写真は3枚までです。　<a href="/admin/{{$id}}/deletePage">画像の削除はこちらから</a></p>
                             
                             <br>
                             <div class="salon_image">
-                            @foreach ($images as $key => $image)
-                                @if ($key == 0)
-                                    <input type="radio" name="sizeSelect" value="small" id="sizeSelectSmall" checked><label for="sizeSelectSmall" style="background-image: url({{$image->path}}); background-size:cover;"></label>
-                                @elseif($key == 1)
-                                    <input type="radio" name="sizeSelect" value="medium" id="sizeSelectMedium"><label for="sizeSelectMedium" style="background-image: url({{$image->path}}); background-size:cover;"></label>
-                                @else
-                                    <input type="radio" name="sizeSelect" value="large" id="sizeSelectLarge"><label for="sizeSelectLarge" style="background-image: url({{$image->path}}); background-size:cover;"></label>
-                                @endif
+                            @foreach ($images as $image)
+                                <img src="{{ $image->path }}"　width="70" height = "120">
                             @endforeach
                             </div>
-                            
-                            <form action = '/admin/{{ $id }}/{{$image->id}}/delete' method = "POST">
-                                {{ csrf_field() }}
-                                {{ method_field('delete') }}
-                                
-                                
-                                <input type = "submit" value = "削除" id = "salon_image" onclick = "return deleteReserve(this);">
-                            </form>
                         @else
-                            <input type="file" name="photo[]" multiple="multiple">
+                            @foreach ($images as $image)
+                                <img src="{{ $image->path }}"　width="70" height = "120">
+                            @endforeach
+                            <br>
+                            <input type="file" id="file_btn1" name="photo[]" multiple="multiple">
+                            <a href="/admin/{{$id}}/deletePage"><画像の削除はこちらから></a>
                         @endif
                         
                         <hr>
                         
                         @if (isset($introduction) || count($images)==3)
-                            <input type = "submit" value = "変更">
+                            <input type = "submit" value = "変更" onclick = "return maxfile_confim_1(this);">
                         @else
                             <input type = "submit" value = "登録">
                         @endif
                     </form>
+                    
                     <main class="mt-4">
                         @yield('content')
                     </main>
