@@ -1,17 +1,11 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+<p align="center"><a href="https://salon-reserve.herokuapp.com/" target="_blank"><img height="500" alt="スクリーンショット 2021-11-10 17 40 42" src="https://user-images.githubusercontent.com/82369122/141079370-333b68f7-5a3f-4937-8375-c778d5f73f49.png"></a></p>
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
-</p>
 
-## タイトル
+## SalonBeauty
 
 美容院予約サイトです。<br>
 様々な美容院において予約や各美容院についての情報を見ることができます。<br>
-アピールポイント
+Googleからのログインも可能となっています
 
 - サイトURL<br>
     https://salon-reserve.herokuapp.com/
@@ -34,9 +28,7 @@
     - EC2
     - S3
 - Google Maps API
-
-## AWS構造図
-
+- Google+ API
 
 
 ## 機能一覧
@@ -44,9 +36,13 @@
 <ユーザー側>
 - 新規登録、ログイン機能
 - 予約機能
-- 予約の確認、変更、キャンセル機能
+    - 新規予約
+    - 予約確認
+    - 予約の変更・キャンセル  
 - レビュー投稿機能
-- 美容院検索機能（美容院名 ・ 地域）
+- 検索機能
+    - 美容院名
+    - 地域
 
 <美容院側>
 - 新規登録、ログイン機能
