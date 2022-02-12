@@ -1,12 +1,9 @@
-php_flag display_errors on
-
-<<IfModule mod_rewrite.c>
+<IfModule mod_rewrite.c>
     <IfModule mod_negotiation.c>
         Options -MultiViews -Indexes
     </IfModule>
 
     RewriteEngine On
-    
 
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
@@ -37,5 +34,4 @@ php_flag display_errors on
     </FilesMatch>
 
     Header append Vary Accept-Encoding env=!dont-vary
-    
 </IfModule>
