@@ -80,5 +80,38 @@ function deleteStylist(e){
     }
 }
 
+function deleteSalonImage(e){
+    'use strict';
+    var id = document.getElementById("salon_image");
+    if(confirm('一度削除すると元には戻せません \n本当に削除しますか？')) {
+        document.getElementById(id).submit();
+    }else{
+        return false;
+    }
+}
 
 
+function maxfile_confim_1(e){
+    'use strict';
+    const maxFiles = 3;
+    let $file_btn = $("#file_btn1");
+
+  // addEventListener() の jQuery による略記
+  $file_btn.on("change", function(evt){
+    // jQuery オブジェクトの最初の要素は Element が格納されているので
+    // 次のようにHTMLElementを取得できる。
+    // $(this)[0];　$(this).get(0);
+
+    // 変数 $file_btn に格納済みのjQueryオブジェクトを使っても良い。
+    let elm = $file_btn[0];
+    if( maxFiles < elm.files.length ) {
+
+      alert(`表示できるのは ${maxFiles} 枚までです` );
+
+      elm.value = null; // input[type=file] をリセット
+
+      return false;// イベントリスナを抜ける。
+    }
+    // プレビュー処理など。
+  })
+}
