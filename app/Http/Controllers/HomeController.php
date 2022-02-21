@@ -120,7 +120,6 @@ class HomeController extends Controller
             if (count($admin_images) == 0){
                 return view('first_launch')->with([
                     "admins" => $admins->paginate(20),
-                    "images" => $webp_images,
                     "averages" => $averages,
                     "count_salon" => count($admins),
                     "count" => count($admin_images)
