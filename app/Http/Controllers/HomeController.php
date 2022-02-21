@@ -83,7 +83,7 @@ class HomeController extends Controller
         $admin_images = SalonImage::query()->get();
         $admins = Admin::query()->orderBy("id","ASC")->get();
         $reviews = StylistReview::query()->get();
-        
+        dd($admins);
         if (count($admins) != 0){
             //ランキング出力
             $averages = [];
