@@ -128,7 +128,7 @@ class HomeController extends Controller
                 array_push($webp_images[$images->admin_id],$salon_image);
             }
             
-            
+                        dd("画像はあリマス");
             return view('first_launch')->with([
                 "admins" => $admins->paginate(20),
                 "images" => $webp_images,
