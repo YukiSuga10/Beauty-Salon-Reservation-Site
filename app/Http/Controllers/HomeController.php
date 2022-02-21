@@ -179,8 +179,14 @@ class HomeController extends Controller
         $stylists = Stylist::query()->where("admin_id",$id)->get();
         $stylist_times = [];
         
+        foreach($stylists as $stylist){
+            $image = file_Image::where("stylist_id",$stylist->id)->value("path");
+            $stylist["path"] = $image;
+        }
+        
+        
         foreach ($stylists as $stylist){
-            $stylist_image =   Storage::disk('s3')->url($stylist->file_images->path);
+            $stylist_image =   Storage::disk('s3')->url($stylist->path);
             $stylist["path"] = $stylist_image;
         }
     
