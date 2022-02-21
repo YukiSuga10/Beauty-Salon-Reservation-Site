@@ -26,7 +26,7 @@
                         @yield('content')
                     </main>
                    
-                    @if ($count == 0)
+                    @if ($count_salon == 0)
                         <div class ='show_salon'>
                             美容院が登録されていません
                         </div>
@@ -39,15 +39,18 @@
                                     
                                     <hr class="division">
                                     <div align="center" class="salonImage">
+                                        @if ($count == 0)
+                                            写真は登録されていません
+                                        @else
+                                            @foreach ($images as $key => $image)
+                                                @if ($key== $admin->id)
+                                                    @foreach ($image as $path)
+                                                        <img src="{{ $path }}"　width="70" height = "120">
+                                                    @endforeach
+                                                @endif
+                                            @endforeach
+                                        @endif
                                         
-                                        @foreach ($images as $key => $image)
-                              
-                                            @if ($key== $admin->id)
-                                                @foreach ($image as $path)
-                                                    <img src="{{ $path }}"　width="70" height = "120">
-                                                @endforeach
-                                            @endif
-                                        @endforeach
                                     </div>
                                     <hr>
                                     <div class="introduction">

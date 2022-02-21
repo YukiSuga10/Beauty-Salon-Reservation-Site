@@ -83,7 +83,6 @@ class HomeController extends Controller
         $admin_images = SalonImage::query()->get();
         $admins = Admin::query()->orderBy("id","ASC")->get();
         $reviews = StylistReview::query()->get();
-        dd($admins);
         if (count($admins) != 0){
             //ランキング出力
             $averages = [];
@@ -117,29 +116,40 @@ class HomeController extends Controller
             }
             array_multisort($sort, SORT_DESC, $averages);
             
-            //連想配列定義
-           foreach($admin_images as $images){
-               $webp_images[$images->admin_id] = [];
-           }
-           
-           //pathの変換
-           foreach($admin_images as $images){
-               $salon_image =   Storage::disk('s3')->url($images->path);
-                array_push($webp_images[$images->admin_id],$salon_image);
-            }
             
-                        dd("画像はあリマス");
-            return view('first_launch')->with([
-                "admins" => $admins->paginate(20),
-                "images" => $webp_images,
-                "averages" => $averages,
-                "count" => count($admins)
-                ]);
+            if (count($admin_images) == 0){
+                return view('first_launch')->with([
+                    "admins" => $admins->paginate(20),
+                    "images" => $webp_images,
+                    "averages" => $averages,
+                    "count_salon" => count($admins),
+                    "count" => count($admin_images)
+                    ]);
+            }else{
+                //連想配列定義
+               foreach($admin_images as $images){
+                   $webp_images[$images->admin_id] = [];
+               }
+               
+               //pathの変換
+               foreach($admin_images as $images){
+                   $salon_image =   Storage::disk('s3')->url($images->path);
+                    array_push($webp_images[$images->admin_id],$salon_image);
+                }
+                
+                return view('first_launch')->with([
+                    "admins" => $admins->paginate(20),
+                    "images" => $webp_images,
+                    "averages" => $averages,
+                    "count_salon" => count($admins),
+                    "count" => count($admin_images)
+                    ]);
+            }
+        
         }else{
-            dd("画像はありません");
             return view('first_launch')->with([
                 "admins" => $admins->paginate(20),
-                "count" => 0
+                "count_salon" => 0
                 ]);;
         }
         
