@@ -84,60 +84,55 @@ class HomeController extends Controller
         $admins = Admin::query()->orderBy("id","ASC")->get();
         $reviews = StylistReview::query()->get();
         
-        //ランキング出力
-        $averages = [];
-        foreach ($admins as $admin){
-            $sum = 0;
-            $count = 0;
-            foreach($reviews as $review){
-                if ($review->reserve->admin_id == $admin->id){
-                    $sum += $review->evaluation;
-                    $count += 1;
-                }else{
-                    continue;
+        if (count($admins) != 0){
+            //ランキング出力
+            $averages = [];
+            foreach ($admins as $admin){
+                $sum = 0;
+                $count = 0;
+                foreach($reviews as $review){
+                    if ($review->reserve->admin_id == $admin->id){
+                        $sum += $review->evaluation;
+                        $count += 1;
+                    }else{
+                        continue;
+                    }
                 }
+                
+                if ($count == 0){
+                    $average = 0;
+                }else{
+                    $average = $sum/$count;
+                }
+                $averages[$admin->id] =
+                    array (
+                        "id" => $admin->id,
+                        "name" => $admin->name,
+                        "evaluation" => $average
+                        );
             }
+           $sort = [];
+           foreach ($averages as $key => $value) {
+                $sort[$key] = $value['evaluation'];
+            }
+            array_multisort($sort, SORT_DESC, $averages);
             
-            if ($count == 0){
-                $average = 0;
-            }else{
-                $average = $sum/$count;
+            //連想配列定義
+           foreach($admin_images as $images){
+               $webp_images[$images->admin_id] = [];
+           }
+           
+           //pathの変換
+           foreach($admin_images as $images){
+               $salon_image =   Storage::disk('s3')->url($images->path);
+                array_push($webp_images[$images->admin_id],$salon_image);
             }
-            $averages[$admin->id] =
-                array (
-                    "id" => $admin->id,
-                    "name" => $admin->name,
-                    "evaluation" => $average
-                    );
-        }
-       $sort = [];
-       foreach ($averages as $key => $value) {
-            $sort[$key] = $value['evaluation'];
-        }
-        array_multisort($sort, SORT_DESC, $averages);
-        
-        //連想配列定義
-       foreach($admin_images as $images){
-           $webp_images[$images->admin_id] = [];
-       }
-       
-       //pathの変換
-       foreach($admin_images as $images){
-           $salon_image =   Storage::disk('s3')->url($images->path);
-            array_push($webp_images[$images->admin_id],$salon_image);
-       }
-       
-       if (count($admins) != 0){
-            return view('first_launch')->with([
-                "admins" => $admins->paginate(20),
-                "images" => $webp_images,
-                "averages" => $averages,
-                ]);
         }else{
             return view('first_launch')->with([
                 "admins" => $admins->paginate(20),
                 ]);;
         }
+    
         
         
     }
