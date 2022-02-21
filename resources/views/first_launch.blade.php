@@ -25,7 +25,8 @@
                     <main class="mt-4">
                         @yield('content')
                     </main>
-                    @if (@count($admins) == 0)
+                   
+                    @if ($count == 0)
                         <div class ='show_salon'>
                             美容院が登録されていません
                         </div>

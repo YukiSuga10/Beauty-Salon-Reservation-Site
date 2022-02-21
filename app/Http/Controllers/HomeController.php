@@ -127,13 +127,24 @@ class HomeController extends Controller
                $salon_image =   Storage::disk('s3')->url($images->path);
                 array_push($webp_images[$images->admin_id],$salon_image);
             }
+            
+            return view('first_launch')->with([
+                "admins" => $admins->paginate(20),
+                "images" => $webp_images,
+                "averages" => $averages,
+                "count" => count($admins)
+                ]);
         }else{
             return view('first_launch')->with([
                 "admins" => $admins->paginate(20),
+                "count" => 0
                 ]);;
         }
-    
         
+        
+       
+      
+  
         
     }
     
