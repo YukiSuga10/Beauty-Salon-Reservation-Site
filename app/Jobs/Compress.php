@@ -48,7 +48,7 @@ class Compress implements ShouldQueue
         $img->limitColors(null);
 
         //一時ファイルを置く場所を定義する
-        $file_path_image = '/temp/thumbnail';
+        $file_path_image = '/public/thumbnai';
         //絶対パスでapp/temp/thumbnail/のディレクトリを定義
         $file_path = storage_path('app'.$file_path_image);
         //保存する先のS3バケットを定義
