@@ -126,13 +126,20 @@ class HomeController extends Controller
            $salon_image =   Storage::disk('s3')->url($images->path);
             array_push($webp_images[$images->admin_id],$salon_image);
        }
-
+       
+       if (count($admins) != 0){
+            return view('first_launch')->with([
+                "admins" => $admins->paginate(20),
+                "images" => $webp_images,
+                "averages" => $averages,
+                ]);
+        }else{
+            return view('first_launch')->with([
+                "admins" => $admins->paginate(20),
+                ]);;
+        }
         
-        return view('first_launch')->with([
-            "admins" => $admins->paginate(20),
-            "images" => $webp_images,
-            "averages" => $averages,
-            ]);
+        
     }
     
     //美容院の各ページ表示

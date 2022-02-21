@@ -25,41 +25,47 @@
                     <main class="mt-4">
                         @yield('content')
                     </main>
-                    <div class ='show_salon'>
-                        <p><h5 style="border-bottom: 3px double #7C7B7B;">▶サロン一覧</h5></p>
-                        
-                        @foreach($admins as $admin)
-                            <div class="each_salon">
-                                <a class="salonName" href = "/salon/{{$admin->id}}">{{ $admin->name }}</a><p class="region" style="color:#383333;">{{$admin->region}}</p>
-                                
-                                <hr class="division">
-                                <div align="center" class="salonImage">
+                    @if (@count($admins) == 0)
+                        <div class ='show_salon'>
+                            美容院が登録されていません
+                        </div>
+                    @else
+                        <div class ='show_salon'>
+                            <p><h5 style="border-bottom: 3px double #7C7B7B;">▶サロン一覧</h5></p>
+                            @foreach($admins as $admin)
+                                <div class="each_salon">
+                                    <a class="salonName" href = "/salon/{{$admin->id}}">{{ $admin->name }}</a><p class="region" style="color:#383333;">{{$admin->region}}</p>
                                     
-                                    @foreach ($images as $key => $image)
-                          
-                                        @if ($key== $admin->id)
-                                            @foreach ($image as $path)
-                                                <img src="{{ $path }}"　width="70" height = "120">
-                                            @endforeach
-                                        @endif
-                                    @endforeach
-                                </div>
-                                <hr>
-                                <div class="introduction">
-                                    <p style="margin-top:20px;">〜美容院から一言〜</p>
-                                    <label>{{ $admin->introduction }}</label>
-                                    <div class="reserveBTN">
-                                        <section>
-                                          <a href="/salon/{{$admin->id}}/reserve" class="reserveBtn">予約する</a>
-                                        </section>
+                                    <hr class="division">
+                                    <div align="center" class="salonImage">
+                                        
+                                        @foreach ($images as $key => $image)
+                              
+                                            @if ($key== $admin->id)
+                                                @foreach ($image as $path)
+                                                    <img src="{{ $path }}"　width="70" height = "120">
+                                                @endforeach
+                                            @endif
+                                        @endforeach
                                     </div>
-                                </div>
-                        
-                    </div>
-                        @endforeach       
-                    <div class="d-flex justify-content-center">
-                        {{$admins->links()}}
-                    </div>        
+                                    <hr>
+                                    <div class="introduction">
+                                        <p style="margin-top:20px;">〜美容院から一言〜</p>
+                                        <label>{{ $admin->introduction }}</label>
+                                        <div class="reserveBTN">
+                                            <section>
+                                              <a href="/salon/{{$admin->id}}/reserve" class="reserveBtn">予約する</a>
+                                            </section>
+                                        </div>
+                                    </div>
+                            
+                        </div>
+                            @endforeach       
+                        <div class="d-flex justify-content-center">
+                            {{$admins->links()}}
+                        </div>        
+                    @endif
+                    
                 </div>
                     <br>
                     <div>
