@@ -128,6 +128,7 @@ class HomeController extends Controller
                 array_push($webp_images[$images->admin_id],$salon_image);
             }
             
+            
             return view('first_launch')->with([
                 "admins" => $admins->paginate(20),
                 "images" => $webp_images,
@@ -135,6 +136,7 @@ class HomeController extends Controller
                 "count" => count($admins)
                 ]);
         }else{
+            dd("画像はありません");
             return view('first_launch')->with([
                 "admins" => $admins->paginate(20),
                 "count" => 0
