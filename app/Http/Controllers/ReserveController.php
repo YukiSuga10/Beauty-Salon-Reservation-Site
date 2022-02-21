@@ -149,6 +149,8 @@ class ReserveController extends Controller
             "salon_id" => $id]);
     }
     
+    
+    //予約機能
     public function reserve($id,Request $request){
         $input = $request['reserve'];
         $salon = Admin::query()->where("id",$id)->first();

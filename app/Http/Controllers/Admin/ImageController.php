@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Storage;
 use App\file_Image;
 use App\Admin;
 use App\Stylist;
+use App\Jobs\Compress;
 
 
 class ImageController extends Controller
@@ -30,11 +31,8 @@ class ImageController extends Controller
                 'mimes:jpeg,png',
             ]
         ]);
-        
-    
-    
-    $stylist = $request['stylist'];
-    
+
+        $stylist = $request['stylist'];
         //バリデーションを正常に通過した時の処理
         if ($request->file('file')->isValid([])) {
             $upload_info = Storage::disk('s3')->putFile('/stylists', $request->file('file'), 'public');
@@ -44,7 +42,6 @@ class ImageController extends Controller
             $user_id = Auth::id();
 
             //モデルファイルのクラスからインスタンスを作成し、オブジェクト変数$new_image_dataに格納する
-            
             $stylists = new Stylist;
             $stylists->admin_id = $id;
             $stylists->name = $stylist['name'];
@@ -52,14 +49,12 @@ class ImageController extends Controller
             
             $stylists->save();
             
+            //スタイリストIDの取得
+            $stylist_id = Stylist::where("name",$stylist["name"])->where("admin_id",$id)->value("id");
             
+            //webpのS3への写真の保存
+            Compress::dispatch($path,$user_id,$stylist_id);
             
-            
-            $new_image_data = file_Image::insert([
-                "admin_id" => $id,
-                "stylist_id" => $stylists->id,
-                "path" => $path,
-                ]);
             
             $name = Admin::query()->where("id",$id)->value('name');
             

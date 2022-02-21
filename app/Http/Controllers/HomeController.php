@@ -14,6 +14,9 @@ use App\file_Image;
 use App\SalonImage;
 use App\StylistReview;
 use DateTime;
+use Image;
+use Storage;
+
 
 class HomeController extends Controller
 {
@@ -66,6 +69,7 @@ class HomeController extends Controller
         
         $profile = User::query()->where("id",$user->id)->first();
 
+        
         $profile->name = $edit_content['name'];
         $profile->gender = $edit_content['gender'];
         $profile->email = $edit_content['email'];
@@ -74,7 +78,7 @@ class HomeController extends Controller
         return redirect("/home")->with(["flash_message" => "変更が完了しました"]);
     }
     
-    
+    //トップページ表示
     public function show_salon(){
         $admin_images = SalonImage::query()->get();
         $admins = Admin::query()->orderBy("id","ASC")->get();
@@ -110,23 +114,39 @@ class HomeController extends Controller
        foreach ($averages as $key => $value) {
             $sort[$key] = $value['evaluation'];
         }
-        
         array_multisort($sort, SORT_DESC, $averages);
+        
+        //連想配列定義
+       foreach($admin_images as $images){
+           $webp_images[$images->admin_id] = [];
+       }
+       
+       //pathの変換
+       foreach($admin_images as $images){
+           $salon_image =   Storage::disk('s3')->url($images->path);
+            array_push($webp_images[$images->admin_id],$salon_image);
+       }
+
         
         return view('first_launch')->with([
             "admins" => $admins->paginate(20),
-            "images" => $admin_images,
+            "images" => $webp_images,
             "averages" => $averages,
             ]);
     }
     
+    //美容院の各ページ表示
     public function show_salonPage($id){
         $salon = Admin::where("id",$id)->first();
         $images = SalonImage::query()->where("admin_id",$id)->get();
-        
+        $webp_images = [];
+        foreach($images as $image){
+            $salon_image =   Storage::disk('s3')->url($image->path);
+            array_push($webp_images,$salon_image);
+        }
         return view('salonPage')->with([
             "salon" => $salon,
-            "images" => $images]);
+            "images" => $webp_images]);
     }
     
     
@@ -134,6 +154,13 @@ class HomeController extends Controller
     {
         $stylists = Stylist::query()->where("admin_id",$id)->get();
         $stylist_times = [];
+        
+        foreach ($stylists as $stylist){
+            $stylist_image =   Storage::disk('s3')->url($stylist->file_images->path);
+            $stylist["path"] = $stylist_image;
+        }
+    
+        
         return view("info_stylists")->with([
             'stylists' => $stylists, 
             'stylist_times' => $stylist_times,
@@ -217,6 +244,7 @@ class HomeController extends Controller
         foreach ($past_reserves as $past_reserve) {
             $past_reserve->date = date('Y年m月d日',strtotime($past_reserve->date));
         }
+        
         
         
         return view('past_reserve')->with([

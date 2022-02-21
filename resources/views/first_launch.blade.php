@@ -34,9 +34,13 @@
                                 
                                 <hr class="division">
                                 <div align="center" class="salonImage">
-                                    @foreach ($images as $image)
-                                        @if ($image->admin_id == $admin->id)
-                                            <img src="{{ $image->path }}"　width="70" height = "120">
+                                    
+                                    @foreach ($images as $key => $image)
+                          
+                                        @if ($key== $admin->id)
+                                            @foreach ($image as $path)
+                                                <img src="{{ $path }}"　width="70" height = "120">
+                                            @endforeach
                                         @endif
                                     @endforeach
                                 </div>

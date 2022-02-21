@@ -34,15 +34,16 @@
                     </div>
                     @else
                     <p>{{ $numbers }}件の結果がヒットしました</p>
-
-                        <p><h5 style="border-bottom: 3px double #7C7B7B;">▶サロン一覧</h5></p>
+                        <p><h5 style="border-bottom: 3px double #7C7B7B;">▶検索結果一覧</h5></p>
                         @foreach($results as $result)
                         <div class="each_salon">
                             <a href = "/salon/{{$result->id}}" class="salonName">{{ $result->name }}</a><p class="region" style="color:#383333;">{{$result->region}}</p>
                                 <div align="center" class="salonImage">
-                                    @foreach ($images as $image)
-                                        @if ($image->admin_id == $result->id)
-                                            <img src="{{ $image->path }}">
+                                    @foreach ($images as $key => $salon_images)
+                                        @if ($key == $result->id)
+                                            @foreach($salon_images[0] as $image)
+                                                <img src="{{ $image->path }}">
+                                            @endforeach
                                         @endif
                                     @endforeach
                                 </div>

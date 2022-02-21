@@ -13,6 +13,7 @@ use App\Menu;
 use App\Admin;
 use App\time;
 use App\Calendar\CalendarView;
+use App\Jobs\Compress_salonImage;
 
 class HomeController extends Controller
 {
@@ -36,19 +37,30 @@ class HomeController extends Controller
     {
         $admin = Admin::query()->where("id",Auth::id())->first();
         $admin_images = SalonImage::query()->where("admin_id",Auth::guard('admin')->user()->id)->get();
+
+        $webp_images = [];
+        foreach($admin_images as $image){
+            $salon_image =   Storage::disk('s3')->url($image->path);
+            array_push($webp_images,$salon_image);
+        }
         $salon_id = Auth::guard('admin')->user()->id;
         $salon_name = Admin::query()->where("id",$salon_id)->value('name');
         return view('admin.home')->with([
             "salon_id" => $salon_id,
             "name" => $salon_name,
             "admin" => $admin,
-            "images" => $admin_images]);
+            "images" => $webp_images]);
     }
     
     public function show_info($id)
     {
         $stylists = Stylist::query()->where("admin_id",$id)->get();
-        
+        foreach($stylists as $stylist){
+            $stylist_image =   Storage::disk('s3')->url($stylist->file_images->path);
+            $stylist["image"] = $stylist_image;
+            
+        }
+
         return view('admin.info_stylists')->with([
             'stylists' => $stylists,
             "salon_id" => $id
@@ -84,11 +96,7 @@ class HomeController extends Controller
             if ($file->isValid([])){
                 $upload_info = Storage::disk('s3')->putFile('/salonImage', $file, 'public');
                 $path = Storage::disk('s3')->url($upload_info);
-                
-                $salon_image = new SalonImage;
-                $salon_image->admin_id = $id;
-                $salon_image->path = $path;
-                $salon_image->save();
+                Compress_salonImage::dispatch($path,$id);
             }
         }
         

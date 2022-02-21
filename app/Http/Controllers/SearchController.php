@@ -14,6 +14,7 @@ use App\file_Image;
 use App\SalonImage;
 use App\StylistReview;
 use DateTime;
+use Storage;
 
 class SearchController extends Controller
 {
@@ -35,13 +36,30 @@ class SearchController extends Controller
      
      public function result_salon(Request $request){
         $search = $request['search'];
-        $searchResult = Admin::query()->where("name",'LIKE', "%{$search['salonName']}%")->get();
-        $salon_images = SalonImage::query()->get();
-        $result_num = count($searchResult);
-        
+        $searchResults = Admin::query()->where("name",'LIKE', "%{$search['salonName']}%")->get();
+        $result_num = count($searchResults);
+        if ($result_num != 0){
+            foreach($searchResults as $result){
+                $webp_images[$result->id] = [];
+            }
+            
+            foreach ($searchResults as $result){
+                $salon_images = SalonImage::where("admin_id",$result->id)->get();
+                foreach($salon_images as $salon_image){
+                    $image =  Storage::disk('s3')->url($salon_image->path);
+                    $salon_image["path"] = $image;
+                }
+                array_push($webp_images[$result->id],$salon_images);
+            }
+            
+            return view('search_result')->with([
+                "results" => $searchResults->paginate(20),
+                "images" => $webp_images,
+                "numbers" => $result_num,
+                "condition" => $search['salonName']]);
+        }
+ 
         return view('search_result')->with([
-            "results" => $searchResult->paginate(20),
-            "images" => $salon_images,
             "numbers" => $result_num,
             "condition" => $search['salonName']]);
      }
@@ -49,17 +67,34 @@ class SearchController extends Controller
      public function result_region(Request $request){
          $search = $request->input('search');
          
-         $salons = Admin::query()->where("region",$search[0])->get();
-         $salon_images = SalonImage::query()->get();
-         $result_num = count($salons);
+         $searchResults = Admin::query()->where("region",$search[0])->get();
+         $result_num = count($searchResults);
+         if ($result_num != 0){
+            foreach($searchResults as $result){
+                $webp_images[$result->id] = [];
+             }
+            
+            foreach ($searchResults as $result){
+                $salon_images = SalonImage::where("admin_id",$result->id)->get();
+                foreach($salon_images as $salon_image){
+                    $image =  Storage::disk('s3')->url($salon_image->path);
+                    $salon_image["path"] = $image;
+                }
+                array_push($webp_images[$result->id],$salon_images);
+            } 
+            
+            return view('search_result')->with([
+                 "results" => $searchResults->paginate(20),
+                 "images" => $webp_images,
+                 "numbers" => $result_num,
+                 "condition" => $search[0]
+                ]);
+         }
          
          return view('search_result')->with([
-             "results" => $salons->paginate(20),
-             "images" => $salon_images,
              "numbers" => $result_num,
              "condition" => $search[0]
             ]);
-         
      }
     
     public function refine_review(Request $request,$id){

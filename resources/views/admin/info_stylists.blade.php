@@ -23,12 +23,15 @@
                     <main class="mt-4">
                         @yield('content')
                     </main>
+                    @if (@count($stylists) != 0)
                         @foreach ($stylists as $stylist)
-                            <img src='{{ $stylist->file_images->path }}' style = "width:50%">
+                        <div align="center">
+                            <img src='{{ $stylist->image }}' style = "width:50%">
                             <br>
                             <p>スタイリスト名：{{ $stylist->name }}</p>
                             <p>性別：{{ $stylist->gender }}</p>
                             <p><a href = "/{{ $stylist->id }}/show_review">この美容師の口コミを見る</a></p>
+                        </div>
                             <div style = "text-align: right">
                                 <div style="display:inline-flex">
                                 <form method="POST" name="a_form" action="/admin/{{ $salon_id }}/{{$stylist->id}}/delete">
@@ -44,6 +47,11 @@
                             </div>
                             <hr>
                         @endforeach
+                    @else
+                        <div align="center">
+                            美容師が登録されていません。
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>

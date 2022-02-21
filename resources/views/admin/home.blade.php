@@ -36,9 +36,7 @@
                                 <a href="/admin/{{ $admin->id }}/salon_images" style="text-align:right;" class="edit">編集</a>
                                 <div align="center" class="salonImage">
                                     @foreach ($images as $image)
-                                        @if ($image->admin_id == $admin->id)
-                                            <img src="{{ $image->path }}"　width="70" height = "120">
-                                        @endif
+                                            <img src="{{ $image }}"　width="70" height = "120">
                                     @endforeach
                                 </div>
                                 

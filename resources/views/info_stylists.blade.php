@@ -40,7 +40,7 @@
                     <hr>
                         @foreach ($stylists as $stylist)
                         <div class="each_stylist">
-                            <img src="{{ $stylist->file_images->path }}">
+                            <img src="{{ $stylist['path'] }}">
                             <div class="stylist_info">
                             <p>スタイリスト名：{{ $stylist->name }}</p>
                             <p>性別：{{ $stylist->gender }}</p>

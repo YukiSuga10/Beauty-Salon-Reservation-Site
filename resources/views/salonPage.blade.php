@@ -40,7 +40,7 @@
                             @else
                                 @foreach ($images as $image)
                                 <div class="main_img">    
-                                        <img src="{{ $image->path }}">
+                                        <img src="{{ $image }}">
                                 </div>    
                                 @endforeach
                             @endif
