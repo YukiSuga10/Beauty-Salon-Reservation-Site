@@ -17,7 +17,8 @@
         "laravel/tinker": "^2.5",
         "laravel/ui": "1.*",
         "league/flysystem-aws-s3-v3": "~1.0",
-        "spatie/laravel-google-calendar": "^3.3"
+        "spatie/laravel-google-calendar": "^3.3",
+        "ext-gd": "*"
     },
     "require-dev": {
         "facade/ignition": "^1.16.15",
