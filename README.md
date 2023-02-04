@@ -6,18 +6,6 @@
 美容院予約サイトです。<br>
 様々な美容院において予約や各美容院についての情報を見ることができます。<br>
 Googleからのログインも可能となっています
-
-- サイトURL<br>
-    https://salon-reserve.herokuapp.com/
-    
-    - テスト用ユーザー<br>
-        <ユーザー側><br>
-        ログインID : test@gmail.com<br>
-        パスワード : test1234<br>
-        
-        <美容院側><br>
-        ログインID : salonA@gmail.com<br>
-        パスワード : salonA1234<br>
         
 ## 使用技術
 
